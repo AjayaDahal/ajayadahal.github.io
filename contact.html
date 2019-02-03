@@ -12,11 +12,13 @@
 Name:<br>
 <input type="text" name="name"><br>
 E-mail:<br>
-<input type="email" name="mail" placeholder="ajayadahal1000@gmail.com" size="40"><br>
-<script src='https://www.google.com/recaptcha/api.js'></script>
-<form id="comment_form" action="form.php" method="post">
+<input type="email" name="mail" placeholder="Type your email" size="40"><br>
+<form id="send_email" action="sendEmail.php" method="post">
 <textarea name="comment" rows="8" cols="39"></textarea><br><br>
+  
+<script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
 <div class="g-recaptcha" data-sitekey="6LdA3I4UAAAAAM2yFeeDnJ8og42_D4CjziMI2ALs"></div>
+  
 <input type="submit" value="Send">
 <input type="reset" value="Reset">
 </form>
