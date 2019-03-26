@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Number Guessing Game</title>
+		<script>
+		var nameOfTheGame="Welcome to the guessing game!";
+		</script>
+</head>
+
+<body onload = "displayPageStatus();">
+<h1>Proudly presenting a Guessing Game</h1>
+
+<div class="form">
+    <label for="guessField">Please guess a number between 1 and 10 </label>
+    <input type = "text" id = "guessField" class = "guessField">
+    <input type = "submit" value = "Submit guess"
+           class = "guessSubmit" id = "submitguess">
+</div>
+
+<script type = "text/javascript">
+    var computerGuessedNumber = Math.floor(Math.random() * 10 + 1);
+    var guess = 1;
+
+    document.getElementById("submitguess").onclick = function(){
+   var userGuessedNumber = document.getElementById("guessField").value;
+
+   if(userGuessedNumber == computerGuessedNumber)
+   {
+       document.write("CONGRATULATIONS!!! YOU GUESSED IT RIGHT IN "+ guess + " GUESS ");
+   }
+   else if(userGuessedNumber > computerGuessedNumber)
+   {
+       guess++;
+       alert("OOPS SORRY!! TRY A SMALLER NUMBER");
+   }
+   else
+   {
+       guess++;
+       alert("OOPS SORRY!! TRY A GREATER NUMBER")
+   }
+}
+</script>
+</body>
+</html>
