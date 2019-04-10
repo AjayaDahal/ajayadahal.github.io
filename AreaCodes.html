@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Area Codes</title>
+
+  <script type="text/javascript">
+
+    /* <![CDATA[ */
+
+    function checkTheCode()
+    {
+      var msg = "";
+      var areaCode = document.getElementById("theCode").options[document.getElementById("theCode").selectedIndex].value;
+      switch (parseInt(areaCode))
+      {
+        case 617:
+          msg = "Boston's area code is " + areaCode;
+          break;
+        case 212:
+          msg = "Manhattan's area code is " + areaCode;
+          break;
+        case 415:
+          msg = "San Francisco's area code is " + areaCode;
+          break;
+        case 813:
+          msg = "Tampa's area code is " + areaCode;
+          break;
+        default:
+          msg = "You did not select a city!";
+
+      
+      }
+      
+      alert(msg);
+
+    }
+
+    /* ]]> */
+
+  </script>
+
+</head>
+
+<body>
+
+Select a City:
+
+<form action="AreaCodes.html" method="post" name="theForm"
+
+      onsubmit="checkTheCode(); return false;">
+
+  <select name="theCode" id="theCode">
+
+    <option value="">-- Select a City --</option>
+    <option value="617">Boston</option>
+    <option value="212">Manhattan</option>
+    <option value="415">San Francisco</option>
+    <option value="813">Tampa</option>
+
+  </select>
+
+  <br />
+  <br />
+
+  <input type="submit" value="Check the Area Code" />
+
+</form>
+
+</body>
+
+</html>
