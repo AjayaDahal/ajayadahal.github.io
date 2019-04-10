@@ -1,0 +1,78 @@
+  <!DOCTYPE HTML>
+  <html>
+  <head>
+    <title>Fortune Teller</title>
+
+    <script> var noOfChildren; </script>
+    <script> var parterName; </script>
+    <script> var locations; </script>
+    <script> var jobTitle; </script>
+    <script> var message; </script>
+    <script type="text/javascript">var computerRandom = Math.floor(Math.random() * 9) + 1;  </script>
+    <script type="text/javascript"> var userInput</script>
+
+
+    <script type="text/javascript"> function messageCreator(){
+     message = "You will be a "+jobTitle+" in "+locations+", and married to "+parterName+" with "+noOfChildren+" Children(s)"; 
+   }
+ </script>
+
+ <script type="text/javascript"> function displayFortune(){
+  document.write(message);
+}
+</script>
+
+<script type="text/javascript"> function function1(){
+  noOfChildren = 1;
+  parterName = "Jenny Kaif";
+  locations = "India";
+  jobTitle = "Manager in India Department of Motor Vehicle";
+  
+}
+</script>
+
+<script type="text/javascript">function function2(){
+  noOfChildren = 5;
+  parterName = "Barbara Hau";
+  locations = "Toyko";
+  jobTitle = "Supervisor in Tokyo Department of Industrlization";
+
+}
+</script>
+
+<script type="text/javascript"> function function3(){
+  noOfChildren = 9;
+  parterName = "Gana KC";
+  locations = "USA";
+  jobTitle = "Security Guard in USA Security Agency";
+}
+</script>
+
+<script type="text/javascript"> function conditionMatcher(){
+  userInput = document.getElementById("userInput").value;
+  if (userInput==1 || userInput==4 || userInput==7 ) {
+    function1();
+  }
+  else if (userInput==2 || userInput==5 || userInput==8 ){
+    function2();
+  }
+  else if (userInput==3 || userInput==6 || userInput==9 ){
+    function3();  
+  }
+  messageCreator();
+  displayFortune();
+  //document.write(userInput);
+}
+</script>
+</head>
+
+
+<body>
+  <h1> Welcome to the Fortune Teller-BOT<h1>
+    <h2>Please proceed and enter a random number from 1 to 9</h2>
+
+    <input type="number" id="userInput" />
+   
+       <button onclick = "conditionMatcher(); ">Show me my Fortune!</button>
+  </body>
+  </html>
