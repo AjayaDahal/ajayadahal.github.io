@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Arrays and loop</title>
+
+  <script type="text/javascript">
+  	var myFormData = [];   //declare an array
+	var user_name = document.getElementById("user_name").value; 
+	var user_address = document.getElementById("user_address").value; 
+	var user_occupation= document.getElementById("user_occupation").value;  
+	myFormData.push(user_name);
+	myFormData.push(user_address);
+	myFormData.push(user_occupation);
+  </script>
+
+  <script type="text/javascript">
+  	function pushInfo(){
+  		user_name = document.getElementById("user_name").value; 
+	user_address = document.getElementById("user_address").value; 
+	user_occupation= document.getElementById("user_occupation").value;  
+	myFormData.push(user_name);
+	myFormData.push(user_address);
+	myFormData.push(user_occupation);
+  	document.write("<b>Thank you for your information! You supplied this information:</b><br /><br />");
+  	for (var i = 0; i <= myFormData.length-1; i++) {
+ 	
+ 	document.write(myFormData[i]+"<br />");
+ }
+  	}
+  </script>
+
+</head>
+
+<body>
+	<form action="Questionnaire.html" method="post" onsubmit="pushInfo(); return false;">
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="user_name" name="user_name">
+  </div>
+  <div>
+    <label for="address">Address:</label>
+    <input type="text" id="user_address" name="user_address">
+  </div>
+  <div>
+    <label for="occupation">Occupation:</label>
+    <input type="text"  id="user_occupation" name="user_occupation">
+  </div>
+<input type="submit" value="Submit" />
+
+</form>
+
+
+</body>
+</html>
