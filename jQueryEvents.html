@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Unit 10 jQuery Events and Effects</title>
+	<meta charset="UTF-8">
+  <title>jQuery Intro Assignment</title>
+  <script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+	function change(){
+		document.getElementById("btnSubmit").value="Loading..."; 
+	}
+    /* <![CDATA[ */
+    $(document).ready(function()
+    {
+     $("#formIn").submit(function (e) {
+            //disable the submit button
+            $("#btnSubmit").attr("disabled", true);
+            return true; 
+    });
+    });
+
+
+    /* ]]> */
+  </script>
+
+  <style type="text/css">
+    body { font-family: Arial,sans-serif; background-color: #ffd; }
+    #mainDiv { width: 800px; margin: 0 auto; position: relative; }
+    button { margin: 0 0 10px 0; }
+  </style>
+</head>
+
+
+
+
+<body>
+
+<h2>Unit 10 jQuery Events and Effects</h2>
+
+<form id="formIn" action="http://www.frodriguez.net/PHPStuff/TestFormDataDelay.php" method="POST">
+  First name: 
+  <input type="text" name="firstname" value="First Name">
+  <br>
+  Last name: 
+  <input type="text" name="lastname" value="Last Name">
+  <br><br>
+  <input type="submit" value="Submit" id = "btnSubmit" onclick="change()">
+</form> 
+
+
+
+</body>
+</html>
