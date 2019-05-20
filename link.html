@@ -1,20 +1,82 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
 </head>
 <body>
-<p><a href="home.html" target="main"><Font Face="Elephant">Home</Font></a></p>
-<p><a href="aboutme.html" target="main"><Font Face="Elephant">Programming Language</Font></a></p>
-<p><a href="aboutme.html" target="main"><Font Face="Elephant">About me</Font></a></p>
-<p><a href="contact.html" target="main"><Font Face="Elephant">Contact me</Font></a></p>
-  <p><a href="StockVariable.html" target="main"><Font Face="Elephant">StockVariable.html</Font></a></p>
-  <p><a href="guessingGame.html" target="main"><Font Face="Elephant">Guessing Game</Font></a></p>
-  <p><a href="fortuneTeller.html" target="main"><Font Face="Elephant">Fortune Teller</Font></a></p>
-  <p><a href="NumberCheck.html" target="main"><Font Face="Elephant">6.1 Decision Making (Number Check) </Font></a></p>
-  <p><a href="AreaCodes.html" target="main"><Font Face="Elephant">6.1 Decision Making (Area Codes)</Font></a></p>
-  <p><a href="Questionnaire.html" target="main"><Font Face="Elephant">Questionnaire</Font></a></p>
-  <p><a href="canvas.html" target="main"><Font Face="Elephant"> A Simple Canvas </Font></a></p>
-  <p><a href="jqueryStuff.html" target="main"><Font Face="Elephant"> JQueryStuff 9.1 </Font></a></p>
-  <p><a href="jQueryEvents.html" target="main"><Font Face="Elephant"> Unit 10 JQuery Events and Effects </Font></a></p>
+
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <p><a href="home.html" target="main"><Font Face="Elephant">Home</Font></a>
+<a href="aboutme.html" target="main"><Font Face="Elephant">Programming Language</Font></a>
+    <a href="aboutme.html" target="main"><Font Face="Elephant">About me</Font></a>
+<a href="contact.html" target="main"><Font Face="Elephant">Contact me</Font></a>
+<a href="StockVariable.html" target="main"><Font Face="Elephant">StockVariable.html</Font></a>
+<a href="guessingGame.html" target="main"><Font Face="Elephant">Guessing Game</Font></a>
+<a href="fortuneTeller.html" target="main"><Font Face="Elephant">Fortune Teller</Font></a>
+<a href="NumberCheck.html" target="main"><Font Face="Elephant">6.1 Decision Making (Number Check) </Font></a>
+<a href="AreaCodes.html" target="main"><Font Face="Elephant">6.1 Decision Making (Area Codes)</Font></a>
+<a href="Questionnaire.html" target="main"><Font Face="Elephant">Questionnaire</Font></a>
+<a href="canvas.html" target="main"><Font Face="Elephant"> A Simple Canvas </Font></a>
+<a href="jqueryStuff.html" target="main"><Font Face="Elephant"> JQueryStuff 9.1 </Font></a>
+<a href="jQueryEvents.html" target="main"><Font Face="Elephant"> Unit 10 JQuery Events and Effects </Font></a>
+</div>
+  
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+</script>
+   
 </body>
-<html>
+</html> 
