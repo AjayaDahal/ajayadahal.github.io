@@ -2,11 +2,13 @@
 <html>
 <head>
 <title>Contact Me</title>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
 </head>
 <body>
 <h2>Contact me by using the form below and I will get back to you.</h2>
-<form action="mailto:ajayadahal100@gmail.com" method="post" enctype="text/plain">
+<form>
 Name:<br>
 <input type="text" name="name"><br>
 E-mail:<br>
