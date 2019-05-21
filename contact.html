@@ -21,6 +21,7 @@
         <input id="name" name="name" placeholder="Your good name?" />
         <br>
         <label for="message">Message: </label>
+          <br>
         <textarea id="message" name="message" rows="10"
                   placeholder="Your message"></textarea>
         <br>
@@ -32,8 +33,6 @@
         </button>
 
     </form>
-
-    <!-- Customise the Thankyou Message People See when they submit the form: -->
     <div style="display:none;" id="thankyou_message">
         <h2>
             <em>Thanks</em> for contacting us!
@@ -41,8 +40,7 @@
         </h2>
     </div>
 
-    <script data-cfasync="false" type="text/javascript"
-            src="https://cdn.rawgit.com/dwyl/learn-to-send-email-via-google-script-html-no-server/master/form-submission-handler.js">
+    <script data-cfasync="false" type="text/javascript">
    document.write(thankyou_message);
     </script>
 
