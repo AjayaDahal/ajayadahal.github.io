@@ -1,28 +1,54 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="contact form example">
 <title>Contact Me</title>
   <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
         async defer>
     </script>
 </head>
 <body>
-<h2>Contact me by using the form below and I will get back to you.</h2>
-<form>
-Name:<br>
-<input type="text" name="name"><br>
-E-mail:<br>
-<input type="email" name="mail" placeholder="Type your email" size="40"><br>
-Message:<br>
-<textarea name="Message" rows="8" cols="39"></textarea><br><br>
-  
-<div class="g-recaptcha" data-sitekey="6LdA3I4UAAAAAM2yFeeDnJ8og42_D4CjziMI2ALs"></div>
-      <br/>
-<input type="submit" value="Submit">
-                                 
-<input type="reset" value="Reset">
-</form>
-                                 
+<h2>Contact me by using the form below and I will get back to you.</h2>                         
+   <h2 class="content-head is-center">Contact Us!</h2>
+    <form id="gform" method="POST" class="pure-form pure-form-stacked" data-email="from_email@example.com"
+          action="https://script.google.com/macros/s/AKfycbyay9o1hC8z_eMcN743zxKsPlZa3jSoBWIYUnTW7WhwdV36xS8/exec">
+        <label for="name">Name: </label>
+        <input id="name" name="name" placeholder="What your Mom calls you" /><br>
+        <label for="message">Message: </label>
+        <textarea id="message" name="message" rows="10"
+                  placeholder="Your message"></textarea>
+
+        <br>
+
+        <label for="email"><em>Your</em> Email Address:</label>
+        <input id="email" name="email" type="email" value=""
+               required placeholder="your.name@email.com" />
+
+
+      <div class="g-recaptcha" data-sitekey="6LdA3I4UAAAAAM2yFeeDnJ8og42_D4CjziMI2ALs"></div>
+        <button class="button-success pure-button button-xlarge">
+            <i class="fa fa-paper-plane"></i>&nbsp;Send
+        </button>
+
+    </form>
+
+    <!-- Customise the Thankyou Message People See when they submit the form: -->
+    <div style="display:none;" id="thankyou_message">
+        <h2>
+            <em>Thanks</em> for contacting us!
+            We will get back to you soon!
+        </h2>
+    </div>
+
+
+    <script data-cfasync="false" type="text/javascript"
+            src="https://cdn.rawgit.com/dwyl/learn-to-send-email-via-google-script-html-no-server/master/form-submission-handler.js"></script>
+
 
 </body>
-<html>
+</html>
+
+
+
