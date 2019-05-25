@@ -5,10 +5,9 @@
 <style>
 body {
   font-family: "Lato", sans-serif;
-  transition: background-color .5s;
 }
 
-.sidenav {
+.sidebar {
   height: 100%;
   width: 0;
   position: fixed;
@@ -21,7 +20,7 @@ body {
   padding-top: 60px;
 }
 
-.sidenav a {
+.sidebar a {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
@@ -30,11 +29,11 @@ body {
   transition: 0.3s;
 }
 
-.sidenav a:hover {
+.sidebar a:hover {
   color: #f1f1f1;
 }
 
-.sidenav .closebtn {
+.sidebar .closebtn {
   position: absolute;
   top: 0;
   right: 25px;
@@ -42,22 +41,36 @@ body {
   margin-left: 50px;
 }
 
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
 #main {
   transition: margin-left .5s;
   padding: 16px;
 }
 
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
 }
 </style>
 </head>
 <body bgcolor = " #818181">
 
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="home.html" target="main"><Font Face="Elephant">Home</Font></a>
+<div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+   <a href="home.html" target="main"><Font Face="Elephant">Home</Font></a>
   <a href="aboutme.html" target="main"><Font Face="Elephant">Programming Language</Font></a>
   <a href="aboutme.html" target="main"><Font Face="Elephant">About me</Font></a>
   <a href="contact.html" target="main"><Font Face="Elephant">Contact me</Font></a>
@@ -65,21 +78,18 @@ body {
 </div>
 
 <div id="main">
+  <button class="openbtn" onclick="openNav()">☰ <img src ="logo.png" id= "logo" height = "80" width = "80"></button>  
   
-  <span style="font-size:30px;cursor:pointer" font-family: "Lato", onclick="openNav()">&#9776;  <img src ="logo.png" id= "logo" height = "80" width = "80">
-</span></div>
 
 <script>
 function openNav() {
-  document.getElementById("mySidenav").style.width = "250px";
+  document.getElementById("mySidebar").style.width = "250px";
   document.getElementById("main").style.marginLeft = "250px";
-  document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
 }
 
 function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("mySidebar").style.width = "0";
   document.getElementById("main").style.marginLeft= "0";
-  
 }
 </script>
    
