@@ -1,8 +1,7 @@
 body, html {
   height: 100%;
   margin: 0;
-  font-family: Six hands Marker;
-  
+  font-family: six hands marker ;
 }
 
 * {
@@ -18,7 +17,7 @@ body, html {
   -webkit-filter: blur(8px);
   
   /* Full height */
-  height: 75%; 
+  height: 100%; 
   
   /* Center and scale the image nicely */
   background-position: center;
@@ -42,7 +41,6 @@ body, html {
   padding: 20px;
   text-align: center;
 }
-
 
 .row > .column {
   padding: 0 8px;
