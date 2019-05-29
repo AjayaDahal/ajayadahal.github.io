@@ -1,138 +1,17 @@
 <!DOCTYPE html>
 <html>
-  
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css"href="CSS/home.css">
 </head>
-  
 <body>
-  
+
 <div class="bg-image"></div>
-  
+
 <div class="bg-text">
-<p Align="center"><font face ="Blackadder ITC" size="8" Color="#3BB9FF">
-<a href = "home.html" target = "main"><img src = "logo.png" height = "100" width = "100"></a>
-&ensp; Hi. I am Ajaya </Font></p>
-<p Align="center"><font face ="Six hands Marker" size="4" Color=" #DBFF3B">I am a student of Artificial Intelligence and Robotics. </Font></p>
+  <h2>Hello</h2>
+  <h1 style="font-size:50px">I am Ajaya Dahal</h1>
+  <p>And I'm a Student of AI and Robotics</p>
 </div>
-
-<hr size="5" color="Black">
-<hr size="5" color="grey">
-<hr size="5" color="Black">
-
-  <h2> <font face = "Six hands Marker" size = "8">  #aboutMe </font> </h2>
-  <p align = "justify"> <font face = "Six hands Marker" size = "5">  I am undergraduate student currently enrolled in Mississippi State University as junior. My major is
-      Computer Engineering and my specialization will be in Artificial Intelligence and Robotics. I am an international Student from Nepal and it's been 3 adventurous years
-      here in the United States. 
-    </p>
-    <p>
-      I have been actively envolving into Artificial Intelligence and Robotics since 2012. In these years, I have also worked in various companies
-      which directly/indirectly helped me to become what I am doing. Some of the wonderful place where I worked before are: El Centro College-Dallas, TX as Supplemental Instructor Leader for Chemistry 1411 and College level Math 1314; 7 Eleven-Dallas, TX as Shift Manager; and Merch by Amazon as Print Ops Associate-DFW5, Carrolton, TX. I cannot wait to see what future holds in 
-      my next chapter.
-    </font></p>
-
-
-<div class="row">
-  <div class="column">
-    <img src="images/Graduation.jpg" style="width:70%" onclick="openModal();currentSlide(1)" class="hover-shadow cursor">
-  </div>
-  <div class="column">
-    <img src="images/PTK-family.jpg" style="width:70%" onclick="openModal();currentSlide(2)" class="hover-shadow cursor">
-  </div>
-  <div class="column">
-    <img src="images/Apt-lab.jpg" style="width:70%" onclick="openModal();currentSlide(3)" class="hover-shadow cursor">
-  </div>
-  <div class="column">
-    <img src="images/DPRG.JPG" style="width:70%" onclick="openModal();currentSlide(4)" class="hover-shadow cursor">
-  </div>
-</div>
-
-<div id="myModal" class="modal">
-  <span class="close cursor" onclick="closeModal()">&times;</span>
-  <div class="modal-content">
-
-    <div class="mySlides">
-      <div class="numbertext">1 / 4</div>
-      <img src="images/Graduation.jpg" style="width:100%">
-    </div>
-
-    <div class="mySlides">
-      <div class="numbertext">2 / 4</div>
-      <img src="images/PTK-family.jpg" style="width:100%">
-    </div>
-
-    <div class="mySlides">
-      <div class="numbertext">3 / 4</div>
-      <img src="images/Apt-lab.jpg" style="width:100%">
-    </div>
-    
-    <div class="mySlides">
-      <div class="numbertext">4 / 4</div>
-      <img src="images/DPRG.JPG" style="width:100%">
-    </div>
-    
-    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-    <a class="next" onclick="plusSlides(1)">&#10095;</a>
-
-    <div class="caption-container">
-      <p id="caption"></p>
-    </div>
-    
-    <div class="column">
-      <img class="demo cursor" src="images/Graduation.jpg" style="width:70%" onclick="currentSlide(1)" alt="Class of 2018: Associate in Science">
-    </div>
-    <div class="column">
-      <img class="demo cursor" src="images/PTK-family.jpg" style="width:70%" onclick="currentSlide(2)" alt="PTK Honor Society; Vice President of Records">
-    </div>
-    <div class="column">
-      <img class="demo cursor" src="images/Apt-lab.jpg" style="width:70%" onclick="currentSlide(3)" alt="My Fav Place~ My apartment lab">
-    </div>
-    <div class="column">
-      <img class="demo cursor" src="images/DPRG.JPG" style="width:70%" onclick="currentSlide(4)" alt="Dallas Personal Robotics Group-Robot competition">
-    </div>
-  </div>
-</div>
-
-<script>
-function openModal() {
-  document.getElementById("myModal").style.display = "block";
-}
-
-function closeModal() {
-  document.getElementById("myModal").style.display = "none";
-}
-
-var slideIndex = 1;
-showSlides(slideIndex);
-
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  var i;
-  var slides = document.getElementsByClassName("mySlides");
-  var dots = document.getElementsByClassName("demo");
-  var captionText = document.getElementById("caption");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-      dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-  captionText.innerHTML = dots[slideIndex-1].alt;
-}
-</script>
-
 
 </body>
 </html>
