@@ -1,84 +1,40 @@
-<!doctype html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="utf-8">
+    <title>Contact Form Tutorial by Bootstrapious.com</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="contact form">
-    <title>Contact me</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,500' rel='stylesheet' type='text/css'>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body>
-    <h2 class="content-head is-center">Contact Us!</h2>
-    <aside>
-        <p>
-            Please use the <b><em>Contact-me Form</em></b>
-            to send me a message.
-        </p>
-    </aside>
-    <form id="gform" method="POST" class="pure-form pure-form-stacked" data-email="from_email@example.com"
-          action="https://script.google.com/macros/s/AKfycbxPnH-8Fr5Jsk2YFRFGdvT4Ssz1Kc54HTSl_APspg/exec">
-        <label for="name">Name: </label>
-        <input id="name" name="name" placeholder="Your good name?" />
-        <br>
-        <label for="message">Message: </label>
-          <br>
-        <textarea id="message" name="message" rows="10"
-                  placeholder="Your message"></textarea>
-        <br>
-        <label for="email"><em>Your</em> Email Address:</label>
-        <input id="email" name="email" type="email" value=""
-               required placeholder="your.name@email.com" />
-       
-    <form id="form1" runat="server">  
-        <div class="g-recaptcha" data-sitekey="6Lc9taUUAAAAAEUav0GVHAHTguudjtjjz8P6Hhfe"></div>          
-    </form>  
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-         <button class="button-success pure-button button-xlarge">
-            <i class="fa fa-paper-plane"></i>&nbsp;Send
-        </button>
-    </form>
+<aside>
+<p>
+Please use the <b><em>Contact-me Form</em></b>
+to send me a message.
+</p>
+</aside>
+<form action="https://formspree.io/ajayadahal1000@gmail.com" method="POST">
+<label for="name">Name: </label>  
+<input type="text" name="name" required data-error="Enter your name!"></br>
+<label for="email">Email: </label>  
+<input type="email" name="_replyto" required data-error="Enter your Email!"></br>
+<label for="message">Message: </label>  
+<textarea id="message" name="message" rows="10" placeholder="Your message"></textarea>
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-async defer></script>
-<script type="text/javascript">
-var onloadCallback = function () {
-    grecaptcha.render('dvCaptcha', {
-        'sitekey': '<%=ReCaptcha_Key %>',
-        'callback': function (response) {
-            $.ajax({
-                type: "POST",
-                url: "Default.aspx/VerifyCaptcha",
-                data: "{response: '" + response + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (r) {
-                    var captchaResponse = jQuery.parseJSON(r.d);
-                    if (captchaResponse.success) {
-                        $("[id*=txtCaptcha]").val(captchaResponse.success);
-                        $("[id*=rfvCaptcha]").hide();
-                    } else {
-                        $("[id*=txtCaptcha]").val("");
-                        $("[id*=rfvCaptcha]").show();
-                        var error = captchaResponse["error-codes"][0];
-                        $("[id*=rfvCaptcha]").html("RECaptcha error. " + error);
-                    }
-                }
-            });
-        }
-    });
-};
-</script>
-    
-    <script data-cfasync="false" type="text/javascript">
-   document.write("<h2>
-            <em>Thanks</em> for contacting us!
-            We will get back to you soon!
-        </h2>");
-    </script>
+<div class="g-recaptcha" data-sitekey="6Lf-BKYUAAAAAOR4O1AnEyEOz-8vr2kgzSVINNl-" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
+<input class="form-control d-none" data-recaptcha="true" required data-error="Please complete the Captcha">
+</div>
+                        
+<input type="submit" value="Send">
+</form> 
+<p class="text-muted">
+<strong>*</strong> These fields are required.
+</p>
 
-
+ 
 </body>
+
 </html>
-
-
