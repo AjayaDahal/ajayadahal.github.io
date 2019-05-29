@@ -1,7 +1,8 @@
 body, html {
   height: 100%;
   margin: 0;
-  font-family: six hands marker ;
+  font-family: six hands marker;
+  overflow-x: hidden;
 }
 
 * {
@@ -42,6 +43,10 @@ body, html {
   text-align: center;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .row > .column {
   padding: 0 8px;
 }
@@ -65,8 +70,8 @@ body, html {
   padding-top: 100px;
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   overflow: auto;
   background-color: black;
 }
