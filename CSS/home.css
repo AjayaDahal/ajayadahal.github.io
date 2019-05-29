@@ -2,7 +2,7 @@ body, html {
   height: 100%;
   margin: 0;
   font-family: six hands marker;
-  overflow-x: hidden;
+  overflow: auto;
 }
 
 * {
