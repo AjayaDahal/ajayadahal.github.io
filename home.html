@@ -15,17 +15,23 @@
 </div>
 
   
-  <div class="w3-content w3-section" style="max-width:500px">
+  <div class="w3-content w3-section" style="max-width:500px, max-height:500px" >
   <img class="mySlides w3-animate-fading" src="My Pic.jpg" style="width:100%">
   <img class="mySlides w3-animate-fading" src="My Pic1.jpg" style="width:100%">
   <img class="mySlides w3-animate-fading" src="My Pic2.jpg" style="width:100%">
   <img class="mySlides w3-animate-fading" src="Like2.jpg" style="width:100%">
+    
+  <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+  <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
 </div>
   
 <script>
 var myIndex = 0;
-carousel();
-function carousel() {
+carousel(myIndex);
+  function plusDivs(n) {
+  carousel(myIndex += n);
+}
+function carousel(n) {
   var i;
   var x = document.getElementsByClassName("mySlides");
   for (i = 0; i < x.length; i++) {
@@ -34,7 +40,7 @@ function carousel() {
   myIndex++;
   if (myIndex > x.length) {myIndex = 1}    
   x[myIndex-1].style.display = "block";  
-  setTimeout(carousel, 9000);    
+  setTimeout(carousel, 7000);    
 }
 </script>
   
