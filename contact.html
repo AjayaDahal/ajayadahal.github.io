@@ -16,6 +16,7 @@ Please use the <b><em>Contact-me Form</em></b>
 to send me a message.
 </p>
 </aside>
+    <div class = "contact">
 <form
   action="https://formspree.io/mvogldyy"
   method="POST">
@@ -27,7 +28,13 @@ to send me a message.
     Your message:
     <textarea name="message"></textarea>
   </label>
-
+<script>
+ function clicker(){
+contact.innerHTML="<em>Thanks</em> for contacting us! We will get back to you soon!";
+    setTimeout("<a href = "https://ajayadahal.github.io"></a>",1000);
+}
+    </script>
+    </div>
   <!-- your other form fields go here -->
 <div class="g-recaptcha" data-sitekey="6Lc9taUUAAAAAEUav0GVHAHTguudjtjjz8P6Hhfe" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
 <input class="form-control d-none" data-recaptcha="true" required data-error="Please complete the Captcha">
@@ -38,12 +45,7 @@ to send me a message.
 <p class="text-muted">
 <strong>*</strong> These fields are required.
 </p>
-    <script>
- function clicker(){
-g-recaptcha.innerHTML="<em>Thanks</em> for contacting us! We will get back to you soon!";
-    setTimeout("<a href = "https://ajayadahal.github.io"></a>",1000);
-}
-    </script>
+    
  
  
 </body>
