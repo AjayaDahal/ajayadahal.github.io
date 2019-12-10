@@ -16,20 +16,26 @@ Please use the <b><em>Contact-me Form</em></b>
 to send me a message.
 </p>
 </aside>
-<form action="https://formspree.io/ajayadahal1000@gmail.com" method="POST">
-<label for="name">Name: </label>  
-<input type="text" name="name" required data-error="Enter your name!"></br>
-<label for="_replyto">Email: </label>  
-<input type="email" name="_replyto" required data-error="Enter your Email!"></br>
-<label for="message">Message: </label>  
-<textarea id="message" name="message" rows="10" placeholder="Your message"></textarea>
+<form
+  action="https://formspree.io/mvogldyy"
+  method="POST"
+>
+  <label>
+    Your email:
+    <input type="text" name="_replyto">
+  </label>
+  <label>
+    Your message:
+    <textarea name="message"></textarea>
+  </label>
 
-<div class="g-recaptcha" data-sitekey="6Lc9taUUAAAAAEUav0GVHAHTguudjtjjz8P6Hhfe" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
+  <!-- your other form fields go here -->
+    <div class="g-recaptcha" data-sitekey="6Lc9taUUAAAAAEUav0GVHAHTguudjtjjz8P6Hhfe" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
 <input class="form-control d-none" data-recaptcha="true" required data-error="Please complete the Captcha">
 </div>
-                        
-<input type="submit" value="Send">
-</form> 
+  <button type="submit">Send</button>
+</form>
+
 <p class="text-muted">
 <strong>*</strong> These fields are required.
 </p>
