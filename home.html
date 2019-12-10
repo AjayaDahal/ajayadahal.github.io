@@ -14,5 +14,33 @@
   <a href ="https://www.bing.com/images/search?view=detailV2&ccid=zy54u1pD&id=B971AFDD351D281150477E07A464BEF37ECB6B29&thid=OIP.zy54u1pDC4WS-JSml5OfIgHaFm&mediaurl=http%3a%2f%2fwww.bankingtech.com%2fwp-content%2fblogs.dir%2f94%2ffiles%2f2012%2f09%2funder-construction.jpg&exph=757&expw=1000&q=underconstruction&simid=608008214142845152&selectedIndex=10">
 </div>
 
+  
+  <div class="w3-content w3-section" style="max-width:500px">
+  <p>The w3-animate-fading class animates an element in and out (takes about 10 seconds).</p>
+
+  <img class="mySlides w3-animate-fading" src="My Pic.jpg" style="width:100%">
+  <img class="mySlides w3-animate-fading" src="My Pic1.jpg" style="width:100%">
+  <img class="mySlides w3-animate-fading" src="My Pic2.jpg" style="width:100%">
+  <img class="mySlides w3-animate-fading" src="like2.jpg" style="width:100%">
+</div>
+
+<script>
+var myIndex = 0;
+carousel();
+
+function carousel() {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  myIndex++;
+  if (myIndex > x.length) {myIndex = 1}    
+  x[myIndex-1].style.display = "block";  
+  setTimeout(carousel, 9000);    
+}
+</script>
+  
+  
 </body>
 </html>
