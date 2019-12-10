@@ -21,8 +21,8 @@ to send me a message.
   method="POST"
 >
   <label>
-    Your email:
-    <input type="text" name="_replyto">
+    <strong color = "red">*</strong> Your email:
+    <input type="text" name="_replyto" required data-error="Enter your Email!">
   </label>
   <label>
     Your message:
@@ -30,22 +30,21 @@ to send me a message.
   </label>
 
   <!-- your other form fields go here -->
-    <div class="g-recaptcha" data-sitekey="6Lc9taUUAAAAAEUav0GVHAHTguudjtjjz8P6Hhfe" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
+<div class="g-recaptcha" data-sitekey="6Lc9taUUAAAAAEUav0GVHAHTguudjtjjz8P6Hhfe" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
 <input class="form-control d-none" data-recaptcha="true" required data-error="Please complete the Captcha">
 </div>
-  <button type="submit">Send</button>
+  <button type="submit" name="submit1" value="Click" onClick="clicker()">Send</button>
 </form>
 
 <p class="text-muted">
 <strong>*</strong> These fields are required.
 </p>
+ function clicker(){
+ss.innerHTML="bye bye";
+setTimeout("kk()",1000);
+}
     
-    <script data-cfasync="false" type="text/javascript">
-   document.write("<h2>
-            <em>Thanks</em> for contacting us!
-            We will get back to you soon!
-        </h2>");
-    </script>
+ 
  
 </body>
 
