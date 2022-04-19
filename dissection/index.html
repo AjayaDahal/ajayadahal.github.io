@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home | Ajaya Dahal</title>
+    <meta name="description" content="Page-specific description">
+    <meta name="keywords" content="Page-specific keywords">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="static/images/favicons/favicon.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="static/images/favicons/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="static/images/favicons/apple-touch-icon-precomposed.png">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,300,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../../netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="static/css/screen.min.css">
+    <link rel="stylesheet" href="static/css/custom.min.css">
+    <link rel="stylesheet" href="static/css/table.min.css">
+
+</head>
+
+<body>
+    <!-- $Page header-->
+    <header class="page-header js-header">
+        <div class="page-header__inner">
+
+            <a class="navbar-brand" href="https://ajayadahal.github.io"><span>A</span><font color=#0000>jaya</font>   </a>
+
+            <nav class="page-header__nav js-nav">
+
+                <ul>
+                    <li>
+                        <h6 style="color: #444; margin-right: 55px; margin-left: auto; font-family: 'Lucida Sans Regular';">ECE 6723 Electronics Dissection
+
+                        </h6>
+                    </li>
+                    <li>
+                        <a class="page-header__nav-link js-anchor js-link is-active" href="#home">Home</a>
+                    </li>
+                    <li>
+                        <a class="page-header__nav-link js-anchor js-link" href="#portfolio">Documents</a>
+                    </li>
+                    <li>
+                        <a class="page-header__nav-link js-anchor js-link" href="#introduction">Proposal</a>
+                    </li>
+                    <li>
+                        <a class="page-header__nav-link js-anchor js-link" href="#process">Process</a>
+                    </li>
+
+                    <li><a class="page-header__nav-link js-anchor js-link" href="#process_1">Product Make-Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- $Promo section-->
+    <section class="promo js-jumbo" id="home">
+        <h2 class="promo__title">DC-DC Buck Boost Converter <span>Dissection</span></h2>
+        <p class="promo__descr">Buck boost converter that is capable of outputing 0.5V to 30V with max current of 4A. </p>
+        <a class="promo__btn" href="#introduction">Let's get into this</a>
+        <a class="promo__go-next js-anchor" href="#portfolio"></a>
+    </section>
+
+    <!-- $Portfolio section-->
+    <section class="portfolio js-portfolio" id="portfolio">
+        <div class="portfolio__inner">
+
+            <nav class="portfolio__filter">
+                <!---
+                <ul>
+                      <li class="portfolio__filter-btn is-selected js-filter" data-filter="all">All</li>
+                    <li class="portfolio__filter-btn js-filter" data-filter="web">Drafts</li>
+                    <li class="portfolio__filter-btn js-filter" data-filter="graphic">Final Submission</li>
+                    <li class="portfolio__filter-btn js-filter" data-filter="flat">Presentation Video</li>
+              
+                </ul>
+                  -->
+            </nav>
+
+            <ul class="portfolio__content">
+                <h2 class="portfolio__title" style="color:#1bbc9b" id="documents">Documents</h2>
+                <h3 class="portfolio__title" style="color:black">Table 1: Documents </h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Description</th>
+                            <th>Download</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="active-row">
+                            <td>Project Description</td>
+                            <td>ECE6723 - Electronics Dissection assignment details</td>
+
+                            <td>
+                                <a href="files\Assignment_Details.pdf">
+                                    <p class="link-table">Assignment_Details.pdf</p>
+                            </td>
+                        </tr>
+                        <tr class="active-row">
+                            <td>Project Proposal</td>
+                            <td>Initial idea of the project</td>
+
+                            <td>
+                                <a href="files\Dahal_Ajaya_Dissection_Proposal_ad2323.pdf">
+                                    <p class="link-table">Proposal.pdf</p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row">
+                            <td>Schematics</td>
+                            <td>Schematics of the board</td>
+
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="files\Display Submodule.pdf">
+                                            <p class="link-table">Display_Schematics.pdf</p>
+                                    </li>
+                                    <li>
+                                        <a href="files\Voltage Submodule.pdf">
+                                            <p class="link-table">Voltage_Schematics.pdf</p>
+                                    </li>
+
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="active-row">
+                            <td>BOM</td>
+                            <td>Bill of Materials - Price of parts</td>
+
+                            <td>
+                                <a href="files\BOM.xlsx">
+                                    <p class="link-table">BOM.xlsx</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ul>
+        </div>
+    </section>
+
+    <!--Introduction -->
+    <section class="introduction" id="introduction">
+        <ul class="portfolio__content">
+
+            <div class="promo__proposal" style="background-color: #16a086">
+                <h2 class="h3" style="color:#ffffff">Introduction</h2>
+                <p style="color:#ffffff">
+                    My name is <a href="https://ajayadahal.github.io/" class="promo_proposal" style="color: rgb(22, 49, 118);"> Ajaya Dahal - AJ </a>, senior student majoring in computer engineering as Mississippi State University. I am graduating in
+                    the December with Bachelors of Science in Computer Engineering. I want to pursue my masters after my graduation. After my masters degree, I want to work as an embedded system designer for few years before coming back for Ph.D. I am
+                    interested in communication and computer vision that has direct application in UAVs and UGVs. This webpage is designed for ECE 6723, reporting dissection of an embedded system. The following sections explains the process starting with
+                    proposal.
+                    <br><br>
+                </p>
+            </div>
+        </ul>
+
+    </section>
+
+    <!--Proposal -->
+    <section class="proposal" id="proposal">
+        <ul class="portfolio__content">
+
+            <div class="promo__proposal">
+                <h2 class="h3" style="color:#1bbc9b">Proposal</h2>
+                <img src="static/images/proposal.jpg" alt="proposal" height="600" width="1100">
+            </div>
+        </ul>
+
+    </section>
+
+    <!--Product market and retail info -->
+    <section class="process" id="process">
+        <ul class="portfolio__content">
+
+            <div class="promo__proposal" style="background-color: #16a086">
+                <h2 class="h3" style="color:#ffff">Product information overview</h2>
+                <p style="color: #ffffff;"> DC-DC buck boost converter modules are a most have tools in any lab. It comes very handy in the lab while prototyping, building and experiementing any electronic design.<br> The price and manufacture information is listed below:<br><br>
+                    <ul style="color: rgb(255, 255, 255); font-size: 16px;">
+                        <li>Price: $12.54</li>
+                        <li>Manufacture: ZK-4KX eElectronicsParts</li>
+                        <li>Distributer: eBay</li>
+                    </ul>
+
+                    <br><br>
+                    <p style="color: #ffffff;">The following table presents the features this devices provides:<br><br></p>
+                </p>
+
+                <h3 class="portfolio__title" style="color:black">Table 2: Features </h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr style="background-color: #097a65;">
+                            <th>Features</th>
+                            <th>Range</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="active-row">
+                            <td style="color: #ffffff;">Input Voltage Range</td>
+                            <td style="color: #ffffff;">5-30V</td>
+
+                        </tr>
+                        <tr class="active-row">
+                            <td>Output Voltage Range</td>
+                            <td>0.5 - 30V</td>
+
+                        </tr>
+                        <tr class="active-row">
+                            <td style="color: #ffffff;">Output Current</td>
+                            <td style="color: #ffffff;">4A (Max)</td>
+
+                        </tr>
+                        <tr class="active-row">
+                            <td>Output Power</td>
+                            <td>50W (Max)</td>
+                        </tr>
+                        <tr class="active-row">
+                            <td style="color: #ffffff;">Protection:</td>
+                            <td style="color: #ffffff;">Under-voltage</td>
+                        </tr>
+                        <tr class="active-row">
+                            <td></td>
+                            <td>Over-voltage</td>
+                        </tr>
+                        <tr class="active-row">
+                            <td></td>
+                            <td style="color: #ffffff;">Over-current</td>
+                        </tr>
+                        <tr class="active-row">
+                            <td></td>
+                            <td>Time-out</td>
+                        </tr>
+                        <tr class="active-row">
+                            <td style="color: #ffffff;">Soft start</td>
+                            <td style="color: #ffffff;">Yes</td>
+                        </tr>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </ul>
+
+    </section>
+
+    <!--Process -->
+
+    <section class="process" id="process">
+        <ul class="portfolio__content">
+            <h2 class="h3" style="color:#1bbc9b">Product Operation Analysis</h2>
+            <div class="contact__descr">
+                <p>The dissection began by observing the product. After that the device is taken apart it is found that the buck-boost converter module has
+                    <strong><font face="Aerial"; color="#231f1f">two submodules</font></strong> which is referred to
+                    <strong><font face="Aerial"; color="#231f1f">LCD module</font></strong> and
+                    <strong><font face="Aerial"; color="#231f1f">voltage converter module.</font></strong>
+                </p>
+                <br><br>
+                <h3 class="h3" style="color:#1bbc9b; font-size: 18px;font-weight: bold;">Unboxing </h3>
+                <main class="grid">
+                    <img src="static/images/unbox1.jpg" alt="unbox1">
+                    <img src="static/images/unbox2.jpg" alt="unbox2">
+                    <img src="static/images/unbox3.jpg" alt="unbox3">
+                    <img src="static/images/unbox4.jpg" alt="unbox4">
+                    <img src="static/images/unbox5.jpg" alt="unbox5">
+                    <img src="static/images/unbox6.jpg" alt="unbox6">
+                </main>
+                <br><br>
+                <h3 class="h3" style="color:#1bbc9b; font-size: 18px; font-weight: bold;">First use </h3>
+                <main class="grid">
+                    <img src="static/images/firstuse1.jpg" alt="first_use1">
+                    <img src="static/images/first_use2.jpg" alt="first_use2">
+
+                </main>
+                <br><br>
+                <h3 class="h3" style="color:#1bbc9b; font-size: 18px; font-weight: bold;">UI Screens </h3>
+                <img src="static/images/UI_options.png" alt="proposal" height="375" width="500">
+
+                <br><br>
+                <h3 class="h3" style="color:#1bbc9b; font-size: 18px; font-weight: bold;">Dissection </h3>
+                <main class="grid">
+                    <img src="static/images/unassembled1.jpg" alt="first_use2">
+                    <img src="static/images/two_modules.jpg" alt="first_use1">
+
+                </main>
+                <br>
+                <p style="margin-left: 10px;margin-right: 10px;">As mentioned above, the LCD module has UI inputs and outputs. Based on the user's selection to obtained the desired voltage, they can use rotory encoder, and the microcontroller generates variable PWM signal which is fed to the other module;
+                    voltage converter module that then generates the requested voltage. The other two buttons SW and U/I are used to set different parameters as shown below:<br><br></p>
+                <img src="static/images/UI_options_set.png" alt="proposal" height="375" width="500">
+                <br><br>
+                <p style="margin-left: 10px;margin-right: 10px;">The information presented below about the UI option has been verified first and obtained from the user manual: <br>“Switch display parameters -- in the normal interface, press SW to switch the display below the display screen, and switch
+                    the display content between current A power W capacity Ah time h. Long press SW button to switch the uplink display on the display screen and switch the display content between input voltage IN output voltage OUT. <br><br> Set output
+                    voltage -- press U/I button in the normal interface to enter the interface of setting voltage constant current. It can be seen that a certain digit of the output voltage value is flashing. Rotate the encoder left and right to adjust
+                    the major and minor. Short press the rotary encoder to choose which bit of output voltage to set. After setting, press U/I button 2 times to return to the normal interface. Or automatically return to the normal interface after stopping
+                    operation for 10s. <br><br> Set constant current value (that is, the maximum current value allowed to output by the module) -- press U/I button in the normal interface to enter the setting voltage constant current interface. Then press
+                    U/I button and switch to setting constant current value. You can see a bit of the setting constant current value flashing. Rotate the rotary encoder left and right to adjust the major and minor. Short press the rotary encoder to choose
+                    which bit to set the constant current value. After setting, press U/I to exit the setting voltage constant current interface and return to the normal interface. Or automatically return to the normal interface after stopping operation
+                    for 10s. <br><br> Set the default on/off state of module power-on -- long press U/I in the normal interface to enter the parameter setting interface. You can see that it shows "OPEN OFF" or "OPEN ON". "OPEN OFF" means the output is
+                    turned OFF by default when power is ON, and "OPEN ON" means the output is turned ON by default when power is ON. Long press rotate encoder to switch two states. After setting, long press U/I to return to the normal interface. <br><br>                    Setting of protection parameters on state and threshold -- long press U/I to enter the parameter setting interface in the normal interface. Press SW until the protection you want appears. UP -- undervoltage protection threshold; OUP
+                    -- overvoltage protection threshold; OCP -- overcurrent protection threshold; OAP -- ultra-capacity protection threshold; OHP timeout protection threshold. Short press rotate encoder to select which bit you want to set the protection
+                    parameter. Long press the rotary encoder to set the protection parameters on or off (only timeout protection and super capacity protection can be set to turn on/off, and other protection parameters are turned on by default.).Rotate
+                    the encoder left and right to make the parameters bigger and smaller. After setting, long press U/I to return to the normal interface. <br><br> Calibration voltage and current -- press U/I button to enter the parameter setting interface
+                    under normal interface. Press SW key for a short time until the interface with zero appears, with zero + out + a symbol. Press and hold the rotary encoder to complete zero calibration. Short press SW button until a parameter interface
+                    with CAL appears. The calibration input voltage interface with the symbol CAL+IN+V; The calibration output voltage interface with the symbol CAL+OUT+V; The calibration output current interface with the symbol CAL+OUT+A. Rotate the
+                    encoder left and right to adjust the size of parameters. After the adjustment is completed, long press the rotary encoder to confirm the adjustment is completed, and the parameter value is no longer flashing. Long press U/I to return
+                    to the normal interface.” <br><br>
+                </p>
+
+                <br><br>
+                <P>The PWM generated by the LCD module is obtained by probing NI analog discovery portable oscilloscope and the results are presented below:<br>(Click to enlarge) </P>
+
+                <a href="static/images/PWM4.png"><img src="static/images/PWM4.png" alt="PWM1"></a><br><br>
+                <a href="static/images/PWM1.png"><img src="static/images/PWM1.png" alt="PWM2"></a><br><br>
+                <a href="static/images/PWM2.png"><img src="static/images/PWM2.png" alt="PWM3"></a><br><br>
+                <a href="static/images/PWM3.png"><img src="static/images/PWM3.png" alt="PWM4"></a><br><br>
+
+
+            </div>
+
+        </ul>
+
+    </section>
+
+    <section class="process_1" id="process_1" style="background-color: #16a086">
+        <ul class="portfolio__content">
+            <h2 class="h3" style="color:#ffffff">Product Make-Up Analysis </h2>
+            <div class="contact__descr">
+                <p style="color: #ffffff;">From this dissection, I learned the working mechanism of the buck boost converter. One may replicate this module using the information below. First, all the components used in these modules were studied. Below is the table that shows all
+                    the major components in detail: </p>
+                <br><br>
+                <h3 class="portfolio__title" style="color:black">Table 3: Components Details </h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr style="background-color: #097a65;">
+                            <th>Name of the component</th>
+                            <th>Quantity</th>
+                            <th>Description</th>
+                            <th>Image</th>
+                            <th>Datasheet</th>
+                            <th>Price/Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="active-row">
+                            <td style="color: #ffffff;">HK32F030F4P6</td>
+                            <td style="color: #ffffff;">1</td>
+                            <td style="color: #ffffff;">
+                                <ul>
+                                    <li>Manufacturer Shenxhen Hangshun Chip Technology </li>
+                                    <li>Chinese datasheet converted to English version using: o https://www.onlinedoctranslator.com</li>
+                                    <li> Operating range: 2.0V ~ 5.5V</li>
+                                    <li> Clock: upto 72 MHz </li>
+                                    <li> Reset; software reset, power on reset, external pin reset, watchdog timer reset,<br> power mode reset, low voltage detection, </li>
+                                    <li> 64 KBytes memory</li>
+                                    <li> 16 ADC </li>
+                                    <li> On board temperature sensor </li>
+                                    <li> 7 Timer </li>
+                                    <li> 2 I2C, USART, SPI</li>
+                                </ul>
+                            </td>
+                            <td> <img src="static/images/HK32F030F4P6.jpg" alt="first_use1" height="150" width="200"></td>
+                            <td style="color: #ffffff;">
+                                <ul>
+                                    <li>
+                                        <a href=" files\HK32F030x4_en.pdf">
+                                            <p class="link-table" style="color: #ffffff">HK32F030x_en.pdf</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="files\HK32F030x_cn.pdf">
+                                            <p class="link-table " style="color: #ffffff;">HK32F030x_cn.pdf</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/HK_HK-HK32F030F4P6_C482572.html">
+                                    <p class="link-table " style="color: #ffffff;"> $0.7232 </p>
+                                </a>
+                            </td>
+                        </tr>
+
+
+                        <tr class="active-row ">
+                            <td>HT1621</td>
+                            <td>1</td>
+                            <td>
+                                <ul>
+                                    <li> Manufacturer HOLTEK</li>
+                                    <li> RAM Mapping 32x4 LCD Controller for I/O MCU</li>
+                                    <li> Operating range: 2.4V ~ 5.2V</li>
+                                    <li> Built in 256 KHz RC Oscilator</li>
+                                    <li> Can be configured as ½ or 1/3 bias can be software configured</li>
+
+                                </ul>
+
+                            </td>
+                            <td> <img src="static/images/HT1621.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\HT1621.pdf ">
+                                    <p class="link-table ">HT1621.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/LCD-Drivers_HGSEMI-HT1621_C512789.html">
+                                    <p class="link-table ">$0.3264 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td style="color: #ffffff; ">LM358 </td>
+                            <td style="color: #ffffff; ">2</td>
+                            <td style="color: #ffffff; ">
+                                <ul>
+                                    <li>Manufactured by Texas Instruments.</li>
+                                    <li>Dual operational amplifier</li>
+                                </ul>
+                            </td>
+                            <td> <img src="static/images/LM358.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\lm158-n.pdf">
+                                    <p class="link-table " style="color: #ffffff; ">LM358.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.digikey.com/en/products/detail/texas-instruments/LM358PSR/277043">
+                                    <p class="link-table " style="color: #ffffff;">$0.16759</p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td>FP5139</td>
+                            <td>1</td>
+                            <td>
+                                <ul>
+                                    <li>Boost converter control IC</li>
+                                    <li>Operating voltage range 1.8-15v</li>
+                                </ul>
+                            </td>
+                            <td> <img src="static/images/FP5139.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\FP5139.pdf ">
+                                    <p class="link-table ">FP5139.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/Battery-Management-ICs_Feeling-Tech-FP5139BWR-LF_C88318.html">
+                                    <p class="link-table ">$0.3571 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td style="color: #ffffff; ">SS8050</td>
+                            <td style="color: #ffffff; ">2</td>
+                            <td style="color: #ffffff; ">NPN transistor with 1.5A collector current.</td>
+                            <td> <img src="static/images/SS8050.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\SS8050.pdf ">
+                                    <p class="link-table " style="color: #ffffff; ">SS8050.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/Bipolar-Transistors-BJT_ZRE-SS8050_C779777.html">
+                                    <p class="link-table " style="color: #ffffff;">$0.0075 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td>SS56</td>
+                            <td>1</td>
+                            <td>
+                                <ul>
+                                    <li>Manufactured by HY</li>
+                                    <li>Schottky barrier rectifiers</li>
+                                    <li>Reveres voltage 60 volts</li>
+                                    <li>Forward current 5.0 amps</li>
+                                </ul>
+                            </td>
+                            <td> <img src="static/images/SS56.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\SS56.pdf ">
+                                    <p class="link-table ">SS56.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_YFW-SS56_C2898337.html">
+                                    <p class="link-table ">$0.0446 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td style="color: #ffffff; ">SS8550 </td>
+                            <td style="color: #ffffff; ">2</td>
+                            <td style="color: #ffffff; ">PNP transistor with -1.5A collector current.</td>
+                            <td> <img src="static/images/SS8550.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\SS8550.pdf ">
+                                    <p class="link-table " style="color: #ffffff; ">SS8550.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/Bipolar-Transistors-BJT_LGE-SS8550_C402305.html">
+                                    <p class="link-table " style="color: #ffffff;">$0.0095 x 2 = 0.019 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td>Special Resistors: R025, R202</td>
+                            <td>1 each</td>
+                            <td>0.0250 Ohm and 2K Ohm reistors in SMT formfactor.</td>
+                            <td> <img src="static/images/r025.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href=" files\r025.pdf ">
+                                            <p class="link-table">r025.pdf</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="files\2K.pdf ">
+                                            <p class="link-table ">2K.pdf</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="https://www.digikey.com/en/products/detail/vishay-dale/WSL2512R0250FTA18/9754319">
+                                            <p class="link-table ">$1.01660</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.digikey.com/en/products/detail/stackpole-electronics-inc/RMCF2512JT2K00/1756948">
+                                            <p class="link-table "> $0.04140</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+
+                        </tr>
+                        <tr class="active-row ">
+                            <td style="color: #ffffff; ">ME6209</td>
+                            <td style="color: #ffffff; ">1</td>
+                            <td style="color: #ffffff; ">
+                                <ul>
+                                    <li>Manufactured by MicrOne</li>
+                                    <li>Low Power COnsumption Low Dropout Regulator</li>
+                                    <li>Operating range: max 18v, max output current 250mA </li>
+                                </ul>
+                            </td>
+                            <td> <img src="static/images/ME6209.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\ME6209.pdf ">
+                                    <p class="link-table " style="color: #ffffff; ">ME6209.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/Linear-Voltage-Regulators-LDO_MICRONE-Nanjing-Micro-One-Elec-ME6209A28PG_C2835826.html">
+                                    <p class="link-table " style="color: #ffffff;">$0.0521 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td>RU7570L</td>
+                            <td>1</td>
+                            <td>75V 70A N Channel Power MOSFET</td>
+                            <td> <img src="static/images/RU7570L.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\RU7570L-Ruichips.pdf ">
+                                    <p class="link-table ">RU7570L-Ruichips.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/MOSFETs_Shenzhen-ruichips-Semicon-RU7570L_C128586.html">
+                                    <p class="link-table ">$0.2525 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td style="color: #ffffff; ">MST5350B</td>
+                            <td style="color: #ffffff; ">1</td>
+                            <td style="color: #ffffff; ">
+                                <ul>
+                                    <li>Manufactured by Milestone Semiconductor Inc.</li>
+                                    <li>It is a high voltage, ultra low power</li>
+                                    <li> Dropout voltage regulator with output current of &lt;200mA. </li>
+                                </ul>
+                            </td>
+                            <td> <img src="static/images/mst5350b.png " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\MST53XXB.pdf">
+                                    <p class="link-table " style="color: #ffffff; ">MST53XXB.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.lcsc.com/product-detail/Linear-Voltage-Regulators-LDO_span-style-background-color-ff0-MST-span-MST5350BTS_C324583.html">
+                                    <p class="link-table " style="color: #ffffff;">$0.1142 </p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td>Resistors</td>
+                            <td>31</td>
+                            <td>SMT resistors various ohms.</td>
+                            <td> <img src="static/images/resistors.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\resistors.pdf ">
+                                    <p class="link-table ">resistors.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.digikey.com/en/products/detail/stackpole-electronics-inc/RMCF2512JT2K00/1756948">
+                                    <p class="link-table ">~$0.04140 x 31 = 1.2834</p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td style="color: #ffffff; ">Choke</td>
+                            <td style="color: #ffffff; ">1</td>
+                            <td style="color: #ffffff; "></td>
+                            <td> <img src="static/images/Choke.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\Choke.pdf ">
+                                    <p class="link-table " style="color: #ffffff; ">Choke.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/744821120/1638843?s=N4IgjCBcoLQBxVAYygMwIYBsDOBTANCAPZQDaIA7AMwBMIAugL6OF2TkUAsncNYYNAAwNGQA">
+                                    <p class="link-table " style="color: #ffffff;">$2.55000</p>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td>THT Capacitors</td>
+                            <td>4</td>
+                            <td>
+                                <ul>
+                                    <li>1 - 220uf </li>
+                                    <li>2 - 35V 470uF </li>
+                                    <li>1 - 35V 100uF </li>
+                                </ul>
+
+                            </td>
+                            <td> <img src="static/images/tht_cap.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+
+                                <a href="files\tht_cap.pdf ">
+                                    <p class="link-table ">tht_cap.pdf</p>
+                                </a>
+                            </td>
+
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="https://www.digikey.com/en/products/detail/cornell-dubilier-illinois-capacitor/227CKE035M/5411713">
+                                            <p class="link-table ">$0.12708</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.digikey.com/en/products/filter/aluminum-electrolytic-capacitors/58?s=N4IgTCBcDaICwHYAMBXAZgAgMYEMAOOWAlgC4D2ATiALoC%2BQA">
+                                            <p class="link-table ">$0.30044 x 2 = 0.60088</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.digikey.com/en/products/detail/rubycon/50YXF100MEFC8X11-5/3563335">
+                                            <p class="link-table ">$0.09580</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+
+                            </td>
+                        </tr>
+                        <tr class="active-row ">
+                            <td style="color: #ffffff; ">SMT Capacitors</td>
+                            <td style="color: #ffffff; ">21</td>
+                            <td style="color: #ffffff; "></td>
+                            <td> <img src="static/images/smt_cap.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\smt_cap.pdf ">
+                                    <p class="link-table " style="color: #ffffff; ">smt_cap.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.digikey.com/en/products/detail/yageo/CC0201KRX5R8BB473/15220161">
+                                    <p class="link-table " style="color: #ffffff;">$0.00466 x 21 = 0.09786</p>
+                                </a>
+                            </td>
+                        </tr>
+
+
+                        <tr class="active-row ">
+                            <td>Screw Terminals</td>
+                            <td>1</td>
+                            <td></td>
+                            <td> <img src="static/images/screw_terminal.jpg " alt="first_use1 " height="150 " width="200 "></td>
+                            <td>
+                                <a href="files\screw_terminal.pdf ">
+                                    <p class="link-table ">screw_terminal.pdf</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="https://www.digikey.com/en/products/detail/cui-devices/TB003-500-P09BE/10064092">
+                                    <p class="link-table ">$0.6244 </p>
+                                </a>
+                            </td>
+                        </tr>
+
+
+
+                        <tr class="active-row ">
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td> </td>
+                            <td></td>
+                            <td>$</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <br><br>
+                <p style="color: #ffffff;">After going through the table, it can be concluded that the device cost about ~$9.4 when the parts are purchaged in bulk quantity. That results in ~$3 of profit.</p>
+                <br><br>
+
+                <h2 class="h3" style="color:#ffffff">Design Schematics</h2>
+
+                <img src="static/images/Display Submodule.jpg " alt="first_use1 " height="800 " width="1000 ">
+                <br><br>
+            </div>
+        </ul>
+
+    </section>
+
+
+    <!--Introduction -->
+    <section class="lesson" id="lesson">
+        <ul class="portfolio__content">
+
+            <div class="promo__proposal">
+                <h2 class="h3" style="color:#1bbc9b">Conclusion</h2>
+                <p>
+                    After dissecting the presented DC-DC buck boost converter, I feel comfortable to design my own bench power supply, during this journey, I was able to learn about various different electronic components which I will be able to use them in future during
+                    my engineering career.
+                    <br><br>
+                </p>
+            </div>
+        </ul>
+
+    </section>
+
+
+
+    <!-- $Page footer-->
+    <footer class="page-footer ">
+        <div class="page-footer__inner "><span class="page-footer__copyright ">&copy; <Copyright color="#FFFFFF ">Copyright 2013 Bak-One | <a href="https://github.com/website-templates/design-studio_one-page-template
+                                ">One PageFlat Template</p></a></span><a class="page-footer__gotop js-anchor " href="#home ">Go to top</a></div>
+    </footer>
+    <script src="static/js/body.min.js "></script>
+</body>
+
+
+</html>
