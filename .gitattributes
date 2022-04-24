@@ -1,3 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.MP4 filter=lfs diff=lfs merge=lfs -text
 /S500-Build/S500-Build.mp4 filter=lfs diff=lfs merge=lfs -text
