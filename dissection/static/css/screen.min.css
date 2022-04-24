@@ -274,7 +274,7 @@ body {
     width: 115px;
     height: 35px;
     text-align: center;
-    background-color: #1bbc9b;
+    background-color: #3e64ff;
     font-size: 15px;
     color: #fff;
     text-transform: uppercase;
@@ -427,7 +427,7 @@ body {
 
 .page-header__nav-link:hover,
 .page-header__nav-link.is-active {
-    background-color: #1bbc9b;
+    background-color: #3e64ff;
     color: #fff
 }
 
@@ -464,7 +464,7 @@ body {
     margin: 20px 20px 0 0;
     text-align: center;
     overflow: hidden;
-    background-color: #1bbc9b;
+    background-color: #3e64ff;
     color: transparent;
     -webkit-transition: all .5s;
     -o-transition: all .5s;
@@ -534,7 +534,7 @@ body {
     text-transform: uppercase;
     padding: 10px;
     color: #fff;
-    background-color: #1bbc9b;
+    background-color: #3e64ff;
     -webkit-transition: background-color .2s;
     -o-transition: background-color .2s;
     transition: background-color .2s
@@ -596,7 +596,7 @@ body {
     height: 100%;
     top: 0;
     padding-top: 35px;
-    background-color: #1bbc9b;
+    background-color: #3e64ff;
     background-color: rgba(27, 188, 155, .8);
     -webkit-border-radius: 50%;
     border-radius: 50%;
@@ -649,7 +649,7 @@ body {
     -webkit-background-size: cover;
     background-size: cover;
     text-align: center;
-    color: #1bbc9b
+    color: #3e64ff
 }
 
 .promo__proposal {
@@ -659,7 +659,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    color: #1bbc9b
+    color: #3e64ff
 }
 
 .promo__inner {
@@ -701,7 +701,7 @@ body {
     width: 250px;
     height: 35px;
     padding-top: 10px;
-    background-color: #1bbc9b;
+    background-color: #3e64ff;
     font-size: 15px;
     color: #fff;
     text-transform: uppercase;
@@ -711,7 +711,7 @@ body {
 }
 
 .promo__btn:hover {
-    background-color: #158f76
+    background-color: #0837f3
 }
 
 .promo__go-next {
@@ -753,7 +753,7 @@ body {
     width: 100%;
     min-height: 645px;
     padding-top: 55px;
-    background-color: #16a086;
+    background-color: #3e64ff;
     text-align: center
 }
 
@@ -828,8 +828,8 @@ body {
     top: 95px;
     left: 50%;
     margin-left: -90px;
-    background-color: #16a086;
-    background-color: rgba(22, 160, 134, .8);
+    background-color: #3e64ff;
+    background-color: #3e64ff;
     white-space: nowrap;
     overflow: hidden;
     opacity: 0;

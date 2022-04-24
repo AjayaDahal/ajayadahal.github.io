@@ -11037,7 +11037,7 @@ h5,
     height: 2px;
     bottom: 0;
     left: 0;
-    background: #1bbc9b;
+    background: #3e64ff;
     visibility: visible;
     -webkit-transform: scaleX(0);
     -moz-transform: scaleX(0);
@@ -11077,7 +11077,7 @@ h5,
     padding-bottom: .7rem;
     padding-left: 18px;
     padding-right: 18px;
-    background: #1bbc9b;
+    background: #3e64ff;
     margin-top: 0;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -11091,7 +11091,7 @@ h5,
 }
 
 .ftco-navbar-light .navbar-nav>.nav-item.cta>a:hover {
-    background: #1bbc9b;
+    background: #3e64ff;
     border: 1px solid #3e64ff;
 }
 
@@ -11166,7 +11166,7 @@ h5,
 
 .ftco-navbar-light.scrolled .nav-item.cta>a {
     color: #fff !important;
-    background: #1bbc9b;
+    background: #3e64ff;
     border: none !important;
     padding-top: 0.5rem !important;
     padding-bottom: .5rem !important;
@@ -11250,7 +11250,7 @@ h5,
     width: 40px;
     height: 40px;
     content: '';
-    background: #1bbc9b;
+    background: #3e64ff;
     z-index: -1;
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
