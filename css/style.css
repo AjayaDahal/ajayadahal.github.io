@@ -9672,3 +9672,148 @@ textarea.form-control {
   100% {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -136px; } }
+
+  
+/* Gallery */
+.gallery{
+  position:relative;
+  width:300px;
+  height:200px;
+  transform-style:preserve-3d;
+  animation:rotate 35s linear infinite;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes rotate{
+  from{
+    transform:perspective(1200px) rotateY(0deg);
+  }
+  
+  to{
+    transform:perspective(1200px) rotateY(360deg);
+  }
+}
+
+.gallery span{
+  position:absolute;
+  width:100%;
+  height:100%;
+  transform-origin:center;
+  transform-style:preserve-3d;
+  transform:rotateY(calc(var(--i) * 45deg)) translateZ(380px);
+}
+
+.gallery span img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.thumbnail { 
+  top:-50px; 
+  left:-35px; 
+  display:block; 
+  z-index:999; 
+  cursor: pointer; 
+  -webkit-transition-property: all; 
+  -webkit-transition-duration: 0.3s; 
+  -webkit-transition-timing-function: ease; 
+  } 
+  
+  .thumbnail.galleryimg{
+    width: 100%;
+    transition: transform 0.4s ease;
+    transform-origin: 50% 50%;}
+  
+  /*change the number below to scale to the appropriate size*/ 
+  .thumbnail:hover { 
+  transform: scale(3); 
+  }
+
+/* ----- */
+.gallery-right{
+  position:relative;
+  width:300px;
+  height:200px;
+  transform-style:preserve-3d;
+  animation:rotate 35s linear infinite;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ @keyframes rotate{
+  from{
+    transform:perspective(1200px) rotateY(360deg);
+  }
+  
+  to{
+    transform:perspective(1200px) rotateY(0deg);
+  }
+}
+
+.gallery-right span{
+  position:absolute;
+  width:100%;
+  height:100%;
+  transform-origin:center;
+  transform-style:preserve-3d;
+  transform:rotateY(calc(var(--i) * 45deg)) translateZ(380px);
+}
+
+.gallery-right span img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.image-container {
+  background-image: url("https://assets.fta.cirium.com/wp-content/uploads/2023/01/31224905/HHero1440-landgeardark.jpg");
+  background-size: cover;
+  position: absolute;
+  height: 300px;
+}
+
+.text-for-image {
+  background-color: black;
+  color: white;
+  mix-blend-mode: multiply;
+  font-size: 10vw; 
+  font-weight: bold;
+  margin: 0 auto;
+  padding: 10px;
+  width: 50%;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+}
+
+
+/* my new for text */
+h1-new {
+  --s: 0.1em;   /* the thickness of the line */
+  --c: #3e64ff; /* the color */
+  
+  color: #0000;
+  padding-bottom: var(--s);
+  background: 
+    linear-gradient(90deg,var(--c) 50%,#000 0) calc(100% - var(--_p,0%))/200% 100%,
+    linear-gradient(var(--c) 0 0) 0% 100%/var(--_p,0%) var(--s) no-repeat;
+  -webkit-background-clip: text,padding-box;
+          background-clip: text,padding-box;
+  transition: 0.5s;
+}
+h1-new:hover {--_p: 100%}
+
+
+h1-new {
+  font-family: system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 1000;
+  cursor: pointer;
+}
