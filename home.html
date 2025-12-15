@@ -550,7 +550,94 @@
                         margin-right: 0;
                     }
                 }
+
+                /* Hardware Lab Carousel Styles */
+                .hardware-lab-carousel .owl-nav {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    pointer-events: none;
+                }
                 
+                .hardware-lab-carousel .owl-nav button {
+                    pointer-events: all;
+                    background: white !important;
+                    width: 45px !important;
+                    height: 45px !important;
+                    border-radius: 50% !important;
+                    display: flex !important;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+                    transition: all 0.3s ease !important;
+                    border: 2px solid #667eea !important;
+                }
+                
+                .hardware-lab-carousel .owl-nav button:hover {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                    transform: scale(1.1);
+                    box-shadow: 0 6px 16px rgba(102,126,234,0.4) !important;
+                }
+                
+                .hardware-lab-carousel .owl-nav button span {
+                    font-size: 24px !important;
+                    color: #667eea;
+                    line-height: 1;
+                }
+                
+                .hardware-lab-carousel .owl-nav button:hover span {
+                    color: white;
+                }
+                
+                .hardware-lab-carousel .owl-nav .owl-prev {
+                    margin-left: -22px;
+                }
+                
+                .hardware-lab-carousel .owl-nav .owl-next {
+                    margin-right: -22px;
+                }
+                
+                .hardware-lab-carousel .owl-dots {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                
+                .hardware-lab-carousel .owl-dot {
+                    width: 10px;
+                    height: 10px;
+                    background: #ddd !important;
+                    border-radius: 50%;
+                    display: inline-block;
+                    margin: 0 5px;
+                    transition: all 0.3s ease;
+                }
+                
+                .hardware-lab-carousel .owl-dot.active {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                    width: 28px;
+                    border-radius: 5px;
+                }
+
+                /* Lab card hover effects */
+                .lab-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 30px rgba(102,126,234,0.25) !important;
+                }
+
+                .lab-card:hover .lab-image img {
+                    transform: scale(1.05);
+                }
+
+                @media (max-width: 768px) {
+                    .hardware-lab-carousel .owl-nav .owl-prev,
+                    .hardware-lab-carousel .owl-nav .owl-next {
+                        margin: 0;
+                    }
+                }
+
                 /* Project Cards Hover Effects */
                 .project-card {
                     transition: all 0.3s ease;
@@ -793,37 +880,70 @@
                                     <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000037069?language=en_US">AR 000037069</a> <b>PS-GTR GEM Driver Patch:</b> "Auto-Negotiation Requires Driver Patch in 2023.2" - Embedded Ethernet driver fixes.</li>
                                 </ul>
 
-                                <p style="margin-top: 25px; margin-bottom: 10px;"><b>My Hardware Lab & Active Setups:</b></p>
-                                <div class="row">
-                                    <div class="col-md-4 ftco-animate mb-3">
-                                        <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
-                                            <a href="images/lab/lab1.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab1.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
-                                            </a>
-                                            <div class="text p-2 text-center" style="background: #f8f9fa;">
-                                                <small style="color: #333;"><b>Versal VCK190</b><br>100G Live Traffic Test With MRMAC</small>
+                                <p style="margin-top: 25px; margin-bottom: 20px;"><b>🔬 My Hardware Lab & Active Setups:</b></p>
+                                <div class="hardware-lab-carousel owl-carousel ftco-animate" style="margin-bottom: 30px;">
+                                    <!-- Lab Setup 1 -->
+                                    <div class="item">
+                                        <div class="lab-card" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                                            <div class="lab-image" style="height: 280px; overflow: hidden; position: relative;">
+                                                <img src="images/lab/lab1.jpg" alt="Versal VCK190 Setup" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                                                <div class="lab-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%); display: flex; align-items: flex-end; padding: 20px;">
+                                                    <div>
+                                                        <h5 style="color: white; font-weight: 700; margin-bottom: 5px; font-size: 1.2rem;">Versal VCK190</h5>
+                                                        <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 0.95rem;">100G Live Traffic Test With MRMAC</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="lab-details" style="padding: 20px;">
+                                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                                    <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Versal ACAP</span>
+                                                    <span style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">MRMAC</span>
+                                                    <span style="background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">100G</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 ftco-animate mb-3">
-                                        <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
-                                            <a href="images/lab/lab2.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab2.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
-                                            </a>
-                                            <div class="text p-2 text-center" style="background: #f8f9fa;">
-                                                <small style="color: #333;"><b>Zynq UltraScale+ ZCU111</b><br>100G Live Traffic Test with CMAC</small>
+                                    <!-- Lab Setup 2 -->
+                                    <div class="item">
+                                        <div class="lab-card" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                                            <div class="lab-image" style="height: 280px; overflow: hidden; position: relative;">
+                                                <img src="images/lab/lab2.jpg" alt="Zynq UltraScale+ ZCU111 Setup" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                                                <div class="lab-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%); display: flex; align-items: flex-end; padding: 20px;">
+                                                    <div>
+                                                        <h5 style="color: white; font-weight: 700; margin-bottom: 5px; font-size: 1.2rem;">Zynq UltraScale+ ZCU111</h5>
+                                                        <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 0.95rem;">100G Live Traffic Test with CMAC</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="lab-details" style="padding: 20px;">
+                                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                                    <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">ZynqMP</span>
+                                                    <span style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">CMAC</span>
+                                                    <span style="background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">100G</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 ftco-animate mb-3">
-                                        <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
-                                            <a href="images/lab/lab3.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab3.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
-                                            </a>
-                                            <div class="text p-2 text-center" style="background: #f8f9fa;">
-                                                <small style="color: #333;"><b>IBERT Eye Diagram</b><br>100G SerDes Tuning Results</small>
+                                    <!-- Lab Setup 3 -->
+                                    <div class="item">
+                                        <div class="lab-card" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                                            <div class="lab-image" style="height: 280px; overflow: hidden; position: relative;">
+                                                <img src="images/lab/lab3.jpg" alt="IBERT Eye Diagram" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                                                <div class="lab-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%); display: flex; align-items: flex-end; padding: 20px;">
+                                                    <div>
+                                                        <h5 style="color: white; font-weight: 700; margin-bottom: 5px; font-size: 1.2rem;">IBERT Eye Diagram</h5>
+                                                        <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 0.95rem;">100G SerDes Tuning Results</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="lab-details" style="padding: 20px;">
+                                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                                    <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">GTY/GTM</span>
+                                                    <span style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Signal Integrity</span>
+                                                    <span style="background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">IBERT</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -3458,6 +3578,29 @@
                     },
                     1000: {
                         items: 1
+                    }
+                }
+            });
+
+            // Initialize hardware lab carousel
+            $('.hardware-lab-carousel').owlCarousel({
+                loop: true,
+                margin: 30,
+                nav: true,
+                dots: true,
+                autoplay: true,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: true,
+                navText: ["<span class='ion-ios-arrow-back'></span>", "<span class='ion-ios-arrow-forward'></span>"],
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    768: {
+                        items: 2
+                    },
+                    1200: {
+                        items: 3
                     }
                 }
             });
