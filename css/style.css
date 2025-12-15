@@ -8060,6 +8060,41 @@ button.bg-dark:focus {
   transform: scale(1.05);
 }
 
+/* Mobile responsive fixes for highlight cards */
+@media (max-width: 768px) {
+  .highlight-card {
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 12px;
+  }
+  
+  .highlight-card:hover {
+    animation: none;
+    transform: none;
+  }
+  
+  .highlight-title {
+    font-size: 0.95rem;
+  }
+  
+  .highlight-card p {
+    font-size: 0.9rem;
+  }
+  
+  .highlight-tags {
+    gap: 6px;
+  }
+  
+  .highlight-tag {
+    font-size: 0.7rem;
+    padding: 6px 10px;
+  }
+  
+  .highlight-card:hover .highlight-tag {
+    transform: scale(1);
+  }
+}
+
 @media (min-width: 1200px) {
   .text-xl-left {
     text-align: left !important; }
@@ -10667,6 +10702,63 @@ border-color: #764ba2;
                         left: 10px;
                     }
                     
+                    .work-card {
+                        padding: 20px 15px;
+                        margin-bottom: 20px;
+                        overflow: hidden;
+                    }
+                    
+                    .work-card .d-flex {
+                        flex-direction: column !important;
+                    }
+                    
+                    .work-card .company-logo {
+                        width: 60px;
+                        height: 60px;
+                        margin-bottom: 15px;
+                    }
+                    
+                    .work-card .text {
+                        padding-left: 0 !important;
+                        width: 100%;
+                    }
+                    
+                    .work-card p, .work-card ul {
+                        font-size: 14px;
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                    }
+                    
+                    .work-card ul {
+                        margin-left: 15px;
+                        padding-left: 5px;
+                    }
+                    
+                    .work-card h2 {
+                        font-size: 1.3rem;
+                        word-wrap: break-word;
+                    }
+                    
+                    .work-card .position {
+                        font-size: 13px;
+                        word-wrap: break-word;
+                    }
+                    
+                    .highlight-card {
+                        margin-top: 15px;
+                        padding: 15px;
+                        overflow: hidden;
+                    }
+                    
+                    .highlight-tags {
+                        gap: 8px;
+                    }
+                    
+                    .highlight-tag {
+                        font-size: 0.7rem;
+                        padding: 6px 10px;
+                    }
+                    
                     .work-card::before {
                         left: -20px;
                     }
@@ -10677,6 +10769,14 @@ border-color: #764ba2;
                     
                     .awards-grid {
                         grid-template-columns: 1fr;
+                    }
+                    
+                    .repo-buttons {
+                        flex-direction: column;
+                    }
+                    
+                    .repo-buttons .btn {
+                        min-width: 100%;
                     }
                     
                     .achievement-timeline {
