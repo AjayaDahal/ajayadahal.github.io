@@ -3446,7 +3446,7 @@
     <script>
         // Initialize recommendations carousel
         $(document).ready(function(){
-            $('.carousel-recommendations').owlCarousel({
+            var recommendationsCarousel = $('.carousel-recommendations').owlCarousel({
                 loop: true,
                 margin: 30,
                 nav: true,
@@ -3454,6 +3454,10 @@
                 autoplay: true,
                 autoplayTimeout: 7000,
                 autoplayHoverPause: true,
+                touchDrag: true,
+                mouseDrag: true,
+                pullDrag: false,
+                freeDrag: false,
                 navText: ["<span class='ion-ios-arrow-back'></span>", "<span class='ion-ios-arrow-forward'></span>"],
                 responsive: {
                     0: {
@@ -3466,6 +3470,51 @@
                         items: 1
                     }
                 }
+            });
+
+            // Enhanced touch handling for mobile - distinguish horizontal vs vertical swipes
+            var carouselElement = $('.carousel-recommendations');
+            var startX = 0;
+            var startY = 0;
+            var isDragging = false;
+            var threshold = 50; // Minimum distance for swipe detection
+            var restraint = 100; // Maximum perpendicular distance
+            var allowedTime = 500; // Maximum time for swipe
+
+            carouselElement.on('touchstart', function(e) {
+                var touchObj = e.originalEvent.touches[0];
+                startX = touchObj.pageX;
+                startY = touchObj.pageY;
+                isDragging = false;
+                this.startTime = new Date().getTime();
+            });
+
+            carouselElement.on('touchmove', function(e) {
+                var touchObj = e.originalEvent.touches[0];
+                var distX = touchObj.pageX - startX;
+                var distY = touchObj.pageY - startY;
+                var elapsedTime = new Date().getTime() - this.startTime;
+
+                // Check if it's a horizontal swipe (left/right)
+                if (Math.abs(distX) > Math.abs(distY) * 2) {
+                    // Horizontal swipe detected - prevent page scroll, allow carousel
+                    isDragging = true;
+                    e.preventDefault();
+                } else if (Math.abs(distY) > Math.abs(distX) * 1.5) {
+                    // Vertical swipe detected - allow page scroll, prevent carousel
+                    isDragging = false;
+                    // Stop carousel from capturing the touch
+                    if (elapsedTime < allowedTime) {
+                        carouselElement.trigger('stop.owl.autoplay');
+                        setTimeout(function() {
+                            carouselElement.trigger('play.owl.autoplay');
+                        }, 100);
+                    }
+                }
+            });
+
+            carouselElement.on('touchend', function(e) {
+                isDragging = false;
             });
 
             // Animated project counter with loop
