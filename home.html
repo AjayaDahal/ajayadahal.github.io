@@ -392,7 +392,7 @@
 
                                 <div class="highlight-card">
                                     <div class="highlight-title">Lab & Integration Focus</div>
-                                    <p>Directed FPGA and digital design labs that bridged reference design HDL, embedded Linux, and lab-based signal integrity tuning for every Ethernet IP from 10G to 800G.</p>
+                                    <p>Directed FPGA and digital design labs that bridged reference design HDL, embedded Linux, and lab-based signal integrity tuning for every Ethernet IP from 10M to 800G.</p>
                                     <div class="highlight-tags">
                                         <span class="highlight-tag">Versal ACAP</span>
                                         <span class="highlight-tag">Embedded Linux</span>
@@ -415,15 +415,90 @@
                                 </ul>
 
                                 <p><b>Technical Publications & Knowledge Base:</b></p>
-                                <p>Authored official AMD Answer Records (ARs) and Technical Blogs to resolve global customer blockers:</p>
-                                <ul style="list-style-type: circle; margin-left: 20px;">
-                                    <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000036973?language=en_US">AR 000036973</a> <b>MRMAC Tutorial Series Part 1:</b> "Building a Versal MRMAC 4x25G Baremetal Ethernet Design" - Complete reference design walkthrough.</li>
-                                    <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000039394?language=en_US">AR 000039394</a> <b>DCMAC Survival Guide:</b> "2023.2 VPK120 1x100G CAUI-4 DCMAC Reference Design" - Comprehensive 100G DCMAC design tutorial.</li>
-                                    <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000036641?language=en_US">AR 000036641</a> <b>10G/25G High Speed Ethernet Subsystem:</b> "Example Design Fails Timing in 2023.2/2024.1" - Timing closure strategies for high-speed links.</li>
-                                    <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000037257?language=en_US">AR 000037257</a> <b>Versal/UltraScale+ MCDMA:</b> "Modifying Device Tree Compatibility for MCDMA in Ethernet Designs" - Critical for low-latency DMA transfers.</li>
-                                    <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000038505?language=en_US">AR 000038505</a> <b>MRMAC Linux Driver:</b> "Block Lock Issue in Linux" - Kernel driver debugging for multi-rate MAC (up to 100G+).</li>
-                                    <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000037069?language=en_US">AR 000037069</a> <b>PS-GTR GEM Driver Patch:</b> "Auto-Negotiation Requires Driver Patch in 2023.2" - Embedded Ethernet driver fixes.</li>
-                                </ul>
+                                <p style="margin-bottom: 25px;">Authored official AMD Answer Records (ARs) and Technical Blogs to resolve global customer blockers:</p>
+                                
+                                <!-- Featured Publications -->
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                                    
+                                    <!-- Featured AR 1: MRMAC Tutorial -->
+                                    <div class="highlight-card" style="margin-bottom: 0;">
+                                        <div class="highlight-title" style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 1.2rem;">📘</span> MRMAC Tutorial Series
+                                        </div>
+                                        <p style="font-size: 0.95rem; margin: 10px 0;">
+                                            Complete step-by-step guide for building a Versal MRMAC 4x25G Baremetal Ethernet Design from scratch.
+                                        </p>
+                                        <div style="margin-top: 12px;">
+                                            <a target="_blank" href="https://adaptivesupport.amd.com/s/article/000036973?language=en_US" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+                                                AR 000036973 →
+                                            </a>
+                                        </div>
+                                        <div class="highlight-tags" style="margin-top: 12px;">
+                                            <span class="highlight-tag">Versal ACAP</span>
+                                            <span class="highlight-tag">MRMAC</span>
+                                            <span class="highlight-tag">Tutorial</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Featured AR 2: DCMAC Survival Guide -->
+                                    <div class="highlight-card" style="margin-bottom: 0;">
+                                        <div class="highlight-title" style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 1.2rem;">🚀</span> DCMAC Survival Guide
+                                        </div>
+                                        <p style="font-size: 0.95rem; margin: 10px 0;">
+                                            Comprehensive 100G DCMAC reference design for VPK120 with CAUI-4 interface configuration.
+                                        </p>
+                                        <div style="margin-top: 12px;">
+                                            <a target="_blank" href="https://adaptivesupport.amd.com/s/article/000039394?language=en_US" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+                                                AR 000039394 →
+                                            </a>
+                                        </div>
+                                        <div class="highlight-tags" style="margin-top: 12px;">
+                                            <span class="highlight-tag">100G</span>
+                                            <span class="highlight-tag">DCMAC</span>
+                                            <span class="highlight-tag">VPK120</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Featured AR 3: MCDMA Critical -->
+                                    <div class="highlight-card" style="margin-bottom: 0;">
+                                        <div class="highlight-title" style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 1.2rem;">⚡</span> Low-Latency DMA
+                                        </div>
+                                        <p style="font-size: 0.95rem; margin: 10px 0;">
+                                            Critical device tree modifications for MCDMA compatibility in low-latency Ethernet designs.
+                                        </p>
+                                        <div style="margin-top: 12px;">
+                                            <a target="_blank" href="https://adaptivesupport.amd.com/s/article/000037257?language=en_US" style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+                                                AR 000037257 →
+                                            </a>
+                                        </div>
+                                        <div class="highlight-tags" style="margin-top: 12px;">
+                                            <span class="highlight-tag">MCDMA</span>
+                                            <span class="highlight-tag">Device Tree</span>
+                                            <span class="highlight-tag">Low Latency</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Additional Publications List -->
+                                <div style="background: #f8f9fa; border-radius: 10px; padding: 20px; margin-top: 20px;">
+                                    <h6 style="margin-bottom: 15px; color: #333; font-weight: 600;">📚 Additional Technical Publications</h6>
+                                    <ul style="list-style: none; padding: 0; margin: 0;">
+                                        <li style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                            <a target="_blank" href="https://adaptivesupport.amd.com/s/article/000036641?language=en_US" style="color: #2c98f0; text-decoration: none; font-weight: 600;">AR 000036641</a>
+                                            <span style="color: #666; margin-left: 8px;">10G/25G High Speed Ethernet Subsystem - Timing closure strategies</span>
+                                        </li>
+                                        <li style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                            <a target="_blank" href="https://adaptivesupport.amd.com/s/article/000038505?language=en_US" style="color: #2c98f0; text-decoration: none; font-weight: 600;">AR 000038505</a>
+                                            <span style="color: #666; margin-left: 8px;">MRMAC Linux Driver - Block Lock Issue resolution</span>
+                                        </li>
+                                        <li style="padding: 10px 0;">
+                                            <a target="_blank" href="https://adaptivesupport.amd.com/s/article/000037069?language=en_US" style="color: #2c98f0; text-decoration: none; font-weight: 600;">AR 000037069</a>
+                                            <span style="color: #666; margin-left: 8px;">PS-GTR GEM Driver Patch - Auto-negotiation fixes</span>
+                                        </li>
+                                    </ul>
+                                </div>
 
                                 <div style="margin-top: 30px; margin-bottom: 30px;">
                                     <h3 style="font-size: 1.3rem; margin-bottom: 20px; color: #2c98f0; font-weight: 600;">🔬 My Hardware Lab & Active Setups</h3>
@@ -556,6 +631,16 @@
                                       National Instruments, experimenting with srsLTE/RAN, OAI, and Amarisoft as a Part 107 FAA-certified drone pilot.
                                 </p>
 
+                                <div class="highlight-card">
+                                    <div class="highlight-title">SDR & Wireless Sensing Research</div>
+                                    <p>Architected real-time RF signal processing systems for contraband detection and human activity recognition, combining software-defined radio with machine learning to push wireless sensing into new applications.</p>
+                                    <div class="highlight-tags">
+                                        <span class="highlight-tag">Software Defined Radio</span>
+                                        <span class="highlight-tag">Machine Learning</span>
+                                        <span class="highlight-tag">Spectrum Scanning</span>
+                                    </div>
+                                </div>
+
                                 </div>
                             </div>
                         </div>
@@ -571,16 +656,18 @@
                                 <span class="position">Hunter Engineering Company - Raymond, MS</span>
                                 <p>
                                     Designed system-level functional testers for PCBs used in Hunter Engineering products (e.g., car lifts, wheel 
-                                    balancers, and tire changers). Created end-to-end test systems, including custom PCBs, displays, and interfaces, 
-                                    <div class="highlight-card">
-                                        <div class="highlight-title">Inspection & Process Focus</div>
-                                        <p>Standardized visual audits across multiple shifts and partnered with fulfillment teams to document repeat failure modes so corrective actions could be triggered faster.</p>
-                                        <div class="highlight-tags">
-                                            <span class="highlight-tag">Visual QA</span>
-                                            <span class="highlight-tag">Root Cause</span>
-                                            <span class="highlight-tag">Shift Handoffs</span>
-                                        </div>
+                                    balancers, and tire changers). Created end-to-end test systems, including custom PCBs, displays, and interfaces.
+                                </p>
+                                <div class="highlight-card">
+                                    <div class="highlight-title">Inspection & Process Focus</div>
+                                    <p>Standardized visual audits across multiple shifts and partnered with fulfillment teams to document repeat failure modes so corrective actions could be triggered faster.</p>
+                                    <div class="highlight-tags">
+                                        <span class="highlight-tag">Visual QA</span>
+                                        <span class="highlight-tag">Root Cause</span>
+                                        <span class="highlight-tag">Shift Handoffs</span>
                                     </div>
+                                </div>
+                                <p>
                                     to verify board functionality before assembly. Developed intuitive LabVIEW GUIs and C/C++ backend code to ensure 
                                     ease of use by operators with no technical background, minimizing user error. Integrated camera-based defect detection 
                                     using OpenCV and built testers compatible with Aegis Factory Logix. Delivered robust, operator-friendly systems that 
