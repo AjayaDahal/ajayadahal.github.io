@@ -415,43 +415,46 @@
                                     <li><a target="_blank" href="https://adaptivesupport.amd.com/s/article/000037069?language=en_US">AR 000037069</a> <b>PS-GTR GEM Driver Patch:</b> "Auto-Negotiation Requires Driver Patch in 2023.2" - Embedded Ethernet driver fixes.</li>
                                 </ul>
 
-                                <p style="margin-top: 25px; margin-bottom: 10px;"><b>🔬 My Hardware Lab & Active Setups:</b></p>
-                                <div class="row">
-                                    <div class="col-md-4 ftco-animate mb-3">
-                                        <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
-                                            <a href="images/lab/lab1.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab1.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
-                                            </a>
-                                            <div class="text p-2 text-center" style="background: #f8f9fa;">
-                                                <small style="color: #333;"><b>Versal VCK190</b><br>100G Live Traffic Test With MRMAC</small>
+                                <p style="margin-top: 25px; margin-bottom: 20px;"><b>🔬 My Hardware Lab & Active Setups:</b></p>
+                                <div class="lab-carousel-wrapper" style="position: relative; margin-bottom: 30px;">
+                                    <div class="lab-carousel owl-carousel">
+                                        <div class="item">
+                                            <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
+                                                <a href="images/lab/lab1.jpg" class="block-20 image-popup" 
+                                                   style="background-image: url('images/lab/lab1.jpg'); height: 220px; background-size: cover; background-position: center; display: block;" loading="lazy">
+                                                </a>
+                                                <div class="text p-3 text-center" style="background: #f8f9fa;">
+                                                    <h6 style="color: #333; margin-bottom: 5px; font-weight: 600;">Versal VCK190</h6>
+                                                    <small style="color: #666;">100G Live Traffic Test With MRMAC</small>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="col-md-4 ftco-animate mb-3">
-                                        <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
-                                            <a href="images/lab/lab2.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab2.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
-                                            </a>
-                                            <div class="text p-2 text-center" style="background: #f8f9fa;">
-                                                <small style="color: #333;"><b>Zynq UltraScale+ ZCU111</b><br>100G Live Traffic Test with CMAC</small>
+                                        <div class="item">
+                                            <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
+                                                <a href="images/lab/lab2.jpg" class="block-20 image-popup" 
+                                                   style="background-image: url('images/lab/lab2.jpg'); height: 220px; background-size: cover; background-position: center; display: block;" loading="lazy">
+                                                </a>
+                                                <div class="text p-3 text-center" style="background: #f8f9fa;">
+                                                    <h6 style="color: #333; margin-bottom: 5px; font-weight: 600;">Zynq UltraScale+ ZCU111</h6>
+                                                    <small style="color: #666;">100G Live Traffic Test with CMAC</small>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="col-md-4 ftco-animate mb-3">
-                                        <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
-                                            <a href="images/lab/lab3.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab3.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
-                                            </a>
-                                            <div class="text p-2 text-center" style="background: #f8f9fa;">
-                                                <small style="color: #333;"><b>IBERT Eye Diagram</b><br>100G SerDes Tuning Results</small>
+                                        <div class="item">
+                                            <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
+                                                <a href="images/lab/lab3.jpg" class="block-20 image-popup" 
+                                                   style="background-image: url('images/lab/lab3.jpg'); height: 220px; background-size: cover; background-position: center; display: block;" loading="lazy">
+                                                </a>
+                                                <div class="text p-3 text-center" style="background: #f8f9fa;">
+                                                    <h6 style="color: #333; margin-bottom: 5px; font-weight: 600;">IBERT Eye Diagram</h6>
+                                                    <small style="color: #666;">100G SerDes Tuning Results</small>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <p style="margin-bottom: 15px;"><b>Engineering Excellence Awards:</b></p>
+                                <p style="margin-bottom: 15px; clear: both;"><b>Engineering Excellence Awards:</b></p>
                                 <div class="awards-grid">
                                     <div class="award-item">
                                         <a target="_blank" href="AMD/3x25G_MRMAC_Award.pdf">3x25G MRMAC</a>
@@ -1902,8 +1905,9 @@
     <script src="js/main.js"></script>
     
     <script>
-        // Initialize recommendations carousel
+        // Initialize carousels
         $(document).ready(function(){
+            // Recommendations carousel
             $('.carousel-recommendations').owlCarousel({
                 loop: true,
                 margin: 30,
@@ -1911,6 +1915,33 @@
                 dots: true,
                 autoplay: true,
                 autoplayTimeout: 7000,
+                autoplayHoverPause: true,
+                touchDrag: false,
+                mouseDrag: true,
+                pullDrag: false,
+                freeDrag: false,
+                navText: ["<span class='ion-ios-arrow-back'></span>", "<span class='ion-ios-arrow-forward'></span>"],
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    768: {
+                        items: 1
+                    },
+                    1000: {
+                        items: 1
+                    }
+                }
+            });
+
+            // Lab carousel
+            $('.lab-carousel').owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                dots: true,
+                autoplay: true,
+                autoplayTimeout: 5000,
                 autoplayHoverPause: true,
                 touchDrag: false,
                 mouseDrag: true,

@@ -11465,3 +11465,87 @@ border-color: #764ba2;
     -ms-touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch;
 }
+
+/* Lab Carousel Styles */
+.lab-carousel-wrapper {
+    touch-action: pan-y !important;
+    -ms-touch-action: pan-y !important;
+}
+
+.lab-carousel .owl-nav {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.lab-carousel .owl-nav button {
+    pointer-events: all;
+    background: rgba(255, 255, 255, 0.9) !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2) !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid #667eea !important;
+}
+
+.lab-carousel .owl-nav button:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    transform: scale(1.1);
+}
+
+.lab-carousel .owl-nav button span {
+    font-size: 20px !important;
+    color: #667eea;
+    line-height: 1;
+}
+
+.lab-carousel .owl-nav button:hover span {
+    color: white;
+}
+
+.lab-carousel .owl-nav .owl-prev {
+    margin-left: -20px;
+}
+
+.lab-carousel .owl-nav .owl-next {
+    margin-right: -20px;
+}
+
+.lab-carousel .owl-dots {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.lab-carousel .owl-dot {
+    width: 8px;
+    height: 8px;
+    background: #ddd !important;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+}
+
+.lab-carousel .owl-dot.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    width: 24px;
+    border-radius: 4px;
+}
+
+.lab-carousel .blog-entry {
+    transition: all 0.3s ease;
+}
+
+.lab-carousel .blog-entry:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+}
