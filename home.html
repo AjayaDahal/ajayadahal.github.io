@@ -78,6 +78,18 @@
                 </div>
 
             </div>
+            
+            <!-- Scroll Down Indicator -->
+            <div class="scroll-indicator">
+                <a href="#about-section" class="scroll-down-link">
+                    <div class="scroll-down-text">Scroll Down</div>
+                    <div class="scroll-arrow">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+            </div>
 
         </div>
         </div>
@@ -108,6 +120,114 @@
             object-fit: contain;
             display: block;
             margin: 0 auto;
+        }
+        
+        /* Scroll Down Indicator Styles */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+        
+        .scroll-down-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .scroll-down-text {
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            animation: fade-pulse 2s ease-in-out infinite;
+        }
+        
+        .scroll-arrow {
+            width: 30px;
+            height: 50px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .scroll-arrow span {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid #667eea;
+            border-bottom: 2px solid #667eea;
+            transform: rotate(45deg);
+            margin: -4px;
+            animation: scroll-down 2s infinite;
+        }
+        
+        .scroll-arrow span:nth-child(2) {
+            animation-delay: -0.2s;
+        }
+        
+        .scroll-arrow span:nth-child(3) {
+            animation-delay: -0.4s;
+        }
+        
+        @keyframes scroll-down {
+            0% {
+                opacity: 0;
+                transform: rotate(45deg) translate(-5px, -5px);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+        }
+        
+        @keyframes fade-pulse {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        
+        .scroll-down-link:hover .scroll-down-text {
+            color: #764ba2;
+        }
+        
+        .scroll-down-link:hover .scroll-arrow {
+            border-color: #764ba2;
+        }
+        
+        .scroll-down-link:hover .scroll-arrow span {
+            border-color: #764ba2;
+        }
+        
+        /* Hide scroll indicator on small screens */
+        @media (max-width: 768px) {
+            .scroll-indicator {
+                bottom: 20px;
+            }
+            
+            .scroll-down-text {
+                font-size: 0.75rem;
+            }
+            
+            .scroll-arrow {
+                width: 25px;
+                height: 40px;
+            }
         }
     </style>
     <section class="ftco-about img ftco-section ftco-no-pt ftco-no-pb" id="about-section" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);">
