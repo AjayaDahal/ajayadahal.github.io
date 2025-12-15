@@ -1929,58 +1929,64 @@
                 }
             });
 
-            // Custom touch handling for mobile - distinguish horizontal vs vertical swipes
-            var carouselElement = $('.carousel-recommendations');
+            // Enhanced touch handling - only capture clear horizontal swipes
             var startX = 0;
             var startY = 0;
-            var startTime = 0;
-            var isHorizontalSwipe = false;
+            var moveX = 0;
+            var moveY = 0;
+            var isSwiping = false;
+            var swipeDirection = null;
 
-            carouselElement.on('touchstart', function(e) {
-                var touchObj = e.originalEvent.touches[0];
-                startX = touchObj.pageX;
-                startY = touchObj.pageY;
-                startTime = new Date().getTime();
-                isHorizontalSwipe = false;
+            $('.carousel-recommendations .owl-stage-outer').on('touchstart', function(e) {
+                var touch = e.originalEvent.touches[0];
+                startX = touch.pageX;
+                startY = touch.pageY;
+                moveX = 0;
+                moveY = 0;
+                isSwiping = false;
+                swipeDirection = null;
             });
 
-            carouselElement.on('touchmove', function(e) {
-                var touchObj = e.originalEvent.touches[0];
-                var distX = touchObj.pageX - startX;
-                var distY = touchObj.pageY - startY;
-
-                // Determine direction based on which movement is greater
-                if (!isHorizontalSwipe && Math.abs(distX) > 20) {
-                    // If horizontal movement is significant and greater than vertical
-                    if (Math.abs(distX) > Math.abs(distY)) {
-                        isHorizontalSwipe = true;
+            $('.carousel-recommendations .owl-stage-outer').on('touchmove', function(e) {
+                if (!e.originalEvent.touches[0]) return;
+                
+                var touch = e.originalEvent.touches[0];
+                moveX = touch.pageX - startX;
+                moveY = touch.pageY - startY;
+                
+                // Only set swipe direction once, when movement exceeds threshold
+                if (!isSwiping && (Math.abs(moveX) > 10 || Math.abs(moveY) > 10)) {
+                    isSwiping = true;
+                    // Determine primary direction
+                    if (Math.abs(moveX) > Math.abs(moveY) * 1.5) {
+                        swipeDirection = 'horizontal';
+                        e.preventDefault(); // Only prevent default for horizontal swipes
+                        e.stopPropagation();
+                    } else {
+                        swipeDirection = 'vertical';
+                        // Allow vertical scroll - don't prevent default
                     }
                 }
-
-                // If it's a horizontal swipe, handle carousel navigation
-                if (isHorizontalSwipe) {
-                    e.preventDefault(); // Prevent vertical scroll during horizontal swipe
+                
+                // Continue preventing default only if we determined it's horizontal
+                if (swipeDirection === 'horizontal') {
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
-                // Otherwise, let the page scroll naturally (do nothing)
             });
 
-            carouselElement.on('touchend', function(e) {
-                if (isHorizontalSwipe) {
-                    var touchObj = e.originalEvent.changedTouches[0];
-                    var distX = touchObj.pageX - startX;
-                    
-                    // Trigger carousel navigation based on swipe direction
-                    if (Math.abs(distX) > 50) { // Minimum swipe distance
-                        if (distX < 0) {
-                            // Swiped left - go to next
-                            recommendationsCarousel.trigger('next.owl.carousel');
-                        } else {
-                            // Swiped right - go to previous
-                            recommendationsCarousel.trigger('prev.owl.carousel');
-                        }
+            $('.carousel-recommendations .owl-stage-outer').on('touchend', function(e) {
+                if (swipeDirection === 'horizontal' && Math.abs(moveX) > 50) {
+                    if (moveX < 0) {
+                        recommendationsCarousel.trigger('next.owl.carousel');
+                    } else {
+                        recommendationsCarousel.trigger('prev.owl.carousel');
                     }
                 }
-                isHorizontalSwipe = false;
+                
+                // Reset
+                isSwiping = false;
+                swipeDirection = null;
             });
 
             // Animated project counter with loop
