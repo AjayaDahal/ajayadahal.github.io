@@ -267,6 +267,37 @@
                         margin-right: 0;
                     }
                 }
+                
+                /* Project Cards Hover Effects */
+                .project-card {
+                    transition: all 0.3s ease;
+                }
+                
+                .project-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 25px rgba(44, 152, 240, 0.15) !important;
+                    border-color: #2c98f0 !important;
+                }
+                
+                .tech-badge {
+                    transition: all 0.2s ease;
+                }
+                
+                .tech-badge:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+                
+                /* Responsive adjustments for project cards */
+                @media (max-width: 768px) {
+                    .project-card {
+                        margin-bottom: 20px;
+                    }
+                    
+                    .project-card h4 {
+                        font-size: 18px !important;
+                    }
+                }
             </style>
             
             <div class="row">
@@ -1039,130 +1070,250 @@
 
                     <div id="page-3" class="page two">
                         <h2 class="heading">Projects</h2>
+                        <p class="mb-4" style="color: #6c757d; font-size: 16px;">Open-source FPGA reference designs and hardware projects spanning high-speed networking, embedded systems, and robotics.</p>
 
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="images/PC build.jpg" width="40"
-                                height="40" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date"> December 2023</span>
-                                <h2>High-Performance ML Workstation</h2>
-                                <span class="position">🖥️ Home built gaming PC </span>
-                                <p>Built a powerful PC for gaming, training machine learning model, learning GAN, etc. over Christmas break</p>
-                                <p><a target="_blank" href="https://www.youtube.com/watch?v=OI0yKwsCSdk&ab_channel=AjayaDahal"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
+                        <!-- Featured AMD Reference Designs -->
+                        <h3 class="mb-4" style="color: #2c98f0; font-weight: 600;">Featured: AMD Xilinx Reference Designs (2023-Present)</h3>
+                        
+                        <div class="row mb-4">
+                            <!-- Versal Ethernet Project Card -->
+                            <div class="col-md-6 ftco-animate">
+                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                        <img src="skills_icon/vivado.png" style="width: 50px; height: 50px; margin-right: 15px; object-fit: contain;" alt="Vivado" loading="lazy" />
+                                        <div>
+                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">2023 - PRESENT</span>
+                                            <h4 style="margin: 5px 0; color: #2c98f0; font-size: 20px; font-weight: 600;">Versal ACAP Ethernet Reference Designs</h4>
+                                        </div>
+                                    </div>
+                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
+                                        Production-ready 100G DCMAC and MRMAC Ethernet reference designs for AMD Versal VPK120, VCK190, and VPK180 boards. Features 1x100G and 4x25G configurations with full Vivado/PetaLinux support, validated for low-latency network applications.
+                                    </p>
+                                    <div style="margin-bottom: 15px;">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Versal ACAP</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">100G DCMAC</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">MRMAC</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">GTM SerDes</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fce4ec; color: #c2185b; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">PetaLinux</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #efebe9; color: #4e342e; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Vivado 2024.2</span>
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <a target="_blank" href="https://github.com/ajayadaha1/Versal-Ethernet" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
+                                            <i class="icon-github"></i> View Repository
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ZCU102 Ethernet Project Card -->
+                            <div class="col-md-6 ftco-animate">
+                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                        <img src="skills_icon/vivado.png" style="width: 50px; height: 50px; margin-right: 15px; object-fit: contain;" alt="Vivado" loading="lazy" />
+                                        <div>
+                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">2023 - PRESENT</span>
+                                            <h4 style="margin: 5px 0; color: #2c98f0; font-size: 20px; font-weight: 600;">Zynq UltraScale+ MPSoC Ethernet</h4>
+                                        </div>
+                                    </div>
+                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
+                                        Comprehensive Ethernet reference designs for ZCU102 covering PS-GEM, PL 1G/10G configurations. Includes SGMII, 1000BASE-X, and 10GBASE-R implementations with full PetaLinux BSP integration and performance validation.
+                                    </p>
+                                    <div style="margin-bottom: 15px;">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Zynq UltraScale+</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">10G Ethernet</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">AXI Ethernet</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">GTH SerDes</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fce4ec; color: #c2185b; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">SGMII</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #efebe9; color: #4e342e; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Vivado 2024.2</span>
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <a target="_blank" href="https://github.com/ajayadaha1/ZCU102-Ethernet" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
+                                            <i class="icon-github"></i> View Repository
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="images/RC_plane.jpg" width="40"
-                                height="40" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date"> November 2023</span>
-                                <h2>Shark Aero</h2>
-                                <span class="position">✈️ A 3D printed RC plane </span>
-                                <p>3D Printed RC Plane during week of thanksgiving.. an ideal way to celebrate holidays</p>
-                                <p><a target="_blank" href="https://www.youtube.com/watch?v=zGE-E661loY&ab_channel=AjayaDahal"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
-                            </div>
-                        </div>
+                        <!-- Other Projects Section -->
+                        <h3 class="mb-4 mt-5" style="color: #2c98f0; font-weight: 600;">Additional Projects</h3>
 
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="https://collide-o-scope-msu.github.io/static/images/hardware.jpeg" width="40"
-                                height="40" loading="lazy" />
+                            <img src="iconss/project_icons/line.jpg" width="60"
+                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
                             <div class="text pl-3">
-                                <span class="date"> April-December 2022</span>
-                                <h2>WRECKS</h2>
-                                <span class="position">📶 Wireless Roadside Emergency Collision Kinetic Sensor </span>
-                                <p>Senior Design Project at Mississippi State University to detect collision on
-                                    guardrails and send realtime notification. </p>
-                                <p><a target="_blank" href="https://collide-o-scope-msu.github.io/"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
-                            </div>
-                        </div>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="dissection/static/images/unbox1.jpg" width="40" height="40" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date"> April 2022</span>
-                                <h2>ECE 6723 Electronics Dissection</h2>
-                                <span class="position">⚡ DC-DC Buck Boost Converter Dissection </span>
-                                <p>Buck boost converter that is capable of outputing 0.5V to 30V with max current of 4A.
-                                </p>
-                                <p><a target="_blank" href="dissection/index.html" class="btn btn-primary py-3 px-3">View Project</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/line.jpg" width="40" height="40" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date"> May 2021</span>
+                                <span class="date">MAY 2021</span>
                                 <h2>Line Follower Robot using PIC24</h2>
-                                <span class="position">🎮 Circuit design and 3D modeling </span>
-                                <p>A simple line follower robot using dsPIC33EP128GP502. </p>
+                                <span class="position">Circuit design and 3D modeling</span>
+                                <p>Advanced line follower robot using dsPIC33EP128GP502 microcontroller with custom PCB design and 3D printed chassis.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PIC24</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PCB Design</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Embedded C</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">3D Modeling</span>
+                                </div>
                                 <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/simplest-line-follower-using-pic24-332254"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
                             </div>
                         </div>
+
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/drone.jpg" width="40" height="40" loading="lazy" />
+                            <img src="https://collide-o-scope-msu.github.io/static/images/hardware.jpeg" width="60"
+                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
                             <div class="text pl-3">
-                                <span class="date">February 2021</span>
-                                <h2>NXP Semiconductor</h2>
-                                <span class="position">🚁 COVID-19 Testing Service Via Drone</span>
-                                <p>Hackster.io drone competiion organized by NXP Semiconductor. Bonus prize winner 🏆
-                                </p>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
+                                <span class="date">APRIL - DECEMBER 2022</span>
+                                <h2>WRECKS - Senior Design Project</h2>
+                                <span class="position">Wireless Roadside Emergency Collision Kinetic Sensor</span>
+                                <p>IoT sensor system for real-time collision detection on guardrails with wireless notification capabilities. Mississippi State University senior design project.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Raspberry Pi</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Python</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">LoRa</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">IoT</span>
+                                </div>
+                                <p><a target="_blank" href="https://collide-o-scope-msu.github.io/"
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
                             </div>
                         </div>
+
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/temp.webp" width="40" height="40" loading="lazy" />
+                            <img src="iconss/project_icons/drone_rth.webp" width="60"
+                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
                             <div class="text pl-3">
-                                <span class="date">December 2020</span>
-                                <h2>Mississippi State University: Design Group Project </h2>
-                                <span class="position">🌡️ Realtime temperature monitor</span>
-                                <p>Created a complete product from scratch. 3D modeling in Solidworks, chasis printed
-                                    using 3D printer and an android app built in Android Studio with realtime database
-                                    access using Google Firebase🔥.</p>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/realtime-temperature-monitor-53d97c"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
-                            </div>
-                        </div>
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/video.webp" width="40" height="40" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">June 2020</span>
-                                <h2>Smart Video Player</h2>
-                                <span class="position">📱 Android Application</span>
-                                <p> A video player with builtin google search, youtube video playing capabilities, and
-                                    track the videos that are played from local storage. This app is developed with
-                                    Google Search and has 1 Million quota per day for Youtube
-                                    API consumption! Available in playstore.</p>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/video-player-pro-for-learners-fa9e1b"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
-                            </div>
-                        </div>
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/drone_rth.webp" width="40" height="40" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">April 2020</span>
-                                <h2>DIY Drone</h2>
-                                <span class="position">🛸 DIY return to home</span>
-                                <p>Designed a circuit board with STM32 aka Bluepill that sits perfectly on top of DJI
-                                    F450 frame.
-                                </p>
+                                <span class="date">APRIL 2020</span>
+                                <h2>DIY Return-to-Home Drone</h2>
+                                <span class="position">STM32-based autonomous flight controller</span>
+                                <p>Custom flight controller PCB using STM32 BluePill for DJI F450 frame with GPS-based return-to-home functionality.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">STM32</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">GPS</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PCB Design</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PID Control</span>
+                                </div>
                                 <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/diy-return-to-home-drone-using-stm32-bluepill-9b1886"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
                             </div>
                         </div>
+
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/line.webp" width="40" height="40" loading="lazy" />
+                            <img src="iconss/project_icons/drone.jpg" width="60"
+                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
                             <div class="text pl-3">
-                                <span class="date">March 2020</span>
-                                <h2>LM324N Comparator Line follower</h2>
-                                <span class="position">🤖 Yet another line follower using analog circuit</span>
-                                <p>Circuit board with two method to enable Simple line follower. Analog using LM324N and
-                                    digital with Arduino Nano. </p>
+                                <span class="date">FEBRUARY 2021</span>
+                                <h2>COVID-19 Testing Service Via Drone 🏆</h2>
+                                <span class="position">NXP Semiconductor Hackster.io Competition - Bonus Prize Winner</span>
+                                <p>Autonomous drone system for contactless COVID-19 test sample collection and delivery using FMUK66 flight controller.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">NXP Kinetis</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">ROS2</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PX4</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Computer Vision</span>
+                                </div>
+                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a"
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+                        </div>
+
+                        <div class="resume-wrap d-flex ftco-animate">
+                            <img src="dissection/static/images/unbox1.jpg" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
+                            <div class="text pl-3">
+                                <span class="date">APRIL 2022</span>
+                                <h2>DC-DC Buck Boost Converter Dissection</h2>
+                                <span class="position">ECE 6723 Graduate Course Project</span>
+                                <p>Detailed teardown and analysis of commercial buck-boost converter (0.5V-30V, 4A max) including schematic reverse engineering and component analysis.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Power Electronics</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">SMPS</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">LTSpice</span>
+                                </div>
+                                <p><a target="_blank" href="dissection/index.html" class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+                        </div>
+
+                        <div class="resume-wrap d-flex ftco-animate">
+                            <img src="images/PC build.jpg" width="60"
+                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
+                            <div class="text pl-3">
+                                <span class="date">DECEMBER 2023</span>
+                                <h2>High-Performance ML Workstation</h2>
+                                <span class="position">Custom PC build for deep learning</span>
+                                <p>Built custom workstation optimized for TensorFlow/PyTorch model training and gaming with liquid cooling and RGB integration.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PC Building</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Machine Learning</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Hardware</span>
+                                </div>
+                                <p><a target="_blank" href="https://www.youtube.com/watch?v=OI0yKwsCSdk&ab_channel=AjayaDahal"
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+                        </div>
+
+                        <div class="resume-wrap d-flex ftco-animate">
+                            <img src="images/RC_plane.jpg" width="60"
+                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
+                            <div class="text pl-3">
+                                <span class="date">NOVEMBER 2023</span>
+                                <h2>Shark Aero - 3D Printed RC Plane</h2>
+                                <span class="position">Aerodynamics and RC systems</span>
+                                <p>Fully 3D printed RC aircraft with custom flight controller integration and telemetry system.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">3D Printing</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">RC Systems</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Aerodynamics</span>
+                                </div>
+                                <p><a target="_blank" href="https://www.youtube.com/watch?v=zGE-E661loY&ab_channel=AjayaDahal"
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+                        </div>
+
+                        <div class="resume-wrap d-flex ftco-animate">
+                            <img src="iconss/project_icons/temp.webp" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
+                            <div class="text pl-3">
+                                <span class="date">DECEMBER 2020</span>
+                                <h2>Real-time Temperature Monitor</h2>
+                                <span class="position">IoT system with Android app and Firebase</span>
+                                <p>Complete IoT temperature monitoring solution with 3D printed enclosure, Android app, and real-time Firebase database integration.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Android</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Firebase</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">SolidWorks</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">IoT</span>
+                                </div>
+                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/realtime-temperature-monitor-53d97c"
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+                        </div>
+
+                        <div class="resume-wrap d-flex ftco-animate">
+                            <img src="iconss/project_icons/video.webp" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
+                            <div class="text pl-3">
+                                <span class="date">JUNE 2020</span>
+                                <h2>Smart Video Player for Learners</h2>
+                                <span class="position">Android app with YouTube API integration</span>
+                                <p>Feature-rich Android video player with integrated Google Search, YouTube streaming, and learning progress tracking. Published on Google Play Store.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Android Studio</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">YouTube API</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Java</span>
+                                </div>
+                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/video-player-pro-for-learners-fa9e1b"
+                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+                        </div>
+
+                        <div class="resume-wrap d-flex ftco-animate">
+                            <img src="iconss/project_icons/line.webp" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
+                            <div class="text pl-3">
+                                <span class="date">MARCH 2020</span>
+                                <h2>LM324N Analog Line Follower</h2>
+                                <span class="position">Dual-mode line follower with analog comparator</span>
+                                <p>PCB design featuring both analog (LM324N comparator) and digital (Arduino Nano) line following modes with switchable operation.</p>
+                                <div class="mb-2">
+                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Analog Circuit</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Arduino</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">LM324N</span>
+                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PCB Design</span>
+                                </div>
                                 <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/line-follower-using-lm324n-with-backup-arduino-nano-8e886c"
                                         class="btn btn-primary py-3 px-3">View Project</a></p>
                             </div>
