@@ -2825,53 +2825,83 @@
 
 
 
-    <section class="ftco-section contact-section ftco-no-pb" id="contact-section">
+    <section class="ftco-section contact-section ftco-no-pb" id="contact-section" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%); padding: 80px 0;">
         <div class="container">
             <div class="row justify-content-center mb-5 pb-3">
-                <div class="col-md-7 heading-section text-center ftco-animate">
-                    <h1 class="big big-2">Contact</h1>
-                    <h2 class="mb-4">Get In Touch.</h2>
+                <div class="col-md-10 heading-section text-center ftco-animate">
+                    <h2 class="mb-3" style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Get In Touch</h2>
+                    <p style="color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Let's discuss FPGA engineering, network systems, or potential opportunities</p>
                 </div>
             </div>
             <div class="row justify-content-center d-flex contact-info mb-5">
-                <div class="col-md-8 col-lg-4 d-flex ftco-animate">
-                    <div class="align-self-stretch box text-center p-4 shadow"
-                        style="margin-left: auto; margin-right: auto;">
-                        <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="icon-map-signs"></span>
+                <div class="col-md-5 col-lg-4 d-flex ftco-animate" style="margin-bottom: 30px;">
+                    <div class="contact-card" style="width: 100%; background: white; border-radius: 15px; padding: 40px 30px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid transparent; transition: all 0.3s ease;">
+                        <div class="contact-icon" style="width: 80px; height: 80px; margin: 0 auto 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            <span class="icon-map-signs" style="font-size: 2rem; color: white;"></span>
                         </div>
                         <div>
-                            <h3 class="mb-4">Location</h3>
-                            <p> Austin, TX. </p>
+                            <h3 class="mb-3" style="font-size: 1.3rem; font-weight: 700; color: #333;">Location</h3>
+                            <p style="font-size: 1.05rem; color: #666; margin: 0;">📍 Austin, TX</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-8 col-lg-4 d-flex ftco-animate">
-                    <div class="align-self-stretch box text-center p-4 shadow">
-                        <div class="icon d-flex align-items-center justify-content-center"
-                            style="margin-left: auto; margin-right: auto;">
-                            <span class="icon-paper-plane"></span>
+                <div class="col-md-5 col-lg-4 d-flex ftco-animate" style="margin-bottom: 30px;">
+                    <div class="contact-card" style="width: 100%; background: white; border-radius: 15px; padding: 40px 30px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid transparent; transition: all 0.3s ease;">
+                        <div class="contact-icon" style="width: 80px; height: 80px; margin: 0 auto 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            <span class="icon-paper-plane" style="font-size: 2rem; color: white;"></span>
                         </div>
                         <div>
-                            <h3 class="mb-4">Email </h3>
-                            <p><a target="_blank" href="mailto:ad2323@msstate.edu">ad2323@msstate.edu</a></p>
+                            <h3 class="mb-3" style="font-size: 1.3rem; font-weight: 700; color: #333;">Email</h3>
+                            <p style="font-size: 1.05rem; margin: 0;"><a target="_blank" href="mailto:ad2323@msstate.edu" style="color: #667eea; text-decoration: none; font-weight: 600; transition: color 0.3s ease;">ad2323@msstate.edu</a></p>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
+        
+        <style>
+            .contact-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2) !important;
+                border-color: #667eea !important;
+            }
+            
+            .contact-icon {
+                animation: pulse-icon 2s infinite;
+            }
+            
+            @keyframes pulse-icon {
+                0%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+            
+            .contact-card a:hover {
+                color: #764ba2 !important;
+            }
+        </style>
     </section>
 
-    <section class="ftco-section contact-section ftco-no-pb" id="flag-section">
+    <section class="ftco-section contact-section ftco-no-pb" id="flag-section" style="padding: 60px 0; background: white;">
         <div class="container">
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-10 heading-section text-center ftco-animate">
+                    <h3 class="mb-4" style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Global Visitors</h3>
+                    <p style="color: #666; font-size: 1rem; margin-bottom: 30px;">🌍 Thank you for visiting from around the world!</p>
+                </div>
+            </div>
             <div class="row justify-content-center mb-5 pb-3">
-                <div class="col-md-7 heading-section text-center ftco-animate">
-                    <a target="_blank" href="https://info.flagcounter.com/WPje"><img
-                            src="https://s01.flagcounter.com/countxl/WPje/bg_FFFFFF/txt_3e64ff/border_CCCCCC/columns_2/maxflags_20/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
-                            alt="Flag Counter" border="0"></a>
+                <div class="col-md-8 heading-section text-center ftco-animate">
+                    <div style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #f0f0f0; display: inline-block;">
+                        <a target="_blank" href="https://info.flagcounter.com/WPje" style="display: block;">
+                            <img src="https://s01.flagcounter.com/countxl/WPje/bg_FFFFFF/txt_3e64ff/border_CCCCCC/columns_2/maxflags_20/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
+                                alt="Flag Counter" border="0" style="max-width: 100%; height: auto; border-radius: 8px;">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
