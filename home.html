@@ -33,6 +33,128 @@
 
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
 
+    <style>
+        /* Enhanced Navigation Bar Styles */
+        .ftco_navbar {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .ftco_navbar.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333 !important;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            margin-right: 8px;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover span {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .navbar-nav .nav-link {
+            color: #555 !important;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 10px 20px !important;
+            margin: 0 5px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .navbar-nav .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #667eea !important;
+            background: rgba(102, 126, 234, 0.08);
+        }
+        
+        .navbar-nav .nav-link:hover::before {
+            transform: translateX(-50%) scaleX(1);
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: #667eea !important;
+            background: rgba(102, 126, 234, 0.12);
+        }
+        
+        /* Special styling for LinkedIn link */
+        .navbar-nav .nav-item:last-child .nav-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            font-weight: 600;
+            box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);
+            margin-left: 10px;
+        }
+        
+        .navbar-nav .nav-item:last-child .nav-link::before {
+            display: none;
+        }
+        
+        .navbar-nav .nav-item:last-child .nav-link:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Mobile menu button */
+        .navbar-toggler {
+            border: 2px solid #667eea;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #667eea !important;
+        }
+        
+        .navbar-toggler:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 991px) {
+            .navbar-nav .nav-link {
+                margin: 5px 0;
+            }
+            
+            .navbar-nav .nav-item:last-child .nav-link {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
     
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
         <div class="container">
@@ -44,14 +166,11 @@
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav nav ml-auto">
-
-                    <li class="nav-item"><a href="#about-section" class="nav-link"><span>About me</span></a></li>
+                    <li class="nav-item"><a href="#about-section" class="nav-link"><span>About Me</span></a></li>
                     <li class="nav-item"><a href="#resume-section" class="nav-link"><span>Resume</span></a></li>
-                    <li class="nav-item"><a href="#life-section" class="nav-link"><span>Life outside work</span></a>
-                    </li>
+                    <li class="nav-item"><a href="#life-section" class="nav-link"><span>Life Outside Work</span></a></li>
                     <li class="nav-item"><a href="#contact-section" class="nav-link"><span>Contact</span></a></li>
-                    <li class="nav-item"><a target="_blank" href="https://www.linkedin.com/in/ajaya-dahal-137b94108/"
-                            class="nav-link"><span>LinkedIn</span></a></li>
+                    <li class="nav-item"><a target="_blank" href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" class="nav-link"><span>🔗 LinkedIn</span></a></li>
                 </ul>
             </div>
         </div>
