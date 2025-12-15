@@ -1904,7 +1904,7 @@
     <script>
         // Initialize recommendations carousel
         $(document).ready(function(){
-            var recommendationsCarousel = $('.carousel-recommendations').owlCarousel({
+            $('.carousel-recommendations').owlCarousel({
                 loop: true,
                 margin: 30,
                 nav: true,
@@ -1928,66 +1928,6 @@
                         items: 1
                     }
                 }
-            });
-
-            // Enhanced touch handling - only capture clear horizontal swipes
-            var startX = 0;
-            var startY = 0;
-            var moveX = 0;
-            var moveY = 0;
-            var isSwiping = false;
-            var swipeDirection = null;
-
-            $('.carousel-recommendations .owl-stage-outer').on('touchstart', function(e) {
-                var touch = e.originalEvent.touches[0];
-                startX = touch.pageX;
-                startY = touch.pageY;
-                moveX = 0;
-                moveY = 0;
-                isSwiping = false;
-                swipeDirection = null;
-            });
-
-            $('.carousel-recommendations .owl-stage-outer').on('touchmove', function(e) {
-                if (!e.originalEvent.touches[0]) return;
-                
-                var touch = e.originalEvent.touches[0];
-                moveX = touch.pageX - startX;
-                moveY = touch.pageY - startY;
-                
-                // Only set swipe direction once, when movement exceeds threshold
-                if (!isSwiping && (Math.abs(moveX) > 10 || Math.abs(moveY) > 10)) {
-                    isSwiping = true;
-                    // Determine primary direction
-                    if (Math.abs(moveX) > Math.abs(moveY) * 1.5) {
-                        swipeDirection = 'horizontal';
-                        e.preventDefault(); // Only prevent default for horizontal swipes
-                        e.stopPropagation();
-                    } else {
-                        swipeDirection = 'vertical';
-                        // Allow vertical scroll - don't prevent default
-                    }
-                }
-                
-                // Continue preventing default only if we determined it's horizontal
-                if (swipeDirection === 'horizontal') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            });
-
-            $('.carousel-recommendations .owl-stage-outer').on('touchend', function(e) {
-                if (swipeDirection === 'horizontal' && Math.abs(moveX) > 50) {
-                    if (moveX < 0) {
-                        recommendationsCarousel.trigger('next.owl.carousel');
-                    } else {
-                        recommendationsCarousel.trigger('prev.owl.carousel');
-                    }
-                }
-                
-                // Reset
-                isSwiping = false;
-                swipeDirection = null;
             });
 
             // Animated project counter with loop
