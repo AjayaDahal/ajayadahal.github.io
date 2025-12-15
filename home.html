@@ -435,7 +435,7 @@
                         <div class="text" style="width: 100%;">
                             <div style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%); border-radius: 12px; padding: 25px; border: 2px solid rgba(240, 147, 251, 0.2);">
                                 <p class="mb-3" style="display: flex; align-items: center; gap: 15px; font-size: 1.1rem;">
-                                    <span style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" class="number" data-number="10">0</span>
+                                    <span id="projectCounter" style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" class="number" data-number="20">1</span>
                                     <span style="color: #666; font-weight: 600;">+ Projects Completed</span>
                                 </p>
                                 <p style="margin: 0;"><b style="color: #333; font-size: 1.05rem;">💼 Open to Opportunities?</b></p>
@@ -748,7 +748,7 @@
 
                     <!-- edit started -->
                     <div id="page-1" class="page one">
-                        <h2 class="heading">Work Experience</h2>
+                        <h2 class="heading" style="font-size: 2.5rem; margin-bottom: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center;">Work Experience</h2>
 
                         <div class="work-experience-timeline">
                         <div class="work-card ftco-animate">
@@ -3171,10 +3171,10 @@
                 <!-- Aviation Milestones Section -->
                 <div class="aviation-milestones ftco-animate" style="margin-top: 60px;">
                     <div class="milestone-header">
-                        <h3 style="font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 10px; text-align: center;">
+                        <h3 style="font-size: 1.8rem; font-weight: 700; color: #333; margin-bottom: 10px; text-align: center;">
                             💍 Aviation Milestones
                         </h3>
-                        <p style="color: rgba(255,255,255,0.9); text-align: center; font-size: 1rem; margin-bottom: 30px;">
+                        <p style="color: #555; text-align: center; font-size: 1rem; margin-bottom: 30px;">
                             Where My Love for Aviation Met My Love Story
                         </p>
                     </div>
@@ -3182,10 +3182,10 @@
                     <div class="milestones-grid">
                         <!-- Proposal in Airplane -->
                         <div class="milestone-card proposal-card">
-                            <div class="milestone-badge">✈️ Proposal at 10,000 Feet</div>
+                            <div class="milestone-badge">✈️ Proposal at 1,500 Feet</div>
                             <h4 class="milestone-title">She Said Yes... In The Sky!</h4>
                             <p class="milestone-description">
-                                Proposed to my now-wife during a scenic flight. Sometimes the best moments happen when you're literally on top of the world.
+                                As a student pilot working on my private pilot license, I proposed to my now-wife during a flight at 1,500 feet in a single-engine Cessna 172. I had "MARRY ME" written on the ground in huge letters. She said yes!
                             </p>
                             <div class="video-container">
                                 <iframe 
@@ -3461,6 +3461,39 @@
                     }
                 }
             });
+
+            // Animated project counter with loop
+            function animateProjectCounter() {
+                let counter = 1;
+                const maxCount = 20;
+                const $projectCounter = $('#projectCounter');
+                
+                function updateCounter() {
+                    $projectCounter.text(counter);
+                    
+                    if (counter < maxCount) {
+                        counter++;
+                        setTimeout(updateCounter, 150); // Count up every 150ms
+                    } else {
+                        // Pause at 20 for 3 seconds, then restart
+                        setTimeout(function() {
+                            counter = 1;
+                            updateCounter();
+                        }, 3000);
+                    }
+                }
+                
+                updateCounter();
+            }
+            
+            // Start animation when element is in view
+            var projectCounterStarted = false;
+            $('.counter-wrap').waypoint(function(direction) {
+                if (direction === 'down' && !projectCounterStarted) {
+                    projectCounterStarted = true;
+                    animateProjectCounter();
+                }
+            }, { offset: '95%' });
         });
     </script>
 
