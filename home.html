@@ -1975,118 +1975,285 @@
     </section>
 
     <section class="ftco-about img ftco-section ftco-no-pt ftco-no-pb ftco-animate goto-here" id="life-section">
-        <!-- <section class="ftco-section ftco-no-pb goto-here" id="life-section"> -->
         <div class="container">
-           
-            <div class="text pl-3 text-center" style="margin-top:5%; margin-bottom: 5%;">
-                <h1 style="font-weight: 800; font-size: 30px; margin-bottom: 30px; color: #3e64ff; size: large;" >Life outside work </h1>
-                <div class="text pl-3">
-                    <h1-new><a target="_blank" href="https://www.youtube.com/watch?v=nKVCM2mNDq4&list=PLonxz3LyBmWk82AQUP7UwgOw_kCm6NKEH&index=1&ab_channel=AjayaDahal" style="color: black;">AVIATION LOVE</a></h1-new>
-                </div>
-            </div>
-
-            <div class="gallery">
-                <span style="--i:1">
-                    <img src="images/aviation/avai (1).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:2">
-                    <img src="images/aviation/avai (2).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:3">
-                    <img src="images/aviation/avai (3).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:4">
-                    <img src="images/aviation/avai (4).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:5">
-                    <img src="images/aviation/avai (5).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:6">
-                    <img src="images/aviation/avai (6).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:7">
-                    <img src="images/aviation/avai (7).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:8">
-                    <img src="images/aviation/avai (8).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:9">
-                    <img src="images/aviation/avai (9).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:10">
-                    <img src="images/aviation/avai (10).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:11">
-                    <img src="images/aviation/avai (11).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:12">
-                    <img src="images/aviation/avai (12).jpg" alt="" loading="lazy" />
-            </div>
-
-            <div class="text pl-3 text-center" style="margin-top: 10%; margin-bottom: 10%;">
-                <div class="text pl-3">
-                    <h1-new><a target="_blank" href="https://www.youtube.com/watch?v=NSjGU2b5mi8&list=PLonxz3LyBmWkQFcT2GfcKw2CsSBGzC3B-&index=1&ab_channel=AjayaDahal" style="color: black;">LIFE ON TWO WHEELS </a> </h1-new>
-                </div>
-            </div>
             
-            <div class="gallery-right">
-                <span style="--i:1">
-                    <img src="images/two-wheels/wheels (1).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:2">
-                    <img src="images/two-wheels/wheels (2).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:3">
-                    <img src="images/two-wheels/wheels (3).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:4">
-                    <img src="images/two-wheels/wheels (4).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:5">
-                    <img src="images/two-wheels/wheels (5).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:6">
-                    <img src="images/two-wheels/wheels (6).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:7">
-                    <img src="images/two-wheels/wheels (7).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:8">
-                    <img src="images/two-wheels/wheels (8).jpg" alt="" loading="lazy" />
-
-                </span><span style="--i:9">
-                    <img src="images/two-wheels/wheels (9).jpg" alt="" loading="lazy" />
-                </span>
+            <style>
+                .life-section-header {
+                    text-align: center;
+                    margin: 60px 0 50px 0;
+                }
+                
+                .life-section-title {
+                    font-weight: 800;
+                    font-size: 2.5rem;
+                    color: #2c98f0;
+                    margin-bottom: 15px;
+                    position: relative;
+                    display: inline-block;
+                }
+                
+                .life-section-title::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 60%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #2c98f0 0%, #667eea 100%);
+                    border-radius: 2px;
+                }
+                
+                .life-section-subtitle {
+                    color: #666;
+                    font-size: 1.1rem;
+                    margin-top: 20px;
+                    font-style: italic;
+                }
+                
+                .hobby-section {
+                    margin-bottom: 80px;
+                }
+                
+                .hobby-header {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    border-radius: 15px;
+                    padding: 30px;
+                    margin-bottom: 40px;
+                    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+                    text-align: center;
+                    position: relative;
+                    overflow: hidden;
+                }
+                
+                .hobby-header::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                    animation: pulse 4s ease-in-out infinite;
+                }
+                
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); opacity: 0.5; }
+                    50% { transform: scale(1.1); opacity: 0.8; }
+                }
+                
+                .hobby-icon {
+                    font-size: 3.5rem;
+                    margin-bottom: 15px;
+                    display: inline-block;
+                    animation: float 3s ease-in-out infinite;
+                }
+                
+                @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-10px); }
+                }
+                
+                .hobby-title {
+                    color: white;
+                    font-size: 2rem;
+                    font-weight: 700;
+                    margin-bottom: 10px;
+                    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    position: relative;
+                    z-index: 1;
+                }
+                
+                .hobby-youtube-link {
+                    display: inline-flex;
+                    align-items: center;
+                    background: white;
+                    color: #667eea;
+                    padding: 12px 25px;
+                    border-radius: 25px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+                    transition: all 0.3s ease;
+                    position: relative;
+                    z-index: 1;
+                    margin-top: 10px;
+                }
+                
+                .hobby-youtube-link:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.5);
+                    color: #764ba2;
+                }
+                
+                .hobby-youtube-link::before {
+                    content: '▶';
+                    margin-right: 8px;
+                    font-size: 16px;
+                }
+                
+                /* Aviation theme */
+                .hobby-header.aviation {
+                    background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+                }
+                
+                /* Motorcycle theme */
+                .hobby-header.motorcycle {
+                    background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+                }
+                
+                /* Miscellaneous theme */
+                .hobby-header.misc {
+                    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+                }
+                
+                @media (max-width: 768px) {
+                    .life-section-title {
+                        font-size: 2rem;
+                    }
+                    
+                    .hobby-title {
+                        font-size: 1.5rem;
+                    }
+                    
+                    .hobby-icon {
+                        font-size: 2.5rem;
+                    }
+                }
+            </style>
+           
+            <div class="life-section-header ftco-animate">
+                <h1 class="life-section-title">Life Outside Work</h1>
+                <p class="life-section-subtitle">When I'm not building FPGA designs, I'm chasing adventures in the skies and on the road</p>
             </div>
 
-            <div class="text pl-3 text-center" style="margin-top: 10%; margin-bottom: 10%;">
-                <div class="text pl-3">
-                    <h1-new><a target="_blank" href="https://www.youtube.com/watch?v=OI0yKwsCSdk&list=PLonxz3LyBmWlLQpoN_lpnhbS6UMEQKCwz&index=1&ab_channel=AjayaDahal" style="color: black;">MISCELLANEOUS GALLERY</a></h1-new>
+            <!-- Aviation Section -->
+            <div class="hobby-section ftco-animate">
+                <div class="hobby-header aviation">
+                    <div class="hobby-icon">✈️</div>
+                    <h2 class="hobby-title">Aviation Passion</h2>
+                    <p style="color: white; font-size: 1rem; margin-bottom: 15px; position: relative; z-index: 1;">FAA Part 107 Certified Drone Pilot | Aviation Enthusiast</p>
+                    <a target="_blank" href="https://www.youtube.com/watch?v=nKVCM2mNDq4&list=PLonxz3LyBmWk82AQUP7UwgOw_kCm6NKEH&index=1&ab_channel=AjayaDahal" class="hobby-youtube-link">
+                        Watch on YouTube
+                    </a>
+                    </div>
+
+                <div class="gallery">
+                    <span style="--i:1">
+                        <img src="images/aviation/avai (1).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:2">
+                        <img src="images/aviation/avai (2).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:3">
+                        <img src="images/aviation/avai (3).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:4">
+                        <img src="images/aviation/avai (4).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:5">
+                        <img src="images/aviation/avai (5).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:6">
+                        <img src="images/aviation/avai (6).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:7">
+                        <img src="images/aviation/avai (7).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:8">
+                        <img src="images/aviation/avai (8).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:9">
+                        <img src="images/aviation/avai (9).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:10">
+                        <img src="images/aviation/avai (10).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:11">
+                        <img src="images/aviation/avai (11).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:12">
+                        <img src="images/aviation/avai (12).jpg" alt="Aviation Photography" loading="lazy" />
+                    </span>
                 </div>
             </div>
 
-            <div class="gallery" style="margin-bottom: 10%;">
-                <span style="--i:1">
-                    <img src="images/miscellaneous/mis (1).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:2">
-                    <img src="images/miscellaneous/mis (2).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:3">
-                    <img src="images/miscellaneous/mis (3).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:4">
-                    <img src="images/miscellaneous/mis (4).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:5">
-                    <img src="images/miscellaneous/mis (5).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:6">
-                    <img src="images/miscellaneous/mis (6).jpg" alt="" loading="lazy" />
-                </span>
-                <span style="--i:7">
-                    <img src="images/miscellaneous/mis (7).jpg" alt="" loading="lazy" />
-                </span>
+            <!-- Motorcycle Section -->
+            <div class="hobby-section ftco-animate">
+                <div class="hobby-header motorcycle">
+                    <div class="hobby-icon">🏍️</div>
+                    <h2 class="hobby-title">Life on Two Wheels</h2>
+                    <p style="color: white; font-size: 1rem; margin-bottom: 15px; position: relative; z-index: 1;">Weekend Rides | Open Roads | Freedom on Two Wheels</p>
+                    <a target="_blank" href="https://www.youtube.com/watch?v=NSjGU2b5mi8&list=PLonxz3LyBmWkQFcT2GfcKw2CsSBGzC3B-&index=1&ab_channel=AjayaDahal" class="hobby-youtube-link">
+                        Watch on YouTube
+                    </a>
+                </div>
+            
+                <div class="gallery-right">
+                    <span style="--i:1">
+                        <img src="images/two-wheels/wheels (1).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:2">
+                        <img src="images/two-wheels/wheels (2).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:3">
+                        <img src="images/two-wheels/wheels (3).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:4">
+                        <img src="images/two-wheels/wheels (4).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:5">
+                        <img src="images/two-wheels/wheels (5).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:6">
+                        <img src="images/two-wheels/wheels (6).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:7">
+                        <img src="images/two-wheels/wheels (7).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:8">
+                        <img src="images/two-wheels/wheels (8).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                    <span style="--i:9">
+                        <img src="images/two-wheels/wheels (9).jpg" alt="Motorcycle Adventures" loading="lazy" />
+                    </span>
+                </div>
+            </div>
+
+            <!-- Miscellaneous Section -->
+            <div class="hobby-section ftco-animate">
+                <div class="hobby-header misc">
+                    <div class="hobby-icon">📸</div>
+                    <h2 class="hobby-title">Miscellaneous Gallery</h2>
+                    <p style="color: white; font-size: 1rem; margin-bottom: 15px; position: relative; z-index: 1;">Travel | Photography | Adventures</p>
+                    <a target="_blank" href="https://www.youtube.com/watch?v=OI0yKwsCSdk&list=PLonxz3LyBmWlLQpoN_lpnhbS6UMEQKCwz&index=1&ab_channel=AjayaDahal" class="hobby-youtube-link">
+                        Watch on YouTube
+                    </a>
+                </div>
+
+                <div class="gallery" style="margin-bottom: 10%;">
+                    <span style="--i:1">
+                        <img src="images/miscellaneous/mis (1).jpg" alt="Travel Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:2">
+                        <img src="images/miscellaneous/mis (2).jpg" alt="Travel Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:3">
+                        <img src="images/miscellaneous/mis (3).jpg" alt="Travel Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:4">
+                        <img src="images/miscellaneous/mis (4).jpg" alt="Travel Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:5">
+                        <img src="images/miscellaneous/mis (5).jpg" alt="Travel Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:6">
+                        <img src="images/miscellaneous/mis (6).jpg" alt="Travel Photography" loading="lazy" />
+                    </span>
+                    <span style="--i:7">
+                        <img src="images/miscellaneous/mis (7).jpg" alt="Travel Photography" loading="lazy" />
+                    </span>
+                </div>
             </div>
 
         </div>
