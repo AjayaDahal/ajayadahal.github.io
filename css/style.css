@@ -11549,3 +11549,160 @@ border-color: #764ba2;
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
 }
+
+/* ========================================
+   HARDWARE LAB SHOWCASE SECTION
+   Professional lab setup display with hover effects
+   ======================================== */
+
+.lab-showcase-grid {
+    margin-top: 20px;
+}
+
+.lab-showcase-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.lab-showcase-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.25);
+    border: 2px solid;
+    border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+}
+
+.lab-image-wrapper {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    height: 280px;
+    background: #000;
+}
+
+.lab-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lab-showcase-card:hover .lab-image-wrapper img {
+    transform: scale(1.1);
+}
+
+.lab-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.lab-showcase-card:hover .lab-overlay {
+    opacity: 1;
+}
+
+.lab-overlay-content {
+    text-align: center;
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+}
+
+.lab-showcase-card:hover .lab-overlay-content {
+    transform: translateY(0);
+}
+
+.lab-info {
+    padding: 20px;
+    background: white;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.lab-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.lab-description {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.lab-tech-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.lab-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    color: #667eea;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.lab-badge:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+    transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .lab-image-wrapper {
+        height: 220px;
+    }
+    
+    .lab-title {
+        font-size: 1.1rem;
+    }
+    
+    .lab-description {
+        font-size: 0.9rem;
+    }
+    
+    .lab-showcase-card {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .lab-image-wrapper {
+        height: 250px;
+    }
+    
+    .lab-showcase-card:hover {
+        transform: translateY(-4px);
+    }
+}
