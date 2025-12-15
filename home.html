@@ -2461,6 +2461,181 @@
                         font-size: 2.5rem;
                     }
                 }
+
+                /* Aviation Milestones Section */
+                .aviation-milestones {
+                    background: linear-gradient(135deg, rgba(0, 180, 219, 0.1) 0%, rgba(0, 131, 176, 0.1) 100%);
+                    border-radius: 20px;
+                    padding: 40px;
+                    margin: 60px 0;
+                }
+
+                .milestone-header {
+                    margin-bottom: 40px;
+                }
+
+                .milestones-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                    gap: 30px;
+                }
+
+                .milestone-card {
+                    background: white;
+                    border-radius: 15px;
+                    padding: 30px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                    transition: all 0.3s ease;
+                    border: 2px solid transparent;
+                }
+
+                .milestone-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 30px rgba(0, 180, 219, 0.3);
+                    border-color: #00b4db;
+                }
+
+                .milestone-badge {
+                    display: inline-block;
+                    background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 25px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    margin-bottom: 15px;
+                    box-shadow: 0 2px 10px rgba(0, 180, 219, 0.3);
+                }
+
+                .milestone-title {
+                    font-size: 1.4rem;
+                    font-weight: 700;
+                    color: #333;
+                    margin-bottom: 12px;
+                    background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .milestone-description {
+                    color: #666;
+                    font-size: 1rem;
+                    line-height: 1.6;
+                    margin-bottom: 20px;
+                }
+
+                .video-container {
+                    position: relative;
+                    width: 100%;
+                    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+                    height: 0;
+                    overflow: hidden;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                }
+
+                .video-container iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 12px;
+                }
+
+                .wedding-image-container {
+                    width: 100%;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                    position: relative;
+                }
+
+                .wedding-image-container img {
+                    width: 100%;
+                    height: auto;
+                    display: block;
+                    transition: transform 0.3s ease;
+                }
+
+                .wedding-image-container:hover img {
+                    transform: scale(1.05);
+                }
+
+                .wedding-placeholder {
+                    background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+                    border-radius: 12px;
+                    padding: 60px 30px;
+                    text-align: center;
+                    min-height: 250px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .wedding-placeholder::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    right: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                    animation: rotate-gradient 15s linear infinite;
+                }
+
+                @keyframes rotate-gradient {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                .helicopter-icon {
+                    font-size: 5rem;
+                    animation: helicopter-hover 3s ease-in-out infinite;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                @keyframes helicopter-hover {
+                    0%, 100% {
+                        transform: translateY(0) rotate(-2deg);
+                    }
+                    50% {
+                        transform: translateY(-15px) rotate(2deg);
+                    }
+                }
+
+                /* Mobile Responsive for Milestones */
+                @media (max-width: 768px) {
+                    .aviation-milestones {
+                        padding: 25px 20px;
+                    }
+
+                    .milestones-grid {
+                        grid-template-columns: 1fr;
+                        gap: 25px;
+                    }
+
+                    .milestone-card {
+                        padding: 20px;
+                    }
+
+                    .milestone-title {
+                        font-size: 1.2rem;
+                    }
+
+                    .helicopter-icon {
+                        font-size: 4rem;
+                    }
+                }
             </style>
            
             <div class="life-section-header ftco-animate">
@@ -2516,6 +2691,53 @@
                     <span style="--i:12">
                         <img src="images/aviation/avai (12).jpg" alt="Aviation Photography" loading="lazy" />
                     </span>
+                </div>
+
+                <!-- Aviation Milestones Section -->
+                <div class="aviation-milestones ftco-animate" style="margin-top: 60px;">
+                    <div class="milestone-header">
+                        <h3 style="font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 10px; text-align: center;">
+                            💍 Aviation Milestones
+                        </h3>
+                        <p style="color: rgba(255,255,255,0.9); text-align: center; font-size: 1rem; margin-bottom: 30px;">
+                            Where My Love for Aviation Met My Love Story
+                        </p>
+                    </div>
+
+                    <div class="milestones-grid">
+                        <!-- Proposal in Airplane -->
+                        <div class="milestone-card proposal-card">
+                            <div class="milestone-badge">✈️ Proposal at 10,000 Feet</div>
+                            <h4 class="milestone-title">She Said Yes... In The Sky!</h4>
+                            <p class="milestone-description">
+                                Proposed to my now-wife during a scenic flight. Sometimes the best moments happen when you're literally on top of the world.
+                            </p>
+                            <div class="video-container">
+                                <iframe 
+                                    width="100%" 
+                                    height="315" 
+                                    src="https://www.youtube.com/embed/RGfmsjZ329I" 
+                                    title="Airplane Proposal" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- Helicopter Wedding Entry -->
+                        <div class="milestone-card wedding-card">
+                            <div class="milestone-badge">🚁 Wedding Grand Entry</div>
+                            <h4 class="milestone-title">Arrived By Helicopter</h4>
+                            <p class="milestone-description">
+                                Made a grand entrance to our wedding ceremony via helicopter. When you love aviation, why not make it part of your special day?
+                            </p>
+                            <div class="wedding-image-container">
+                                <img src="images/aviation/wedding.jpg" alt="Helicopter Wedding Entry" loading="lazy" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
