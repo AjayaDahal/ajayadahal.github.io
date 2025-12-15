@@ -177,8 +177,100 @@
                 </div>
             </div>
             
+            <style>
+                /* Custom styling for recommendations carousel navigation */
+                .carousel-recommendations .owl-nav {
+                    position: absolute;
+                    top: 50%;
+                    width: 100%;
+                    transform: translateY(-50%);
+                    display: flex;
+                    justify-content: space-between;
+                    pointer-events: none;
+                }
+                
+                .carousel-recommendations .owl-nav button {
+                    pointer-events: all;
+                    background: white !important;
+                    width: 50px !important;
+                    height: 50px !important;
+                    border-radius: 50% !important;
+                    display: flex !important;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+                    transition: all 0.3s ease !important;
+                    border: 2px solid #2c98f0 !important;
+                }
+                
+                .carousel-recommendations .owl-nav button:hover {
+                    background: #2c98f0 !important;
+                    transform: scale(1.1);
+                    box-shadow: 0 6px 16px rgba(44,152,240,0.3) !important;
+                }
+                
+                .carousel-recommendations .owl-nav button span {
+                    font-size: 28px !important;
+                    color: #2c98f0;
+                    line-height: 1;
+                }
+                
+                .carousel-recommendations .owl-nav button:hover span {
+                    color: white;
+                }
+                
+                .carousel-recommendations .owl-nav .owl-prev {
+                    margin-left: -25px;
+                }
+                
+                .carousel-recommendations .owl-nav .owl-next {
+                    margin-right: -25px;
+                }
+                
+                .carousel-recommendations .owl-dots {
+                    text-align: center;
+                    margin-top: 30px;
+                }
+                
+                .carousel-recommendations .owl-dot {
+                    width: 12px;
+                    height: 12px;
+                    background: #ddd !important;
+                    border-radius: 50%;
+                    display: inline-block;
+                    margin: 0 6px;
+                    transition: all 0.3s ease;
+                }
+                
+                .carousel-recommendations .owl-dot.active {
+                    background: #2c98f0 !important;
+                    width: 30px;
+                    border-radius: 6px;
+                }
+                
+                /* Mobile responsive */
+                @media (max-width: 768px) {
+                    .carousel-recommendations .owl-nav button {
+                        width: 40px !important;
+                        height: 40px !important;
+                    }
+                    
+                    .carousel-recommendations .owl-nav button span {
+                        font-size: 22px !important;
+                    }
+                    
+                    .carousel-recommendations .owl-nav .owl-prev {
+                        margin-left: 0;
+                    }
+                    
+                    .carousel-recommendations .owl-nav .owl-next {
+                        margin-right: 0;
+                    }
+                }
+            </style>
+            
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style="position: relative;">
                     <div class="carousel-recommendations owl-carousel ftco-animate">
                         
                         <!-- Recommendation 1: Daniel Sill - AMD Mentor -->
@@ -346,7 +438,7 @@
 
                         <div class="resume-wrap d-flex ftco-animate">
                             <a target="_blank" href="https://www.amd.com/en.html"> <img src="iconss/edu_icons/amd_logo.png" width="60"
-                                    height="60" /> </a>
+                                    height="60" loading="lazy" /> </a>
                             <div class="text pl-3">
                                 <span class="date">Jan 2023 - Present</span>
                                 <h2>Sr. FPGA & Network System Engineer</h2>
@@ -389,7 +481,7 @@
                                     <div class="col-md-4 ftco-animate mb-3">
                                         <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
                                             <a href="images/lab/lab1.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab1.jpg'); height: 180px; background-size: cover; background-position: center;">
+                                               style="background-image: url('images/lab/lab1.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
                                             </a>
                                             <div class="text p-2 text-center" style="background: #f8f9fa;">
                                                 <small style="color: #333;"><b>Versal VCK190</b><br>100G Live Traffic Test With MRMAC</small>
@@ -400,7 +492,7 @@
                                     <div class="col-md-4 ftco-animate mb-3">
                                         <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
                                             <a href="images/lab/lab2.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab2.jpg'); height: 180px; background-size: cover; background-position: center;">
+                                               style="background-image: url('images/lab/lab2.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
                                             </a>
                                             <div class="text p-2 text-center" style="background: #f8f9fa;">
                                                 <small style="color: #333;"><b>Zynq UltraScale+ ZCU111</b><br>100G Live Traffic Test with CMAC</small>
@@ -411,7 +503,7 @@
                                     <div class="col-md-4 ftco-animate mb-3">
                                         <div class="blog-entry shadow-sm" style="border-radius: 5px; overflow: hidden;">
                                             <a href="images/lab/lab3.jpg" class="block-20 image-popup" 
-                                               style="background-image: url('images/lab/lab3.jpg'); height: 180px; background-size: cover; background-position: center;">
+                                               style="background-image: url('images/lab/lab3.jpg'); height: 180px; background-size: cover; background-position: center;" loading="lazy">
                                             </a>
                                             <div class="text p-2 text-center" style="background: #f8f9fa;">
                                                 <small style="color: #333;"><b>IBERT Eye Diagram</b><br>100G SerDes Tuning Results</small>
@@ -450,7 +542,7 @@
 
                         <div class="resume-wrap d-flex ftco-animate">
                             <a target="_blank" href="https://msstate.edu"><img src="iconss/edu_icons/MSU_logo.jpg" width="60"
-                                    height="60" /> </a>
+                                    height="60" loading="lazy" /> </a>
                             <div class="text pl-3">
                                 <span class="date">Aug 2019-Jan 2024</span>
                                 <h2> Graduate Research Assistant </h2>
@@ -469,7 +561,7 @@
 
                         <div class="resume-wrap d-flex ftco-animate">
                             <a target="_blank" href="https://www.hunter.com/"><img src="iconss/edu_icons/hunter_logo.png" width="70"
-                                    height="20" /></a>
+                                    height="20" loading="lazy" /></a>
                             <div class="text pl-3">
                                 <span class="date">Jan 2020-Jan 2022</span>
                                 <h2> PCB Design Engineer Co-op</h2>
@@ -489,7 +581,7 @@
 
                         <div class="resume-wrap d-flex ftco-animate">
                             <a target="_blank" href="https://www.woot.com/"><img src="https://d3rqdbvvokrlbl.cloudfront.net/lib/images/sites/header/woot-logo.svg" width="70"
-                                    height="20" /></a>
+                                    height="20" loading="lazy" /></a>
                             <div class="text pl-3">
                                 <span class="date">March 2019-August 2019</span>
                                 <h2> Quality Control</h2>
@@ -513,7 +605,7 @@
                         <h2 class="heading">Education</h2>
 
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/scroll_si_casca.jpg" width="60" height="60" />
+                            <img src="iconss/scroll_si_casca.jpg" width="60" height="60" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">2021-2023</span>
                                 <h2>Master's in Electrical and Computer Engineering</h2>
@@ -541,7 +633,7 @@
                         </div>
 
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/edu_icons/engineer.svg" width="40" height="40" />
+                            <img src="iconss/edu_icons/engineer.svg" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">2019-2022</span>
                                 <h2>Bachelor of Science in Electrical and Computer Engineering</h2>
@@ -551,7 +643,7 @@
                         </div>
 
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/edu_icons/secondary school.png" width="40" height="40" />
+                            <img src="iconss/edu_icons/secondary school.png" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">Courses</span>
                                 <ul>
@@ -723,7 +815,7 @@
                             <!-- NVIDIA RDMA Programming - NEW & CRITICAL FOR HFT -->
                             <div class="cert-card">
                                 <div class="cert-logo">
-                                    <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/about-nvidia/logo-and-brand/01-nvidia-logo-vert-500x200-2c50-d.png" alt="NVIDIA">
+                                    <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/about-nvidia/logo-and-brand/01-nvidia-logo-vert-500x200-2c50-d.png" alt="NVIDIA" loading="lazy">
                                 </div>
                                 <div class="cert-content">
                                     <div class="cert-title">
@@ -739,7 +831,7 @@
                             <!-- Jenkins CI/CD - NEW & AMD CERTIFIED -->
                             <div class="cert-card">
                                 <div class="cert-logo">
-                                    <img src="skills_icon/Jenkins-Symbol.png" alt="Jenkins">
+                                    <img src="skills_icon/Jenkins-Symbol.png" alt="Jenkins" loading="lazy">
                                 </div>
                                 <div class="cert-content">
                                     <div class="cert-title">
@@ -757,7 +849,7 @@
                             <!-- Verilog HDL -->
                             <div class="cert-card">
                                 <div class="cert-logo">
-                                    <img src="skills_icon/verilog.png" alt="Verilog">
+                                    <img src="skills_icon/verilog.png" alt="Verilog" loading="lazy">
                                 </div>
                                 <div class="cert-content">
                                     <div class="cert-title">Verilog HDL: VLSI Hardware Design Comprehensive Masterclass</div>
@@ -772,7 +864,7 @@
                             <!-- Linux Device Drivers -->
                             <div class="cert-card">
                                 <div class="cert-logo">
-                                    <img src="skills_icon/linux.svg" alt="Linux">
+                                    <img src="skills_icon/linux.svg" alt="Linux" loading="lazy">
                                 </div>
                                 <div class="cert-content">
                                     <div class="cert-title">Linux Device Drivers</div>
@@ -787,7 +879,7 @@
                             <!-- Embedded Linux using Yocto -->
                             <div class="cert-card">
                                 <div class="cert-logo">
-                                    <img src="skills_icon/YoctoProject_Logo_RGB.jpg" alt="Yocto">
+                                    <img src="skills_icon/YoctoProject_Logo_RGB.jpg" alt="Yocto" loading="lazy">
                                 </div>
                                 <div class="cert-content">
                                     <div class="cert-title">Embedded Linux using Yocto</div>
@@ -802,7 +894,7 @@
                             <!-- LPIC-2 Linux Engineer -->
                             <div class="cert-card">
                                 <div class="cert-logo">
-                                    <img src="skills_icon/linux.svg" alt="Linux">
+                                    <img src="skills_icon/linux.svg" alt="Linux" loading="lazy">
                                 </div>
                                 <div class="cert-content">
                                     <div class="cert-title">LPIC-2 Linux Engineer (201-450) Cert Prep</div>
@@ -950,7 +1042,7 @@
 
                         <div class="resume-wrap d-flex ftco-animate">
                             <img src="images/PC build.jpg" width="40"
-                                height="40" />
+                                height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date"> December 2023</span>
                                 <h2>High-Performance ML Workstation</h2>
@@ -963,7 +1055,7 @@
 
                         <div class="resume-wrap d-flex ftco-animate">
                             <img src="images/RC_plane.jpg" width="40"
-                                height="40" />
+                                height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date"> November 2023</span>
                                 <h2>Shark Aero</h2>
@@ -976,7 +1068,7 @@
 
                         <div class="resume-wrap d-flex ftco-animate">
                             <img src="https://collide-o-scope-msu.github.io/static/images/hardware.jpeg" width="40"
-                                height="40" />
+                                height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date"> April-December 2022</span>
                                 <h2>WRECKS</h2>
@@ -989,7 +1081,7 @@
                         </div>
 
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="dissection/static/images/unbox1.jpg" width="40" height="40" />
+                            <img src="dissection/static/images/unbox1.jpg" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date"> April 2022</span>
                                 <h2>ECE 6723 Electronics Dissection</h2>
@@ -1001,7 +1093,7 @@
                             </div>
                         </div>
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/line.jpg" width="40" height="40" />
+                            <img src="iconss/project_icons/line.jpg" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date"> May 2021</span>
                                 <h2>Line Follower Robot using PIC24</h2>
@@ -1012,7 +1104,7 @@
                             </div>
                         </div>
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/drone.jpg" width="40" height="40" />
+                            <img src="iconss/project_icons/drone.jpg" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">February 2021</span>
                                 <h2>NXP Semiconductor</h2>
@@ -1024,7 +1116,7 @@
                             </div>
                         </div>
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/temp.webp" width="40" height="40" />
+                            <img src="iconss/project_icons/temp.webp" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">December 2020</span>
                                 <h2>Mississippi State University: Design Group Project </h2>
@@ -1037,7 +1129,7 @@
                             </div>
                         </div>
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/video.webp" width="40" height="40" />
+                            <img src="iconss/project_icons/video.webp" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">June 2020</span>
                                 <h2>Smart Video Player</h2>
@@ -1051,7 +1143,7 @@
                             </div>
                         </div>
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/drone_rth.webp" width="40" height="40" />
+                            <img src="iconss/project_icons/drone_rth.webp" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">April 2020</span>
                                 <h2>DIY Drone</h2>
@@ -1064,7 +1156,7 @@
                             </div>
                         </div>
                         <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/line.webp" width="40" height="40" />
+                            <img src="iconss/project_icons/line.webp" width="40" height="40" loading="lazy" />
                             <div class="text pl-3">
                                 <span class="date">March 2020</span>
                                 <h2>LM324N Comparator Line follower</h2>
@@ -1082,51 +1174,51 @@
                             
                             <!-- FPGA & RTL Design Section - TOP PRIORITY -->
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="skills_icon/vivado_design_suite_ml_edition.png" width="50" height="50" />
+                                <img src="skills_icon/vivado_design_suite_ml_edition.png" width="50" height="50" loading="lazy" />
                                 <div class="text pl-3">
                                     <h2>FPGA & RTL Design</h2>
                                 </div>
                             </div>
                             <table>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/vivado_design_suite_ml_edition.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/amd-vitis.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/verilog.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/vivado_design_suite_ml_edition.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/amd-vitis.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/verilog.png" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/vitis-hls.jpg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/chipscope.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/quartus.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/vitis-hls.jpg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/chipscope.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/quartus.png" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/SPB_modelsim.jpg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/JTAG.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/YoctoProject_Logo_RGB.jpg" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/SPB_modelsim.jpg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/JTAG.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/YoctoProject_Logo_RGB.jpg" width="80" height="80" loading="lazy" />
                                 </tr>
                             </table>
                             <br />
                             
                             <!-- Embedded Software & Systems -->
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="skills_icon/software.png" width="50" height="50" />
+                                <img src="skills_icon/software.png" width="50" height="50" loading="lazy" />
                                 <div class="text pl-3">
                                     <h2>Embedded Software & Systems</h2>
                                 </div>
                             </div>
                             <table>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/c.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/cpp.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/python.svg" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/c.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/cpp.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/python.svg" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/linux.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/github.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/docker.svg" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/linux.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/github.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/docker.svg" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/git.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/Jenkins-Symbol.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/git.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/Jenkins-Symbol.png" width="80" height="80" loading="lazy" />
                                     <td style="padding: 25px;"></td>
                                 </tr>
                             </table>
@@ -1134,77 +1226,77 @@
                             
                             <!-- Hardware Design Tools -->
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="skills_icon/hardware.png" width="50" height="50" />
+                                <img src="skills_icon/hardware.png" width="50" height="50" loading="lazy" />
                                 <div class="text pl-3">
                                     <h2>Hardware Design & PCB</h2>
                                 </div>
                             </div>
                             <table>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/altium.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/KiCad-Logo.svg" width="80" height="60" />
-                                    <td style="padding: 25px;"><img src="skills_icon/proteus.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/altium.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/KiCad-Logo.svg" width="80" height="60" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/proteus.png" width="80" height="80" loading="lazy" />
                                 </tr>
                             </table>
                             <br />
                             
                             <!-- Additional Technologies -->
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="skills_icon/aritifical_intelligence.svg" width="50" height="50" />
+                                <img src="skills_icon/aritifical_intelligence.svg" width="50" height="50" loading="lazy" />
                                 <div class="text pl-3">
                                     <h2>Additional Technologies</h2>
                                 </div>
                             </div>
                             <table>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/sdr.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/Ros_logo.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/lv.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/sdr.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/Ros_logo.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/lv.png" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/srsRAN.png" width="80" height="60" />
-                                    <td style="padding: 25px;"><img src="skills_icon/amarisoft.png" width="80" height="40" />
-                                    <td style="padding: 25px;"><img src="skills_icon/wireshark.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/srsRAN.png" width="80" height="60" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/amarisoft.png" width="80" height="40" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/wireshark.png" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/tf.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/opencv.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/wireless_insite.jpg" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/tf.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/opencv.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/wireless_insite.jpg" width="80" height="80" loading="lazy" />
                                 </tr>
                             </table>
                             <br />
                             
                             <!-- Other Development Tools -->
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="skills_icon/software.png" width="50" height="50" />
+                                <img src="skills_icon/software.png" width="50" height="50" loading="lazy" />
                                 <div class="text pl-3">
                                     <h2>Other Development Tools</h2>
                                 </div>
                             </div>
                             <table>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/java.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/javascript.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/android-studio.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/java.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/javascript.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/android-studio.png" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/NetBeans_Logo.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/firebase.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/php.svg" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/NetBeans_Logo.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/firebase.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/php.svg" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/arduino.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/pi.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/solidworks.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/arduino.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/pi.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/solidworks.png" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/3d.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/PX4_symbol_black.svg" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/ardupilot_logo.png" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/3d.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/PX4_symbol_black.svg" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/ardupilot_logo.png" width="80" height="80" loading="lazy" />
                                 </tr>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/mplab-xide-transparent-background.png" width="80" height="80" />
-                                    <td style="padding: 25px;"><img src="skills_icon/beless.jpg" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/mplab-xide-transparent-background.png" width="80" height="80" loading="lazy" />
+                                    <td style="padding: 25px;"><img src="skills_icon/beless.jpg" width="80" height="80" loading="lazy" />
                                     <td style="padding: 25px;"></td>
                                 </tr>
                             </table>
@@ -1217,7 +1309,7 @@
                             <h2 class="heading">Awards and Publication</h2>
 
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="iconss/achivements_icons/msu.png" width="80" height="60" />
+                                <img src="iconss/achivements_icons/msu.png" width="80" height="60" loading="lazy" />
                                 <div class="text pl-3">
                                     <span class="date">December 2021</span>
                                     <h2>Recipient of Certificate of Excellence in Microprocessor ECE 3724 - Spring 2021
@@ -1234,7 +1326,7 @@
                             </div>
 
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="iconss/achivements_icons/msu.png" width="80" height="60" />
+                                <img src="iconss/achivements_icons/msu.png" width="80" height="60" loading="lazy" />
                                 <div class="text pl-3">
                                     <span class="date">September 2019-2022</span>
                                     <h2>Undergraduate Research Assistant Funding from ORED-MSU</h2>
@@ -1247,7 +1339,7 @@
                             </div>
 
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="https://images.squarespace-cdn.com/content/v1/5c3dfaf7ec4eb7132da43b25/1547580067737-V97BF1CHCLTLTRPNK43A/mama-logo.png?format=1500w" width="80" height="50" />
+                                <img src="https://images.squarespace-cdn.com/content/v1/5c3dfaf7ec4eb7132da43b25/1547580067737-V97BF1CHCLTLTRPNK43A/mama-logo.png?format=1500w" width="80" height="50" loading="lazy" />
                                 <div class="text pl-3">
                                     <span class="date">2020-2021</span>
                                     <h2>Recipient of Mississippi Automotive Manufactures Association (MAMA) Scholarships</h2>
@@ -1260,7 +1352,7 @@
 
 
                             <div class="resume-wrap d-flex ftco-animate">
-                                <img src="iconss/research.png" width="60" height="60" />
+                                <img src="iconss/research.png" width="60" height="60" loading="lazy" />
                                 <div class="text pl-3">
                                     <span class="date">September 2019-Present</span>
                                     <h2>Publications </h2>
@@ -1350,40 +1442,40 @@
 
             <div class="gallery">
                 <span style="--i:1">
-                    <img src="images/aviation/avai (1).jpg" alt="" />
+                    <img src="images/aviation/avai (1).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:2">
-                    <img src="images/aviation/avai (2).jpg" alt="" />
+                    <img src="images/aviation/avai (2).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:3">
-                    <img src="images/aviation/avai (3).jpg" alt="" />
+                    <img src="images/aviation/avai (3).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:4">
-                    <img src="images/aviation/avai (4).jpg" alt="" />
+                    <img src="images/aviation/avai (4).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:5">
-                    <img src="images/aviation/avai (5).jpg" alt="" />
+                    <img src="images/aviation/avai (5).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:6">
-                    <img src="images/aviation/avai (6).jpg" alt="" />
+                    <img src="images/aviation/avai (6).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:7">
-                    <img src="images/aviation/avai (7).jpg" alt="" />
+                    <img src="images/aviation/avai (7).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:8">
-                    <img src="images/aviation/avai (8).jpg" alt="" />
+                    <img src="images/aviation/avai (8).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:9">
-                    <img src="images/aviation/avai (9).jpg" alt="" />
+                    <img src="images/aviation/avai (9).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:10">
-                    <img src="images/aviation/avai (10).jpg" alt="" />
+                    <img src="images/aviation/avai (10).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:11">
-                    <img src="images/aviation/avai (11).jpg" alt="" />
+                    <img src="images/aviation/avai (11).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:12">
-                    <img src="images/aviation/avai (12).jpg" alt="" />
+                    <img src="images/aviation/avai (12).jpg" alt="" loading="lazy" />
             </div>
 
             <div class="text pl-3 text-center" style="margin-top: 10%; margin-bottom: 10%;">
@@ -1394,31 +1486,31 @@
             
             <div class="gallery-right">
                 <span style="--i:1">
-                    <img src="images/two-wheels/wheels (1).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (1).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:2">
-                    <img src="images/two-wheels/wheels (2).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (2).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:3">
-                    <img src="images/two-wheels/wheels (3).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (3).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:4">
-                    <img src="images/two-wheels/wheels (4).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (4).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:5">
-                    <img src="images/two-wheels/wheels (5).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (5).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:6">
-                    <img src="images/two-wheels/wheels (6).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (6).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:7">
-                    <img src="images/two-wheels/wheels (7).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (7).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:8">
-                    <img src="images/two-wheels/wheels (8).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (8).jpg" alt="" loading="lazy" />
 
                 </span><span style="--i:9">
-                    <img src="images/two-wheels/wheels (9).jpg" alt="" />
+                    <img src="images/two-wheels/wheels (9).jpg" alt="" loading="lazy" />
                 </span>
             </div>
 
@@ -1430,25 +1522,25 @@
 
             <div class="gallery" style="margin-bottom: 10%;">
                 <span style="--i:1">
-                    <img src="images/miscellaneous/mis (1).jpg" alt="" />
+                    <img src="images/miscellaneous/mis (1).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:2">
-                    <img src="images/miscellaneous/mis (2).jpg" alt="" />
+                    <img src="images/miscellaneous/mis (2).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:3">
-                    <img src="images/miscellaneous/mis (3).jpg" alt="" />
+                    <img src="images/miscellaneous/mis (3).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:4">
-                    <img src="images/miscellaneous/mis (4).jpg" alt="" />
+                    <img src="images/miscellaneous/mis (4).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:5">
-                    <img src="images/miscellaneous/mis (5).jpg" alt="" />
+                    <img src="images/miscellaneous/mis (5).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:6">
-                    <img src="images/miscellaneous/mis (6).jpg" alt="" />
+                    <img src="images/miscellaneous/mis (6).jpg" alt="" loading="lazy" />
                 </span>
                 <span style="--i:7">
-                    <img src="images/miscellaneous/mis (7).jpg" alt="" />
+                    <img src="images/miscellaneous/mis (7).jpg" alt="" loading="lazy" />
                 </span>
             </div>
 
