@@ -1018,6 +1018,214 @@
                                 .awards-grid {
                                     grid-template-columns: 1fr;
                                 }
+                                
+                                .achievement-timeline {
+                                    padding-left: 20px;
+                                }
+                                
+                                .achievement-timeline::before {
+                                    left: 10px;
+                                }
+                                
+                                .achievement-card::before {
+                                    left: -20px;
+                                }
+                                
+                                .achievement-card:hover {
+                                    transform: translateX(0);
+                                }
+                                
+                                .publication-item {
+                                    padding: 15px;
+                                }
+                            }
+                            
+                            /* Awards and Publication Section Styles */
+                            .achievement-timeline {
+                                position: relative;
+                                padding-left: 40px;
+                            }
+                            
+                            .achievement-timeline::before {
+                                content: '';
+                                position: absolute;
+                                left: 30px;
+                                top: 30px;
+                                bottom: 30px;
+                                width: 3px;
+                                background: linear-gradient(180deg, #f39c12 0%, #e74c3c 50%, #9b59b6 100%);
+                                border-radius: 2px;
+                            }
+                            
+                            .achievement-card {
+                                position: relative;
+                                background: #fff;
+                                border: 1px solid #e0e0e0;
+                                border-radius: 12px;
+                                padding: 25px;
+                                margin-bottom: 25px;
+                                box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+                                transition: all 0.3s ease;
+                            }
+                            
+                            .achievement-card::before {
+                                content: '';
+                                position: absolute;
+                                left: -40px;
+                                top: 30px;
+                                width: 16px;
+                                height: 16px;
+                                background: #f39c12;
+                                border: 4px solid #fff;
+                                border-radius: 50%;
+                                box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.2);
+                                z-index: 1;
+                            }
+                            
+                            .achievement-card:nth-child(even)::before {
+                                background: #e74c3c;
+                                box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+                            }
+                            
+                            .achievement-card:nth-child(3n)::before {
+                                background: #9b59b6;
+                                box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.2);
+                            }
+                            
+                            .achievement-card:hover {
+                                box-shadow: 0 6px 24px rgba(243, 156, 18, 0.15);
+                                transform: translateX(5px);
+                                border-color: #f39c12;
+                            }
+                            
+                            .achievement-card .icon-container {
+                                width: 70px;
+                                height: 70px;
+                                border-radius: 12px;
+                                padding: 10px;
+                                background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                box-shadow: 0 4px 12px rgba(253, 203, 110, 0.3);
+                                transition: all 0.3s ease;
+                            }
+                            
+                            .achievement-card:nth-child(even) .icon-container {
+                                background: linear-gradient(135deg, #fab1a0 0%, #ff7675 100%);
+                                box-shadow: 0 4px 12px rgba(255, 118, 117, 0.3);
+                            }
+                            
+                            .achievement-card:nth-child(3n) .icon-container {
+                                background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+                                box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+                            }
+                            
+                            .achievement-card:hover .icon-container {
+                                transform: scale(1.1) rotate(5deg);
+                            }
+                            
+                            .achievement-card .date {
+                                background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+                                color: white;
+                                padding: 5px 14px;
+                                border-radius: 20px;
+                                font-size: 12px;
+                                font-weight: 600;
+                                display: inline-block;
+                                margin-bottom: 10px;
+                                box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+                            }
+                            
+                            .award-badge {
+                                display: inline-flex;
+                                align-items: center;
+                                background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+                                color: #333;
+                                padding: 6px 14px;
+                                border-radius: 20px;
+                                font-size: 11px;
+                                font-weight: 700;
+                                text-transform: uppercase;
+                                box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+                                margin-top: 10px;
+                            }
+                            
+                            .award-badge::before {
+                                content: '🏆';
+                                margin-right: 6px;
+                                font-size: 14px;
+                            }
+                            
+                            .publications-container {
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                border-radius: 12px;
+                                padding: 30px;
+                                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+                            }
+                            
+                            .publication-item {
+                                background: rgba(255, 255, 255, 0.95);
+                                border-radius: 8px;
+                                padding: 20px;
+                                margin-bottom: 15px;
+                                transition: all 0.3s ease;
+                                border-left: 4px solid #667eea;
+                            }
+                            
+                            .publication-item:hover {
+                                transform: translateX(10px);
+                                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                                border-left-color: #764ba2;
+                            }
+                            
+                            .publication-item a {
+                                color: #2c3e50;
+                                text-decoration: none;
+                                font-size: 15px;
+                                font-weight: 500;
+                                display: flex;
+                                align-items: center;
+                            }
+                            
+                            .publication-item a::before {
+                                content: '📄';
+                                margin-right: 12px;
+                                font-size: 20px;
+                            }
+                            
+                            .publication-item:hover a {
+                                color: #667eea;
+                            }
+                            
+                            .scholar-button-container {
+                                text-align: center;
+                                margin: 25px 0;
+                            }
+                            
+                            .scholar-button {
+                                display: inline-flex;
+                                align-items: center;
+                                background: white;
+                                color: #667eea;
+                                padding: 12px 30px;
+                                border-radius: 25px;
+                                font-weight: 600;
+                                text-decoration: none;
+                                box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+                                transition: all 0.3s ease;
+                            }
+                            
+                            .scholar-button:hover {
+                                transform: translateY(-2px);
+                                box-shadow: 0 6px 20px rgba(255, 255, 255, 0.5);
+                                color: #764ba2;
+                            }
+                            
+                            .scholar-button::before {
+                                content: '🎓';
+                                margin-right: 10px;
+                                font-size: 20px;
                             }
                         </style>
                         
@@ -1637,108 +1845,115 @@
                         </div>
                         <div id="page-5" class="page four">
                             <h2 class="heading">Awards and Publication</h2>
+                            
+                            <h3 style="margin-bottom: 25px; color: #f39c12; font-weight: 600;">🏆 Academic Awards & Recognition</h3>
 
-                            <div class="resume-wrap d-flex ftco-animate">
-                                <img src="iconss/achivements_icons/msu.png" width="80" height="60" loading="lazy" />
-                                <div class="text pl-3">
-                                    <span class="date">December 2021</span>
-                                    <h2>Recipient of Certificate of Excellence in Microprocessor ECE 3724 - Spring 2021
-                                    </h2>
-                                    <span class="position">For building a line follower robot using
-                                        dsPIC33EP128GP502.</span>
-    
-                                            <p><h1-new
-                                            style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;"><a target="_blank"
-                                                href="Certificate of Excellence.pdf"
-                                                style="color: #999999;">Certificate of Excellence</a></p>
-                                        </h1-new>
+                            <div class="achievement-timeline">
+                                <div class="achievement-card ftco-animate">
+                                    <div class="d-flex align-items-start">
+                                        <div class="icon-container">
+                                            <img src="iconss/achivements_icons/msu.png" style="max-width: 100%; max-height: 100%; object-fit: contain;" loading="lazy" alt="MSU Logo" />
+                                        </div>
+                                        <div class="text pl-3" style="flex: 1;">
+                                            <span class="date">December 2021</span>
+                                            <h2 style="font-size: 1.3rem; margin-bottom: 8px;">Certificate of Excellence in Microprocessor ECE 3724</h2>
+                                            <span class="position" style="color: #666;">For building a line follower robot using dsPIC33EP128GP502 (Spring 2021)</span>
+                                            <div class="award-badge">Academic Excellence</div>
+                                            <p style="margin-top: 12px;">
+                                                <a target="_blank" href="Certificate of Excellence.pdf" class="btn btn-primary py-2 px-3" style="font-size: 14px;">
+                                                    📜 View Certificate
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="achievement-card ftco-animate">
+                                    <div class="d-flex align-items-start">
+                                        <div class="icon-container">
+                                            <img src="iconss/achivements_icons/msu.png" style="max-width: 100%; max-height: 100%; object-fit: contain;" loading="lazy" alt="MSU Logo" />
+                                        </div>
+                                        <div class="text pl-3" style="flex: 1;">
+                                            <span class="date">September 2019-2022</span>
+                                            <h2 style="font-size: 1.3rem; margin-bottom: 8px;">Undergraduate Research Assistant Funding</h2>
+                                            <span class="position" style="color: #666;">Office of Research and Economic Development - Mississippi State University</span>
+                                            <div class="award-badge">Research Funding</div>
+                                            <p style="margin-top: 12px;">
+                                                <a target="_blank" href="https://symposium.foragerone.com/msus21urs/presentations/696169f8e76c062e9ab1d4273c1ef2cc" class="btn btn-primary py-2 px-3" style="font-size: 14px;">
+                                                    🔬 View Symposium Presentation
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="achievement-card ftco-animate">
+                                    <div class="d-flex align-items-start">
+                                        <div class="icon-container" style="padding: 5px;">
+                                            <img src="https://images.squarespace-cdn.com/content/v1/5c3dfaf7ec4eb7132da43b25/1547580067737-V97BF1CHCLTLTRPNK43A/mama-logo.png?format=1500w" style="max-width: 100%; max-height: 100%; object-fit: contain;" loading="lazy" alt="MAMA Logo" />
+                                        </div>
+                                        <div class="text pl-3" style="flex: 1;">
+                                            <span class="date">2020-2021</span>
+                                            <h2 style="font-size: 1.3rem; margin-bottom: 8px;">MAMA Scholarship Recipient</h2>
+                                            <span class="position" style="color: #666;">Mississippi Automotive Manufactures Association Scholarships</span>
+                                            <div class="award-badge">Scholarship</div>
+                                            <p style="margin-top: 12px;">
+                                                <a target="_blank" href="https://static1.squarespace.com/static/5c3dfaf7ec4eb7132da43b25/t/6054e3e91315ab321125115e/1616176105597/MAMA+2020-2021+All+Scholarship+Winners+-+Announcement.pdf" class="btn btn-primary py-2 px-3" style="font-size: 14px;">
+                                                    📋 View Recipients List
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="resume-wrap d-flex ftco-animate">
-                                <img src="iconss/achivements_icons/msu.png" width="80" height="60" loading="lazy" />
-                                <div class="text pl-3">
-                                    <span class="date">September 2019-2022</span>
-                                    <h2>Undergraduate Research Assistant Funding from ORED-MSU</h2>
-                                            <p><h1-new
-                                                style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;"><a target="_blank"
-                                                    href="https://symposium.foragerone.com/msus21urs/presentations/696169f8e76c062e9ab1d4273c1ef2cc"
-                                                    style="color: #999999;">Mississippi
-                                                    State Symposium</a></p>
+                            <h3 style="margin-top: 50px; margin-bottom: 25px; color: #667eea; font-weight: 600;">📚 Research Publications</h3>
+
+                            <div class="publications-container ftco-animate">
+                                <div class="scholar-button-container">
+                                    <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" class="scholar-button">
+                                        View Full Google Scholar Profile
+                                    </a>
+                                </div>
+
+                                <div style="margin-top: 25px;">
+                                    <div class="publication-item">
+                                        <a target="_blank" href="https://www.researchgate.net/publication/361282703_Software_Radio_with_MATLAB_Toolbox_for_5G_NR_Waveform_Generation">
+                                            Software Radio with MATLAB Toolbox for 5G NR Waveform Generation
+                                        </a>
+                                    </div>
+
+                                    <div class="publication-item">
+                                        <a target="_blank" href="https://www.researchgate.net/publication/362802888_Wifi_fingerprinting_based_room_level_classification_combining_short_term_Fourier_transform_and_imbalanced_learning_method">
+                                            Wifi fingerprinting based room level classification: combining short term Fourier transform and imbalanced learning method
+                                        </a>
+                                    </div>
+
+                                    <div class="publication-item">
+                                        <a target="_blank" href="https://www.researchgate.net/publication/350820833_Effect_of_the_short_time_fourier_transform_on_the_classification_of_complex-valued_mobile_signals">
+                                            Effect of the short time fourier transform on the classification of complex-valued mobile signals
+                                        </a>
+                                    </div>
+
+                                    <div class="publication-item">
+                                        <a target="_blank" href="https://www.researchgate.net/publication/350820972_Real-time_location_fingerprinting_for_mobile_devices_in_an_indoor_prison_setting">
+                                            Real-time location fingerprinting for mobile devices in an indoor prison setting
+                                        </a>
+                                    </div>
+
+                                    <div class="publication-item">
+                                        <a target="_blank" href="https://www.researchgate.net/publication/350821236_Adversarial_indoor_signal_detection">
+                                            Adversarial indoor signal detection
+                                        </a>
+                                    </div>
+
+                                    <div class="publication-item">
+                                        <a target="_blank" href="https://www.researchgate.net/publication/350821280_RGB_pixel-block_point-cloud_fusion_for_object_detection">
+                                            RGB pixel-block point-cloud fusion for object detection
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="resume-wrap d-flex ftco-animate">
-                                <img src="https://images.squarespace-cdn.com/content/v1/5c3dfaf7ec4eb7132da43b25/1547580067737-V97BF1CHCLTLTRPNK43A/mama-logo.png?format=1500w" width="80" height="50" loading="lazy" />
-                                <div class="text pl-3">
-                                    <span class="date">2020-2021</span>
-                                    <h2>Recipient of Mississippi Automotive Manufactures Association (MAMA) Scholarships</h2>
-                                            <p><h1-new
-                                                style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;"><a target="_blank"
-                                                    href="https://static1.squarespace.com/static/5c3dfaf7ec4eb7132da43b25/t/6054e3e91315ab321125115e/1616176105597/MAMA+2020-2021+All+Scholarship+Winners+-+Announcement.pdf"
-                                                    style="color: #999999;">Recipient List</a></p>
-                                </div>
-                            </div>
-
-
-                            <div class="resume-wrap d-flex ftco-animate">
-                                <img src="iconss/research.png" width="60" height="60" loading="lazy" />
-                                <div class="text pl-3">
-                                    <span class="date">September 2019-Present</span>
-                                    <h2>Publications </h2>
-                                    <!-- <span class="position">RGB pixel-block point-cloud fusion for object
-                                        detection</span>
-                                         -->
-                                    <p><a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en"
-                                            class="btn btn-primary py-3 px-3">Google Scholar</a></p>
-
-                                    <h1-new
-                                        style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;"><a
-                                            href="https://www.researchgate.net/publication/361282703_Software_Radio_with_MATLAB_Toolbox_for_5G_NR_Waveform_Generation"
-                                            style="color: #999999;">• Software
-                                            Radio with MATLAB Toolbox for 5G NR Waveform Generation</a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new
-                                        style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;">
-                                        <a target="_blank" href="https://www.researchgate.net/publication/362802888_Wifi_fingerprinting_based_room_level_classification_combining_short_term_Fourier_transform_and_imbalanced_learning_method"
-                                            style="color: #999999;">• Wifi
-                                            fingerprinting based room level classification: combining short term Fourier
-                                            transform and imbalanced learning method</a></h1-new>
-                                    <p></p>
-                                    <h1-new
-                                        style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;">
-
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350820833_Effect_of_the_short_time_fourier_transform_on_the_classification_of_complex-valued_mobile_signals"
-                                            style="color: #999999;">• Effect
-                                            of the short time fourier transform on the classification of complex-valued
-                                            mobile signals</a></h1-new>
-                                    <p></p>
-                                    <h1-new
-                                        style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;">
-
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350820972_Real-time_location_fingerprinting_for_mobile_devices_in_an_indoor_prison_setting"
-                                            style="color: #999999;">• Real-time
-                                            location fingerprinting for mobile devices in an indoor prison
-                                            setting</a></h1-new>
-                                    <p></p>
-                                    <h1-new
-                                        style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;">
-
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350821236_Adversarial_indoor_signal_detection"
-                                            style="color: #999999;">• Adversarial
-                                            indoor signal detection</a></h1-new>
-                                    <p></p>
-                                    <h1-new
-                                        style="font-size: large; color: #999999; font-style:normal; font-family: sans-serif;">
-
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350821280_RGB_pixel-block_point-cloud_fusion_for_object_detection"
-                                            style="color: #999999;">• RGB
-                                            pixel-block point-cloud fusion for object
-                                            detection</a></h1-new>
-                                </div>
-                            </div>
-
 
                         </div>
                     </div>
