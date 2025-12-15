@@ -11450,3 +11450,18 @@ border-color: #764ba2;
     color: #764ba2 !important;
 }
         
+
+/* Fix mobile scrolling for carousel section */
+.carousel-recommendations,
+.carousel-recommendations .owl-stage-outer,
+.carousel-recommendations .owl-stage,
+.carousel-recommendations .owl-item {
+    touch-action: pan-y !important;
+    -ms-touch-action: pan-y !important;
+}
+
+#recommendations-section {
+    touch-action: pan-y !important;
+    -ms-touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch;
+}
