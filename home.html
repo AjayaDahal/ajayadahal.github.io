@@ -423,172 +423,358 @@
                             </div>
                         </div>
 
-                        <h2 class="heading">Certification</h2>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-
-                            <img src="iconss/edu_icons/certificate.svg" width="40" height="40" />
-                            <div class="text pl-3">
-                                <span class="date">LinkedIn Learning</span>
-                                <ul>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/0b613cc47310fff0050189bb1c337e18147340cd38f042fb3a5b75ff0b109931"
-                                            style="color: #999999;">• LPIC-2 Linux Engineer (201-450) Cert Prep</a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/a6041db2cedf68699f4a00a8fe1f28f744920de661289537019765c6ab20522f"
-                                            style="color: #999999;">• Linux Device Drivers</a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/3e652329cfc69fc6eef10b2e44a91bf64c7f1efaa8c89365d538d932d739ea55"
-                                            style="color: #999999;"> • DevOps Foundations: Continuous
-                                            Delivery/Continuous Integration</a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/42c45bb648604f0be7111f845318a7482ca70b8ebe668ca4ab9547fcc7ec9f08"
-                                            style="color: #999999;"> • Git Intermediate Techniques (2018) </a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/251c4561c0efe469d02e4f15994c0b6908c59589f843f8403d40d5e818a147dc"
-                                            style="color: #999999;"> • Java: Database Integration with JDBC </a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/7e7e8e88d856ecb62eb34882a60a64b275064bb00977d01f699c780a3f946755"
-                                            style="color: #999999;">• C++: Essential Training for Career Changers </a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/e8167ba1bcd48575c56491022b03b3efdd2ea8402ca1a078058ad6a4c5ca1ea4"
-                                            style="color: #999999;">• JSON: Processing with Java EE </a>
-                                    </h1-new>
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/9fd52a743e6b0ca3020febb9b0dee3e10b255574c2e8fb70b8bec9cbc9333a21"
-                                            style="color: #999999;"> • Java: Database Access with Hibernate </a>
-                                    </h1-new>
-
-
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/33a9bd964691986ce66b9adb3dbc9910c4446320c752893d0e731a44f4743a4b?u=2140730"
-                                            style="color: #999999;"> • Learning Verilog for FPGA Development </a>
-                                    </h1-new>
-
-                                    <p></p>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.linkedin.com/learning/certificates/324d51fbb8fa02a63dab73216b6339e7194b15c59b85eb1f18ebfb62601f048c?u=2140730"
-                                            style="color: #999999;"> •  Getting Started with Continuous Integration / Continuous Delivery (CI/CD) </a>
-                                    </h1-new>
-
-                                </ul>
+                        <h2 class="heading">Certifications</h2>
+                        
+                        <!-- Featured Certifications for HFT/FPGA Engineering -->
+                        <h3 style="margin-top: 20px; margin-bottom: 20px; color: #2c98f0; font-weight: 600;">Featured Certifications</h3>
+                        
+                        <style>
+                            .cert-card {
+                                border: 1px solid #e0e0e0;
+                                border-radius: 8px;
+                                padding: 20px;
+                                margin-bottom: 20px;
+                                background: #fff;
+                                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                                transition: all 0.3s ease;
+                                display: flex;
+                                align-items: flex-start;
+                            }
+                            
+                            .cert-card:hover {
+                                box-shadow: 0 4px 16px rgba(44,152,240,0.2);
+                                transform: translateY(-2px);
+                                border-color: #2c98f0;
+                            }
+                            
+                            .cert-logo {
+                                flex-shrink: 0;
+                                margin-right: 20px;
+                                width: 60px;
+                                height: 60px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                            
+                            .cert-logo img {
+                                max-width: 60px;
+                                max-height: 60px;
+                                object-fit: contain;
+                            }
+                            
+                            .cert-content {
+                                flex: 1;
+                            }
+                            
+                            .cert-title {
+                                font-size: 1.1rem;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                            }
+                            
+                            .cert-issuer {
+                                font-size: 0.9rem;
+                                color: #666;
+                                margin-bottom: 5px;
+                            }
+                            
+                            .cert-date {
+                                font-size: 0.85rem;
+                                color: #999;
+                            }
+                            
+                            .cert-badge {
+                                display: inline-block;
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                padding: 4px 10px;
+                                border-radius: 4px;
+                                font-size: 0.75rem;
+                                font-weight: 600;
+                                margin-left: 10px;
+                                text-transform: uppercase;
+                            }
+                            
+                            .cert-link {
+                                display: inline-block;
+                                margin-top: 10px;
+                                color: #2c98f0;
+                                text-decoration: none;
+                                font-weight: 500;
+                                font-size: 0.9rem;
+                            }
+                            
+                            .cert-link:hover {
+                                color: #1a7ac4;
+                                text-decoration: underline;
+                            }
+                            
+                            .collapsible-certs {
+                                margin-top: 40px;
+                            }
+                            
+                            .collapse-toggle {
+                                background: #f8f9fa;
+                                border: 1px solid #dee2e6;
+                                padding: 15px 20px;
+                                cursor: pointer;
+                                border-radius: 6px;
+                                font-weight: 600;
+                                color: #495057;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                transition: all 0.3s ease;
+                            }
+                            
+                            .collapse-toggle:hover {
+                                background: #e9ecef;
+                            }
+                            
+                            .collapse-content {
+                                max-height: 0;
+                                overflow: hidden;
+                                transition: max-height 0.3s ease;
+                            }
+                            
+                            .collapse-content.open {
+                                max-height: 3000px;
+                            }
+                            
+                            .cert-list-item {
+                                padding: 12px 20px;
+                                border-bottom: 1px solid #f0f0f0;
+                            }
+                            
+                            .cert-list-item:last-child {
+                                border-bottom: none;
+                            }
+                            
+                            .cert-list-item a {
+                                color: #495057;
+                                text-decoration: none;
+                                font-size: 0.95rem;
+                            }
+                            
+                            .cert-list-item a:hover {
+                                color: #2c98f0;
+                            }
+                        </style>
+                        
+                        <div class="ftco-animate">
+                            <!-- NVIDIA RDMA Programming - NEW & CRITICAL FOR HFT -->
+                            <div class="cert-card">
+                                <div class="cert-logo">
+                                    <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/about-nvidia/logo-and-brand/01-nvidia-logo-vert-500x200-2c50-d.png" alt="NVIDIA">
+                                </div>
+                                <div class="cert-content">
+                                    <div class="cert-title">
+                                        The Fundamentals of RDMA Programming
+                                        <span class="cert-badge">New</span>
+                                    </div>
+                                    <div class="cert-issuer">NVIDIA Deep Learning Institute</div>
+                                    <div class="cert-date">September 2025 • Credential ID: 14143</div>
+                                    <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/details/certifications/1756765497346/single-media-viewer/?type=DOCUMENT&profileId=ACoAABs6OLsBgPzN-811b7s-XMPzxZ2VfaExlkE" target="_blank" class="cert-link">View Certificate →</a>
+                                </div>
                             </div>
                             
-                           
-
-                            <div class="text pl-3">
-                                <span class="date">Udemy</span>
-                                <ul>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.udemy.com/certificate/UC-CW4DQ9QT/?utm_source=sendgrid.com&utm_medium=email&utm_campaign=email"
-                                            style="color: #999999;">• Introduction to Internet of Things and Cloud </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://amdlearning.udemy.com/certificate/UC-83a7a4dd-b193-4f3e-aafa-0256fb5edf19/"
-                                            style="color: #999999;">• Embedded Linux using Yocto </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="amdlearning.udemy.com/certificate/UC-43a1d746-06d7-4600-93ba-0f2534329030/"
-                                            style="color: #999999;">• Embedded Linux Using Yocto Part 2 </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://amdlearning.udemy.com/certificate/UC-24ad219d-5940-454d-b804-ca67bc640817/"
-                                            style="color: #999999;">• Verilog HDL: VLSI Hardware Design Comprehensive Masterclass </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://amdlearning.udemy.com/certificate/UC-27f76bf2-42ee-41b6-bf5b-d118a0b1b9e5/"
-                                            style="color: #999999;">• Complete Guide to TensorFlow for Deep Learning with Python </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.udemy.com/certificate/UC-3241dbba-c00f-40d2-a616-891d4bbeb65c/"
-                                            style="color: #999999;">• Designing RF Communication Systems Using SDRs with GNU Radio  </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.udemy.com/certificate/UC-f8a20bbd-ec56-48ad-8677-2144b0e1ae8a/"
-                                            style="color: #999999;">• ROS for Beginners: Basics, Motion, and OpenCV  </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.udemy.com/certificate/UC-c3d426f4-d27f-4065-a292-3a5d377e214a/"
-                                            style="color: #999999;">•  ROS2 For Beginners (ROS Foxy, Humble - 2024)  </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://www.udemy.com/certificate/UC-f4175a61-2c96-4cf9-880c-f97f4549f8dd/"
-                                            style="color: #999999;">• ROS2 Ultimate Mobile Robotics Course for Beginners OpenCV </a>
-                                    </h1-new>
-
-                                </ul>
+                            <!-- Jenkins CI/CD - NEW & AMD CERTIFIED -->
+                            <div class="cert-card">
+                                <div class="cert-logo">
+                                    <img src="skills_icon/Jenkins-Symbol.png" alt="Jenkins">
+                                </div>
+                                <div class="cert-content">
+                                    <div class="cert-title">
+                                        Jenkins: Beginner To Pro
+                                        <span class="cert-badge">New</span>
+                                    </div>
+                                    <div class="cert-issuer">AMD Learning (Udemy)</div>
+                                    <div class="cert-date">September 2025</div>
+                                    <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/details/certifications/1765773457531/single-media-viewer/?type=IMAGE&profileId=ACoAABs6OLsBgPzN-811b7s-XMPzxZ2VfaExlkE" target="_blank" class="cert-link">View Certificate →</a>
+                                </div>
                             </div>
-
                             
-                            
-
-                            <div class="text pl-3">
-                                <span class="date">MATLAB</span>
-                                <ul>
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=b0a8df60-9cea-4716-af67-873a775780bc&"
-                                            style="color: #999999;">• Machine Learning </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="matlabacademy.mathworks.com/progress/share/certificate.html?id=6505874b-dd7c-4cb3-8255-bbf0bcbebab6&"
-                                            style="color: #999999;">• Optimization </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="matlabacademy.mathworks.com/progress/share/certificate.html?id=2a460dd8-b322-4608-a4dd-7f69740b191e&"
-                                            style="color: #999999;">• Stateflow </a>
-                                    </h1-new>
-                                    <p></p>
-
-                                    <h1-new style="font-size: small; font-size: 1rem; font-weight: 600;">
-                                        <a target="_blank" href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=eaeda9d6-a806-4a47-bcdb-22b9814d4010&"
-                                            style="color: #999999;">• Simulink </a>
-                                    </h1-new>
-                                    <p></p>
-
-
-                                </ul>
+                            <!-- Verilog HDL -->
+                            <div class="cert-card">
+                                <div class="cert-logo">
+                                    <img src="skills_icon/verilog.png" alt="Verilog">
+                                </div>
+                                <div class="cert-content">
+                                    <div class="cert-title">Verilog HDL: VLSI Hardware Design Comprehensive Masterclass</div>
+                                    <div class="cert-issuer">AMD Learning (Udemy)</div>
+                                    <div class="cert-date">Completed</div>
+                                    <a href="https://amdlearning.udemy.com/certificate/UC-24ad219d-5940-454d-b804-ca67bc640817/" target="_blank" class="cert-link">View Certificate →</a>
+                                </div>
                             </div>
-
-
+                            
+                            <!-- Linux Device Drivers -->
+                            <div class="cert-card">
+                                <div class="cert-logo">
+                                    <img src="skills_icon/linux.svg" alt="Linux">
+                                </div>
+                                <div class="cert-content">
+                                    <div class="cert-title">Linux Device Drivers</div>
+                                    <div class="cert-issuer">LinkedIn Learning</div>
+                                    <div class="cert-date">Completed</div>
+                                    <a href="https://www.linkedin.com/learning/certificates/a6041db2cedf68699f4a00a8fe1f28f744920de661289537019765c6ab20522f" target="_blank" class="cert-link">View Certificate →</a>
+                                </div>
+                            </div>
+                            
+                            <!-- Embedded Linux using Yocto -->
+                            <div class="cert-card">
+                                <div class="cert-logo">
+                                    <img src="skills_icon/YoctoProject_Logo_RGB.jpg" alt="Yocto">
+                                </div>
+                                <div class="cert-content">
+                                    <div class="cert-title">Embedded Linux using Yocto</div>
+                                    <div class="cert-issuer">AMD Learning (Udemy)</div>
+                                    <div class="cert-date">Completed</div>
+                                    <a href="https://amdlearning.udemy.com/certificate/UC-83a7a4dd-b193-4f3e-aafa-0256fb5edf19/" target="_blank" class="cert-link">View Certificate →</a>
+                                </div>
+                            </div>
+                            
+                            <!-- LPIC-2 Linux Engineer -->
+                            <div class="cert-card">
+                                <div class="cert-logo">
+                                    <img src="skills_icon/linux.svg" alt="Linux">
+                                </div>
+                                <div class="cert-content">
+                                    <div class="cert-title">LPIC-2 Linux Engineer (201-450) Cert Prep</div>
+                                    <div class="cert-issuer">LinkedIn Learning</div>
+                                    <div class="cert-date">Completed</div>
+                                    <a href="https://www.linkedin.com/learning/certificates/0b613cc47310fff0050189bb1c337e18147340cd38f042fb3a5b75ff0b109931" target="_blank" class="cert-link">View Certificate →</a>
+                                </div>
+                            </div>
                         </div>
+                        
+                        <!-- Additional Certifications (Collapsible) -->
+                        <div class="collapsible-certs ftco-animate">
+                            <div class="collapse-toggle" onclick="toggleCerts()">
+                                <span>View Additional Certifications</span>
+                                <span id="toggle-icon">▼</span>
+                            </div>
+                            <div class="collapse-content" id="additional-certs">
+                                <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 6px 6px; padding: 20px;">
+                                    
+                                    <h4 style="font-size: 1rem; font-weight: 600; color: #495057; margin-bottom: 15px;">DevOps & Development</h4>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.linkedin.com/learning/certificates/324d51fbb8fa02a63dab73216b6339e7194b15c59b85eb1f18ebfb62601f048c?u=2140730" target="_blank">
+                                            Getting Started with Continuous Integration / Continuous Delivery (CI/CD) - LinkedIn Learning
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.linkedin.com/learning/certificates/3e652329cfc69fc6eef10b2e44a91bf64c7f1efaa8c89365d538d932d739ea55" target="_blank">
+                                            DevOps Foundations: Continuous Delivery/Continuous Integration - LinkedIn Learning
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.linkedin.com/learning/certificates/42c45bb648604f0be7111f845318a7482ca70b8ebe668ca4ab9547fcc7ec9f08" target="_blank">
+                                            Git Intermediate Techniques - LinkedIn Learning
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://amdlearning.udemy.com/certificate/UC-43a1d746-06d7-4600-93ba-0f2534329030/" target="_blank">
+                                            Embedded Linux Using Yocto Part 2 - AMD Learning (Udemy)
+                                        </a>
+                                    </div>
+                                    
+                                    <h4 style="font-size: 1rem; font-weight: 600; color: #495057; margin-top: 25px; margin-bottom: 15px;">Robotics & ROS</h4>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.udemy.com/certificate/UC-f8a20bbd-ec56-48ad-8677-2144b0e1ae8a/" target="_blank">
+                                            ROS for Beginners: Basics, Motion, and OpenCV - Udemy
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.udemy.com/certificate/UC-c3d426f4-d27f-4065-a292-3a5d377e214a/" target="_blank">
+                                            ROS2 For Beginners (ROS Foxy, Humble - 2024) - Udemy
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.udemy.com/certificate/UC-f4175a61-2c96-4cf9-880c-f97f4549f8dd/" target="_blank">
+                                            ROS2 Ultimate Mobile Robotics Course for Beginners OpenCV - Udemy
+                                        </a>
+                                    </div>
+                                    
+                                    <h4 style="font-size: 1rem; font-weight: 600; color: #495057; margin-top: 25px; margin-bottom: 15px;">Machine Learning & AI</h4>
+                                    <div class="cert-list-item">
+                                        <a href="https://amdlearning.udemy.com/certificate/UC-27f76bf2-42ee-41b6-bf5b-d118a0b1b9e5/" target="_blank">
+                                            Complete Guide to TensorFlow for Deep Learning with Python - AMD Learning (Udemy)
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=b0a8df60-9cea-4716-af67-873a775780bc&" target="_blank">
+                                            Machine Learning - MATLAB Academy
+                                        </a>
+                                    </div>
+                                    
+                                    <h4 style="font-size: 1rem; font-weight: 600; color: #495057; margin-top: 25px; margin-bottom: 15px;">Software Development</h4>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.linkedin.com/learning/certificates/7e7e8e88d856ecb62eb34882a60a64b275064bb00977d01f699c780a3f946755" target="_blank">
+                                            C++: Essential Training for Career Changers - LinkedIn Learning
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.linkedin.com/learning/certificates/251c4561c0efe469d02e4f15994c0b6908c59589f843f8403d40d5e818a147dc" target="_blank">
+                                            Java: Database Integration with JDBC - LinkedIn Learning
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.linkedin.com/learning/certificates/e8167ba1bcd48575c56491022b03b3efdd2ea8402ca1a078058ad6a4c5ca1ea4" target="_blank">
+                                            JSON: Processing with Java EE - LinkedIn Learning
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.linkedin.com/learning/certificates/9fd52a743e6b0ca3020febb9b0dee3e10b255574c2e8fb70b8bec9cbc9333a21" target="_blank">
+                                            Java: Database Access with Hibernate - LinkedIn Learning
+                                        </a>
+                                    </div>
+                                    
+                                    <h4 style="font-size: 1rem; font-weight: 600; color: #495057; margin-top: 25px; margin-bottom: 15px;">Other Technical Certifications</h4>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.udemy.com/certificate/UC-3241dbba-c00f-40d2-a616-891d4bbeb65c/" target="_blank">
+                                            Designing RF Communication Systems Using SDRs with GNU Radio - Udemy
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://www.udemy.com/certificate/UC-CW4DQ9QT/?utm_source=sendgrid.com&utm_medium=email&utm_campaign=email" target="_blank">
+                                            Introduction to Internet of Things and Cloud - Udemy
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=6505874b-dd7c-4cb3-8255-bbf0bcbebab6&" target="_blank">
+                                            Optimization - MATLAB Academy
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=2a460dd8-b322-4608-a4dd-7f69740b191e&" target="_blank">
+                                            Stateflow - MATLAB Academy
+                                        </a>
+                                    </div>
+                                    <div class="cert-list-item">
+                                        <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=eaeda9d6-a806-4a47-bcdb-22b9814d4010&" target="_blank">
+                                            Simulink - MATLAB Academy
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            function toggleCerts() {
+                                var content = document.getElementById('additional-certs');
+                                var icon = document.getElementById('toggle-icon');
+                                
+                                if (content.classList.contains('open')) {
+                                    content.classList.remove('open');
+                                    icon.textContent = '▼';
+                                } else {
+                                    content.classList.add('open');
+                                    icon.textContent = '▲';
+                                }
+                            }
+                        </script>
 
 
                     </div>
@@ -763,7 +949,7 @@
                             </div>
                             <table>
                                 <tr>
-                                    <td style="padding: 25px;"><img src="skills_icon/c.svg" width="80" height="80" />
+                                    <td style="padding: 25px;"><img src="skills_icon/c.png" width="80" height="80" />
                                     <td style="padding: 25px;"><img src="skills_icon/cpp.svg" width="80" height="80" />
                                     <td style="padding: 25px;"><img src="skills_icon/python.svg" width="80" height="80" />
                                 </tr>
