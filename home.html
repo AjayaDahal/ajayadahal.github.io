@@ -549,6 +549,36 @@
                     .carousel-recommendations .owl-nav .owl-next {
                         margin-right: 0;
                     }
+
+                    /* Fix initials display on mobile */
+                    .carousel-recommendations .user-img {
+                        width: 70px !important;
+                        height: 70px !important;
+                        flex-shrink: 0;
+                    }
+
+                    .carousel-recommendations .user-img > div {
+                        width: 70px !important;
+                        height: 70px !important;
+                        font-size: 28px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        background-size: contain !important;
+                        background-position: center center !important;
+                    }
+
+                    .carousel-recommendations .testimony-wrap {
+                        padding: 25px !important;
+                    }
+
+                    .carousel-recommendations .d-flex {
+                        flex-wrap: nowrap !important;
+                    }
+
+                    .carousel-recommendations .name {
+                        font-size: 1.1rem !important;
+                    }
                 }
 
                 /* Project Cards Hover Effects */
@@ -3454,7 +3484,7 @@
                 autoplay: true,
                 autoplayTimeout: 7000,
                 autoplayHoverPause: true,
-                touchDrag: true,
+                touchDrag: false,
                 mouseDrag: true,
                 pullDrag: false,
                 freeDrag: false,
@@ -3472,49 +3502,58 @@
                 }
             });
 
-            // Enhanced touch handling for mobile - distinguish horizontal vs vertical swipes
+            // Custom touch handling for mobile - distinguish horizontal vs vertical swipes
             var carouselElement = $('.carousel-recommendations');
             var startX = 0;
             var startY = 0;
-            var isDragging = false;
-            var threshold = 50; // Minimum distance for swipe detection
-            var restraint = 100; // Maximum perpendicular distance
-            var allowedTime = 500; // Maximum time for swipe
+            var startTime = 0;
+            var isHorizontalSwipe = false;
 
             carouselElement.on('touchstart', function(e) {
                 var touchObj = e.originalEvent.touches[0];
                 startX = touchObj.pageX;
                 startY = touchObj.pageY;
-                isDragging = false;
-                this.startTime = new Date().getTime();
+                startTime = new Date().getTime();
+                isHorizontalSwipe = false;
             });
 
             carouselElement.on('touchmove', function(e) {
                 var touchObj = e.originalEvent.touches[0];
                 var distX = touchObj.pageX - startX;
                 var distY = touchObj.pageY - startY;
-                var elapsedTime = new Date().getTime() - this.startTime;
 
-                // Check if it's a horizontal swipe (left/right)
-                if (Math.abs(distX) > Math.abs(distY) * 2) {
-                    // Horizontal swipe detected - prevent page scroll, allow carousel
-                    isDragging = true;
-                    e.preventDefault();
-                } else if (Math.abs(distY) > Math.abs(distX) * 1.5) {
-                    // Vertical swipe detected - allow page scroll, prevent carousel
-                    isDragging = false;
-                    // Stop carousel from capturing the touch
-                    if (elapsedTime < allowedTime) {
-                        carouselElement.trigger('stop.owl.autoplay');
-                        setTimeout(function() {
-                            carouselElement.trigger('play.owl.autoplay');
-                        }, 100);
+                // Determine direction based on which movement is greater
+                if (!isHorizontalSwipe && Math.abs(distX) > 20) {
+                    // If horizontal movement is significant and greater than vertical
+                    if (Math.abs(distX) > Math.abs(distY)) {
+                        isHorizontalSwipe = true;
                     }
                 }
+
+                // If it's a horizontal swipe, handle carousel navigation
+                if (isHorizontalSwipe) {
+                    e.preventDefault(); // Prevent vertical scroll during horizontal swipe
+                }
+                // Otherwise, let the page scroll naturally (do nothing)
             });
 
             carouselElement.on('touchend', function(e) {
-                isDragging = false;
+                if (isHorizontalSwipe) {
+                    var touchObj = e.originalEvent.changedTouches[0];
+                    var distX = touchObj.pageX - startX;
+                    
+                    // Trigger carousel navigation based on swipe direction
+                    if (Math.abs(distX) > 50) { // Minimum swipe distance
+                        if (distX < 0) {
+                            // Swiped left - go to next
+                            recommendationsCarousel.trigger('next.owl.carousel');
+                        } else {
+                            // Swiped right - go to previous
+                            recommendationsCarousel.trigger('prev.owl.carousel');
+                        }
+                    }
+                }
+                isHorizontalSwipe = false;
             });
 
             // Animated project counter with loop
