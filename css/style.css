@@ -9817,3 +9817,42 @@ h1-new {
   font-weight: 1000;
   cursor: pointer;
 }
+
+/* Mobile responsive fixes for gallery sections */
+@media (max-width: 768px) {
+  .gallery, .gallery-right {
+    width: 200px;
+    height: 150px;
+  }
+  
+  .gallery span, .gallery-right span {
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(250px);
+  }
+  
+  #life-section .text.pl-3.text-center h1 {
+    font-size: 24px !important;
+  }
+  
+  #life-section h1-new {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery, .gallery-right {
+    width: 150px;
+    height: 120px;
+  }
+  
+  .gallery span, .gallery-right span {
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(180px);
+  }
+  
+  #life-section .text.pl-3.text-center h1 {
+    font-size: 20px !important;
+  }
+  
+  #life-section h1-new {
+    font-size: 1.2rem;
+  }
+}
