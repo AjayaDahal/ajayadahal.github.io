@@ -55,3 +55,52 @@ body {
   right: 0;
   top: 0;
 }
+
+/* ========================================
+   TWO-TIER PROJECT PORTFOLIO STYLING
+   ======================================== */
+
+/* Sandbox Item Hover Effects */
+.sandbox-item {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.sandbox-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2) !important;
+}
+
+/* Responsive Grid for Tier 2 (Sandbox) */
+@media (max-width: 1200px) {
+  .sandbox-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sandbox-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .sandbox-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Tier 1 Card Styling Enhancement */
+.resume-wrap {
+  transition: all 0.3s ease;
+}
+
+.resume-wrap:hover {
+  background: linear-gradient(135deg, rgba(44, 152, 240, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%) !important;
+}
+
+/* Section Divider */
+.tier-divider {
+  margin: 80px 0;
+  position: relative;
+  text-align: center;
+}

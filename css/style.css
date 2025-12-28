@@ -8824,7 +8824,7 @@ h1, h2, h3, h4, h5,
     #navi li a {
       color: #000000; }
       #navi li a.current {
-        color: #3e64ff;
+        color: #667eea;
         margin-left: 20px;
         position: relative; }
         #navi li a.current:after {
@@ -8837,7 +8837,7 @@ h1, h2, h3, h4, h5,
           -webkit-transform: translateY(-50%);
           -ms-transform: translateY(-50%);
           transform: translateY(-50%);
-          background: #3e64ff; }
+          background: #667eea; }
 
 .page {
   width: 100%;
@@ -8848,7 +8848,7 @@ h1, h2, h3, h4, h5,
     font-weight: 800;
     font-size: 30px;
     margin-bottom: 30px;
-    color: #3e64ff; }
+    color: #667eea; }
 
 .resume-wrap {
   width: 100%;

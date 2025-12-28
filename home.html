@@ -358,13 +358,128 @@
                 <div class="col-md-3">
                     <nav id="navi">
                         <ul>
-                            <li><a href="#page-1">Work Experience</a></li>
-                            <li><a href="#page-2">Education and Certification</a></li>
-                            <li><a href="#page-3">Projects</a></li>
-                            <li><a href="#page-4">Skills</a></li>
-                            <li><a href="#page-5">Achievement and Publication</a></li>
+                            <li class="has-submenu">
+                                <a href="#page-1">Work Experience</a>
+                                <ul class="submenu" style="display: none; padding-left: 15px; list-style: none; margin-top: 8px; border-left: 2px solid #667eea;">
+                                    <li style="margin: 5px 0;"><a href="#work-amd" style="font-size: 0.9rem; color: #666;">Sr. FPGA & Network Engineer</a></li>
+                                    <li style="margin: 5px 0;"><a href="#work-grad" style="font-size: 0.9rem; color: #666;">Graduate Research Assistant</a></li>
+                                    <li style="margin: 5px 0;"><a href="#work-hunter" style="font-size: 0.9rem; color: #666;">PCB Design Engineer Co-op</a></li>
+                                    <li style="margin: 5px 0;"><a href="#work-amazon" style="font-size: 0.9rem; color: #666;">Quality Control</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-submenu">
+                                <a href="#page-2">Education and Certification</a>
+                                <ul class="submenu" style="display: none; padding-left: 15px; list-style: none; margin-top: 8px; border-left: 2px solid #667eea;">
+                                    <li style="margin: 5px 0;"><a href="#edu-degree" style="font-size: 0.9rem; color: #666;">Degree & University</a></li>
+                                    <li style="margin: 5px 0;"><a href="#edu-cert" style="font-size: 0.9rem; color: #666;">Professional Certifications</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-submenu">
+                                <a href="#page-3">Projects</a>
+                                <ul class="submenu" style="display: none; padding-left: 15px; list-style: none; margin-top: 8px; border-left: 2px solid #667eea;">
+                                    <li style="margin: 5px 0;"><a href="#featured-amd" style="font-size: 0.9rem; color: #666;">Featured AMD Xilinx Designs</a></li>
+                                    <li style="margin: 5px 0;"><a href="#tier1-systems" style="font-size: 0.9rem; color: #666;">System Architecture</a></li>
+                                    <li style="margin: 5px 0;"><a href="#tier2-sandbox" style="font-size: 0.9rem; color: #666;">The Sandbox</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-submenu">
+                                <a href="#page-4">Skills</a>
+                                <ul class="submenu" style="display: none; padding-left: 15px; list-style: none; margin-top: 8px; border-left: 2px solid #667eea;">
+                                    <li style="margin: 5px 0;"><a href="#skills-fpga" style="font-size: 0.9rem; color: #666;">FPGA & RTL Design</a></li>
+                                    <li style="margin: 5px 0;"><a href="#skills-embedded" style="font-size: 0.9rem; color: #666;">Embedded Software & Systems</a></li>
+                                    <li style="margin: 5px 0;"><a href="#skills-hardware" style="font-size: 0.9rem; color: #666;">Hardware Design & PCB</a></li>
+                                    <li style="margin: 5px 0;"><a href="#skills-additional" style="font-size: 0.9rem; color: #666;">Additional Technologies</a></li>
+                                    <li style="margin: 5px 0;"><a href="#skills-other" style="font-size: 0.9rem; color: #666;">Other Development Tools</a></li>
+                                    
+                                </ul>
+                            </li>
+                            <li class="has-submenu">
+                                <a href="#page-5">Achievement and Publication</a>
+                                <ul class="submenu" style="display: none; padding-left: 15px; list-style: none; margin-top: 8px; border-left: 2px solid #667eea;">
+                                    <li style="margin: 5px 0;"><a href="#achievement-awards" style="font-size: 0.9rem; color: #666;">Awards & Recognition</a></li>
+                                    <li style="margin: 5px 0;"><a href="#achievement-research" style="font-size: 0.9rem; color: #666;">Research & Publications</a></li>
+                                    
+                                </ul>
+                            </li>
                         </ul>
                     </nav>
+                    
+                    <script>
+                        // Initialize original text for all submenu items
+                        document.querySelectorAll('li.has-submenu .submenu a').forEach(item => {
+                            item.setAttribute('data-original-text', item.textContent);
+                        });
+                        
+                        // Submenu toggle functionality - allow manual override
+                        document.querySelectorAll('li.has-submenu > a').forEach(link => {
+                            link.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const submenu = this.parentElement.querySelector('.submenu');
+                                // Smooth scroll to section
+                                const target = this.getAttribute('href');
+                                if(target.startsWith('#')) {
+                                    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+                                }
+                            });
+                        });
+                        
+                        // Auto-expand/collapse submenu and highlight parent based on scroll position
+                        window.addEventListener('scrollspy-update', function(e) {
+                            var allSubmenus = document.querySelectorAll('li.has-submenu');
+                            
+                            allSubmenus.forEach(submenuParent => {
+                                var submenuItems = submenuParent.querySelectorAll('.submenu a');
+                                var submenuContainer = submenuParent.querySelector('.submenu');
+                                var parentLink = submenuParent.querySelector('a:first-of-type');
+                                var isInSubmenu = false;
+                                var isInMainSection = false;
+                                
+                                // Check if any submenu item is active (has 'current' class)
+                                submenuItems.forEach(item => {
+                                    if (item.classList.contains('current')) {
+                                        isInSubmenu = true;
+                                    }
+                                });
+                                
+                                // Check if the parent main section is active
+                                if (parentLink && parentLink.classList.contains('current')) {
+                                    isInMainSection = true;
+                                }
+                                
+                                // EXPAND if in a subsection OR in main section
+                                if ((isInSubmenu || isInMainSection) && submenuContainer) {
+                                    submenuContainer.style.display = 'block';
+                                    if (parentLink) {
+                                        parentLink.classList.add('current');
+                                    }
+                                    
+                                    // Add "--" prefix only for active subsection items
+                                    submenuItems.forEach(item => {
+                                        var originalText = item.getAttribute('data-original-text');
+                                        if (item.classList.contains('current')) {
+                                            if (!item.textContent.startsWith('-- ')) {
+                                                item.textContent = '' + originalText;
+                                            }
+                                        } else {
+                                            item.textContent = originalText;
+                                        }
+                                    });
+                                } 
+                                // COLLAPSE if scrolled away from section entirely
+                                else {
+                                    submenuContainer.style.display = 'none';
+                                    if (parentLink) {
+                                        parentLink.classList.remove('current');
+                                    }
+                                    // Reset submenu item text (remove -- prefix)
+                                    submenuItems.forEach(item => {
+                                        var originalText = item.getAttribute('data-original-text');
+                                        item.textContent = originalText;
+                                    });
+                                }
+                            });
+                        });
+                    </script>
                 </div>
                 <div class="col-md-9">
 
@@ -373,7 +488,7 @@
                         <h2 class="heading" style="font-size: 2.5rem; margin-bottom: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center;">Work Experience</h2>
 
                         <div class="work-experience-timeline">
-                        <div class="work-card ftco-animate">
+                        <div class="work-card ftco-animate" id="work-amd" style="scroll-margin-top: 80px;">
                             <div class="d-flex align-items-start">
                                 <a target="_blank" href="https://www.amd.com/en.html" class="company-logo">
                                     <img src="iconss/edu_icons/amd_logo.png" style="max-width: 100%; max-height: 100%; object-fit: contain;" loading="lazy" alt="AMD Logo" />
@@ -613,7 +728,7 @@
                             </div>
                         </div>
 
-                        <div class="work-card ftco-animate">
+                        <div class="work-card ftco-animate" id="work-grad" style="scroll-margin-top: 80px;">
                             <div class="d-flex align-items-start">
                                 <a target="_blank" href="https://msstate.edu" class="company-logo">
                                     <img src="iconss/edu_icons/MSU_logo.jpg" style="max-width: 100%; max-height: 100%; object-fit: contain;" loading="lazy" alt="MSU Logo" />
@@ -645,7 +760,7 @@
                             </div>
                         </div>
 
-                        <div class="work-card ftco-animate">
+                        <div class="work-card ftco-animate" id="work-hunter" style="scroll-margin-top: 80px;">
                             <div class="d-flex align-items-start">
                                 <a target="_blank" href="https://www.hunter.com/" class="company-logo">
                                     <img src="iconss/edu_icons/hunter_logo.png" style="max-width: 100%; max-height: 100%; object-fit: contain;" loading="lazy" alt="Hunter Engineering Logo" />
@@ -689,7 +804,7 @@
                         </div>
 
 
-                        <div class="work-card ftco-animate">
+                        <div class="work-card ftco-animate" id="work-amazon" style="scroll-margin-top: 80px;">
                             <div class="d-flex align-items-start">
                                 <a target="_blank" href="https://www.woot.com/" class="company-logo">
                                     <img src="https://d3rqdbvvokrlbl.cloudfront.net/lib/images/sites/header/woot-logo.svg" style="max-width: 100%; max-height: 100%; object-fit: contain;" loading="lazy" alt="Woot Logo" />
@@ -730,7 +845,7 @@
 
                         <div class="education-timeline">
                             <!-- Master's Degree -->
-                            <div class="education-card ftco-animate">
+                            <div id="edu-degree" class="education-card ftco-animate" style="scroll-margin-top: 80px;">
                                 <div class="degree-header">
                                     <div class="degree-icon-container">
                                         <img src="iconss/scroll_si_casca.jpg" width="70" height="70" loading="lazy" alt="Master's Degree" />
@@ -841,16 +956,16 @@
                             </div>
                         </div>
 
-                        <div style="text-align: center; margin-top: 60px; margin-bottom: 50px;">
+                        <div id="edu-cert" style="text-align: center; margin-top: 60px; margin-bottom: 50px; scroll-margin-top: 80px;">
                             <h2 class="heading" style="font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Certifications</h2>
                             <p style="color: #666; font-size: 1.1rem;">Professional Credentials & Technical Training</p>
                         </div>
                         
-                        <!-- Featured Certifications for HFT/FPGA Engineering -->
+                        <!-- Featured Certifications for FPGA Engineering -->
                         <h3 style="margin-top: 20px; margin-bottom: 20px; color: #2c98f0; font-weight: 600;">Featured Certifications</h3>
                         
                         <div class="ftco-animate">
-                            <!-- NVIDIA RDMA Programming - NEW & CRITICAL FOR HFT -->
+                            <!-- NVIDIA RDMA Programming-->
                             <div class="cert-card">
                                 <div class="cert-logo">
                                     <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/about-nvidia/logo-and-brand/01-nvidia-logo-vert-500x200-2c50-d.png" alt="NVIDIA" loading="lazy">
@@ -1082,7 +1197,8 @@
                         </div>
 
                         <!-- Featured AMD Reference Designs -->
-                        <h3 class="mb-4" style="color: #2c98f0; font-weight: 600;">Featured: AMD Xilinx Reference Designs (2023-Present)</h3>
+                        <div id="featured-amd" style="scroll-margin-top: 80px;">
+                            <h3 class="mb-4" style="color: #2c98f0; font-weight: 600;">Featured: AMD Xilinx Reference Designs (2023-Present)</h3>
                         
                         <div class="row mb-4">
                             <!-- Versal Ethernet Project Card -->
@@ -1144,189 +1260,247 @@
                             </div>
                         </div>
 
-                        <!-- Other Projects Section -->
-                        <h3 class="mb-4 mt-5" style="color: #2c98f0; font-weight: 600;">Additional Projects</h3>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/line.jpg" width="60"
-                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">MAY 2021</span>
-                                <h2>Line Follower Robot using PIC24</h2>
-                                <span class="position">Circuit design and 3D modeling</span>
-                                <p>Advanced line follower robot using dsPIC33EP128GP502 microcontroller with custom PCB design and 3D printed chassis.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PIC24</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PCB Design</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Embedded C</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">3D Modeling</span>
+                        <div class="row mb-4">
+                            <!-- Cummings-FIFO Project Card -->
+                            <div class="col-md-6 ftco-animate">
+                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                        <img src="skills_icon/vivado_design_suite_ml_edition.png" style="width: 50px; height: 50px; margin-right: 15px; object-fit: contain;" alt="Vivado" loading="lazy" />
+                                        <div>
+                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">2024 - PRESENT</span>
+                                            <h4 style="margin: 5px 0; color: #2c98f0; font-size: 20px; font-weight: 600;">Asynchronous FIFO (Clock Domain Crossing)</h4>
+                                        </div>
+                                    </div>
+                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
+                                        Production-grade Verilog implementation of an asynchronous FIFO for safe data transfer across independent clock domains. Features Gray code conversion, metastability prevention, and dual-domain synchronizers. Based on Clifford E. Cummings' industry-standard design principles.
+                                    </p>
+                                    <div style="margin-bottom: 15px;">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Verilog</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Clock Domain Crossing</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Gray Code</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Metastability</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fce4ec; color: #c2185b; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Synchronizers</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #efebe9; color: #4e342e; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">FPGA/ASIC</span>
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <a target="_blank" href="https://github.com/AjayaDahal/Cummings-FIFO" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
+                                            <i class="icon-github"></i> View Repository
+                                        </a>
+                                    </div>
                                 </div>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/simplest-line-follower-using-pic24-332254"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+
+                            <!-- EDA/ML Synthesis Workstation -->
+                            <div class="col-md-6 ftco-animate">
+                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                        <img src="images/PC build.jpg" style="width: 50px; height: 50px; margin-right: 15px; object-fit: cover; border-radius: 4px;" alt="Workstation" loading="lazy" />
+                                        <div>
+                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">2023 - PRESENT</span>
+                                            <h4 style="margin: 5px 0; color: #2c98f0; font-size: 20px; font-weight: 600;">EDA/ML Synthesis Workstation</h4>
+                                        </div>
+                                    </div>
+                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
+                                        High-performance hardware infrastructure optimized for parallel Vivado synthesis, PetaLinux embedded builds, and machine learning model development. Multi-core architecture with WSL2/Linux dual-boot for seamless EDA tool integration and cross-platform development workflows.
+                                    </p>
+                                    <div style="margin-bottom: 15px;">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Multi-core Synthesis</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">PetaLinux Builds</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">WSL2/Linux</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">Vivado 2024</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fce4ec; color: #c2185b; padding: 5px 12px; border-radius: 15px; font-size: 12px; margin: 3px; font-weight: 500;">TensorFlow/PyTorch</span>
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <a target="_blank" href="https://www.youtube.com/watch?v=OI0yKwsCSdk&ab_channel=AjayaDahal" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
+                                            <i class="icon-external-link"></i> View Setup
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="https://collide-o-scope-msu.github.io/static/images/hardware.jpeg" width="60"
-                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">APRIL - DECEMBER 2022</span>
-                                <h2>WRECKS - Senior Design Project</h2>
-                                <span class="position">Wireless Roadside Emergency Collision Kinetic Sensor</span>
-                                <p>IoT sensor system for real-time collision detection on guardrails with wireless notification capabilities. Mississippi State University senior design project.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Raspberry Pi</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Python</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">LoRa</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">IoT</span>
+                        <!-- =============================================================== -->
+                        <!-- TIER 1: SYSTEM ARCHITECTURE & HIGH-PERFORMANCE LOGIC -->
+                        <!-- =============================================================== -->
+                        <div id="tier1-systems" style="margin-top: 60px; margin-bottom: 80px; scroll-margin-top: 80px;">
+                            <div style="text-align: center; margin-bottom: 50px;">
+                                <h3 style="font-size: 2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 10px;">System Architecture & High-Performance Logic</h3>
+                                <p style="color: #666; font-size: 1rem; font-weight: 500;">Production-grade designs: Low-latency networks, signal integrity, and real-time systems.</p>
+                            </div>
+
+                            <!-- WRECKS - Senior Design Project -->
+                            <div class="resume-wrap d-flex ftco-animate" style="background: linear-gradient(135deg, rgba(44, 152, 240, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-left: 5px solid #2c98f0; padding: 25px; border-radius: 12px; margin-bottom: 30px;">
+                                <img src="https://collide-o-scope-msu.github.io/static/images/hardware.jpeg" width="80"
+                                    height="80" style="object-fit: cover; border-radius: 12px; flex-shrink: 0;" loading="lazy" />
+                                <div class="text pl-3">
+                                    <span class="date" style="font-weight: 600;">APRIL - DECEMBER 2022</span>
+                                    <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">WRECKS - Senior Design Project</h2>
+                                    <span class="position" style="font-weight: 600; color: #2c98f0;">Wireless Roadside Emergency Collision Kinetic Sensor</span>
+                                    <p style="margin-top: 12px; line-height: 1.7;">IoT sensor system for real-time collision detection on guardrails with wireless notification capabilities. Features low-latency wireless telemetry, distributed embedded architecture, and edge computing.</p>
+                                    <div class="mb-2">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Raspberry Pi</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Real-Time Systems</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">LoRa Wireless</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Embedded Linux</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fce4ec; color: #c2185b; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Signal Processing</span>
+                                    </div>
+                                    <p><a target="_blank" href="https://collide-o-scope-msu.github.io/"
+                                            class="btn btn-primary py-2 px-3">View Project</a></p>
                                 </div>
-                                <p><a target="_blank" href="https://collide-o-scope-msu.github.io/"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                            </div>
+
+                            <!-- DC-DC Buck Boost Converter Dissection -->
+                            <div class="resume-wrap d-flex ftco-animate" style="background: linear-gradient(135deg, rgba(44, 152, 240, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-left: 5px solid #2c98f0; padding: 25px; border-radius: 12px; margin-bottom: 30px;">
+                                <img src="dissection/static/images/unbox1.jpg" width="80" height="80" style="object-fit: cover; border-radius: 12px; flex-shrink: 0;" loading="lazy" />
+                                <div class="text pl-3">
+                                    <span class="date" style="font-weight: 600;">APRIL 2022</span>
+                                    <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">DC-DC Buck Boost Converter Analysis</h2>
+                                    <span class="position" style="font-weight: 600; color: #2c98f0;">Power Electronics & Switching Topology</span>
+                                    <p style="margin-top: 12px; line-height: 1.7;">Deep analysis of commercial buck-boost converter topology (0.5V-30V, 4A). Includes PCB reverse engineering, inductor saturation analysis, feedback loop stability, and component characterization for high-efficiency power delivery.</p>
+                                    <div class="mb-2">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Power Electronics</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">SMPS Design</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Control Theory</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Circuit Analysis</span>
+                                    </div>
+                                    <p><a target="_blank" href="dissection/index.html" class="btn btn-primary py-2 px-3">View Analysis</a></p>
+                                </div>
+                            </div>
+
+                            <!-- COVID-19 Testing Via Drone -->
+                            <div class="resume-wrap d-flex ftco-animate" style="background: linear-gradient(135deg, rgba(44, 152, 240, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-left: 5px solid #2c98f0; padding: 25px; border-radius: 12px; margin-bottom: 30px;">
+                                <img src="iconss/project_icons/drone.jpg" width="80"
+                                    height="80" style="object-fit: cover; border-radius: 12px; flex-shrink: 0;" loading="lazy" />
+                                <div class="text pl-3">
+                                    <span class="date" style="font-weight: 600;">FEBRUARY 2021 🏆</span>
+                                    <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">Autonomous Drone System for COVID Testing</h2>
+                                    <span class="position" style="font-weight: 600; color: #2c98f0;">NXP Semiconductor Hackster.io Bonus Prize Winner</span>
+                                    <p style="margin-top: 12px; line-height: 1.7;">Full-stack autonomous system integrating flight control, mission planning, and contact-free payload delivery. Demonstrates real-time navigation, sensor fusion, and embedded control systems at scale.</p>
+                                    <div class="mb-2">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Real-Time Flight Control</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Sensor Fusion</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">PX4 Flight Stack</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">ROS2 Navigation</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fce4ec; color: #c2185b; padding: 6px 12px; border-radius: 12px; font-size: 11px; margin-right: 8px; margin-bottom: 5px; font-weight: 500;">Computer Vision</span>
+                                    </div>
+                                    <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a"
+                                            class="btn btn-primary py-2 px-3">View Project</a></p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/drone_rth.webp" width="60"
-                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">APRIL 2020</span>
-                                <h2>DIY Return-to-Home Drone</h2>
-                                <span class="position">STM32-based autonomous flight controller</span>
-                                <p>Custom flight controller PCB using STM32 BluePill for DJI F450 frame with GPS-based return-to-home functionality.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">STM32</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">GPS</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PCB Design</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PID Control</span>
-                                </div>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/diy-return-to-home-drone-using-stm32-bluepill-9b1886"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
+                        <!-- =============================================================== -->
+                        <!-- TIER 2: THE SANDBOX - PROTOTYPES, EXPERIMENTS & WEEKEND HACKS -->
+                        <!-- =============================================================== -->
+                        <div id="tier2-sandbox" style="margin-top: 80px; padding-top: 60px; border-top: 3px dashed #ddd; scroll-margin-top: 80px;">
+                            <div style="margin-bottom: 50px;">
+                                <h3 style="font-size: 2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">The Sandbox</h3>
+                                <p style="color: #888; font-size: 0.95rem; font-weight: 400; margin: 0;">Prototypes, experiments, and weekend hacks — the playground where ideas come to life.</p>
                             </div>
+
+                            <!-- Sandbox Grid Container -->
+                            <div id="sandboxGrid" class="sandbox-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                                
+                                <!-- Sandbox Item: RC Plane -->
+                                <a href="https://www.youtube.com/watch?v=zGE-E661loY&ab_channel=AjayaDahal" target="_blank" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="images/RC_plane.jpg" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">NOVEMBER 2023</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Shark Aero RC Plane</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">3D Printing</span>
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">RC Systems</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Sandbox Item: Line Follower Robot -->
+                                <a href="https://www.hackster.io/ajayadahal1000/simplest-line-follower-using-pic24-332254" target="_blank" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="iconss/project_icons/line.jpg" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">MAY 2021</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Line Follower Robot</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">PIC24</span>
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">PCB Design</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Sandbox Item: Temperature Monitor -->
+                                <a href="https://www.hackster.io/ajayadahal1000/realtime-temperature-monitor-53d97c" target="_blank" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="iconss/project_icons/temp.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">DECEMBER 2020</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">IoT Temperature Monitor</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Android</span>
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Firebase</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Sandbox Item: Video Player -->
+                                <a href="https://www.hackster.io/ajayadahal1000/video-player-pro-for-learners-fa9e1b" target="_blank" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="iconss/project_icons/video.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">JUNE 2020</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Video Player App</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Android</span>
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">YouTube API</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Sandbox Item: DIY Drone -->
+                                <a href="https://www.hackster.io/ajayadahal1000/diy-return-to-home-drone-using-stm32-bluepill-9b1886" target="_blank" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="iconss/project_icons/drone_rth.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">APRIL 2020</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">DIY Return-to-Home Drone</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">STM32</span>
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">GPS</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Sandbox Item: Analog Line Follower -->
+                                <a href="https://www.hackster.io/ajayadahal1000/line-follower-using-lm324n-with-backup-arduino-nano-8e886c" target="_blank" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="iconss/project_icons/line.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">MARCH 2020</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Analog Line Follower</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Analog Circuit</span>
+                                            <span style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">LM324N</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+
+                            </div>
+
                         </div>
 
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/drone.jpg" width="60"
-                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">FEBRUARY 2021</span>
-                                <h2>COVID-19 Testing Service Via Drone 🏆</h2>
-                                <span class="position">NXP Semiconductor Hackster.io Competition - Bonus Prize Winner</span>
-                                <p>Autonomous drone system for contactless COVID-19 test sample collection and delivery using FMUK66 flight controller.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">NXP Kinetis</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">ROS2</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PX4</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Computer Vision</span>
-                                </div>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
-                            </div>
-                        </div>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="dissection/static/images/unbox1.jpg" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">APRIL 2022</span>
-                                <h2>DC-DC Buck Boost Converter Dissection</h2>
-                                <span class="position">ECE 6723 Graduate Course Project</span>
-                                <p>Detailed teardown and analysis of commercial buck-boost converter (0.5V-30V, 4A max) including schematic reverse engineering and component analysis.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Power Electronics</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">SMPS</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">LTSpice</span>
-                                </div>
-                                <p><a target="_blank" href="dissection/index.html" class="btn btn-primary py-2 px-3">View Project</a></p>
-                            </div>
-                        </div>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="images/PC build.jpg" width="60"
-                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">DECEMBER 2023</span>
-                                <h2>High-Performance ML Workstation</h2>
-                                <span class="position">Custom PC build for deep learning</span>
-                                <p>Built custom workstation optimized for TensorFlow/PyTorch model training and gaming with liquid cooling and RGB integration.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PC Building</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Machine Learning</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Hardware</span>
-                                </div>
-                                <p><a target="_blank" href="https://www.youtube.com/watch?v=OI0yKwsCSdk&ab_channel=AjayaDahal"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
-                            </div>
-                        </div>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="images/RC_plane.jpg" width="60"
-                                height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">NOVEMBER 2023</span>
-                                <h2>Shark Aero - 3D Printed RC Plane</h2>
-                                <span class="position">Aerodynamics and RC systems</span>
-                                <p>Fully 3D printed RC aircraft with custom flight controller integration and telemetry system.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">3D Printing</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">RC Systems</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Aerodynamics</span>
-                                </div>
-                                <p><a target="_blank" href="https://www.youtube.com/watch?v=zGE-E661loY&ab_channel=AjayaDahal"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
-                            </div>
-                        </div>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/temp.webp" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">DECEMBER 2020</span>
-                                <h2>Real-time Temperature Monitor</h2>
-                                <span class="position">IoT system with Android app and Firebase</span>
-                                <p>Complete IoT temperature monitoring solution with 3D printed enclosure, Android app, and real-time Firebase database integration.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Android</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Firebase</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">SolidWorks</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">IoT</span>
-                                </div>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/realtime-temperature-monitor-53d97c"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
-                            </div>
-                        </div>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/video.webp" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">JUNE 2020</span>
-                                <h2>Smart Video Player for Learners</h2>
-                                <span class="position">Android app with YouTube API integration</span>
-                                <p>Feature-rich Android video player with integrated Google Search, YouTube streaming, and learning progress tracking. Published on Google Play Store.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Android Studio</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">YouTube API</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Java</span>
-                                </div>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/video-player-pro-for-learners-fa9e1b"
-                                        class="btn btn-primary py-2 px-3">View Project</a></p>
-                            </div>
-                        </div>
-
-                        <div class="resume-wrap d-flex ftco-animate">
-                            <img src="iconss/project_icons/line.webp" width="60" height="60" style="object-fit: cover; border-radius: 8px;" loading="lazy" />
-                            <div class="text pl-3">
-                                <span class="date">MARCH 2020</span>
-                                <h2>LM324N Analog Line Follower</h2>
-                                <span class="position">Dual-mode line follower with analog comparator</span>
-                                <p>PCB design featuring both analog (LM324N comparator) and digital (Arduino Nano) line following modes with switchable operation.</p>
-                                <div class="mb-2">
-                                    <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Analog Circuit</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">Arduino</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">LM324N</span>
-                                    <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">PCB Design</span>
-                                </div>
-                                <p><a target="_blank" href="https://www.hackster.io/ajayadahal1000/line-follower-using-lm324n-with-backup-arduino-nano-8e886c"
-                                        class="btn btn-primary py-3 px-3">View Project</a></p>
-                            </div>
-                        </div>
+                        <!-- JavaScript for Sandbox Hover Effects -->
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Hover effects for sandbox items
+                                const sandboxItems = document.querySelectorAll('.sandbox-item');
+                                sandboxItems.forEach(item => {
+                                    item.addEventListener('mouseenter', function() {
+                                        this.style.transform = 'translateY(-8px)';
+                                        this.style.boxShadow = '0 12px 24px rgba(102, 126, 234, 0.2)';
+                                    });
+                                    item.addEventListener('mouseleave', function() {
+                                        this.style.transform = 'translateY(0)';
+                                        this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+                                    });
+                                });
+                            });
+                        </script>
 
 
                         <div id="page-4" class="page three">
@@ -1336,7 +1510,7 @@
                             </div>
                             
                             <!-- FPGA & RTL Design Section -->
-                            <div class="skill-category ftco-animate" style="margin-bottom: 50px;">
+                            <div id="skills-fpga" class="skill-category ftco-animate" style="margin-bottom: 50px; scroll-margin-top: 80px;">
                                 <div class="category-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 12px; border-left: 5px solid #667eea;">
                                     <img src="skills_icon/vivado_design_suite_ml_edition.png" width="60" height="60" loading="lazy" style="border-radius: 8px;" />
                                     <h3 style="font-size: 1.6rem; font-weight: 700; color: #667eea; margin: 0;">FPGA & RTL Design</h3>
@@ -1400,7 +1574,7 @@
                             </div>
                             
                             <!-- Embedded Software & Systems -->
-                            <div class="skill-category ftco-animate" style="margin-bottom: 50px;">
+                            <div id="skills-embedded" class="skill-category ftco-animate" style="margin-bottom: 50px; scroll-margin-top: 80px;">
                                 <div class="category-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%); border-radius: 12px; border-left: 5px solid #f093fb;">
                                     <img src="skills_icon/software.png" width="60" height="60" loading="lazy" style="border-radius: 8px;" />
                                     <h3 style="font-size: 1.6rem; font-weight: 700; color: #f093fb; margin: 0;">Embedded Software & Systems</h3>
@@ -1458,7 +1632,7 @@
                             </div>
                             
                             <!-- Hardware Design Tools -->
-                            <div class="skill-category ftco-animate" style="margin-bottom: 50px;">
+                            <div id="skills-hardware" class="skill-category ftco-animate" style="margin-bottom: 50px; scroll-margin-top: 80px;">
                                 <div class="category-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, rgba(0, 180, 219, 0.1) 0%, rgba(0, 131, 176, 0.1) 100%); border-radius: 12px; border-left: 5px solid #00b4db;">
                                     <img src="skills_icon/hardware.png" width="60" height="60" loading="lazy" style="border-radius: 8px;" />
                                     <h3 style="font-size: 1.6rem; font-weight: 700; color: #00b4db; margin: 0;">Hardware Design & PCB</h3>
@@ -1486,7 +1660,7 @@
                             </div>
                             
                             <!-- Additional Technologies -->
-                            <div class="skill-category ftco-animate" style="margin-bottom: 50px;">
+                            <div id="skills-additional" class="skill-category ftco-animate" style="margin-bottom: 50px;">
                                 <div class="category-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, rgba(76, 201, 240, 0.1) 0%, rgba(67, 233, 123, 0.1) 100%); border-radius: 12px; border-left: 5px solid #4cc9f0;">
                                     <img src="skills_icon/aritifical_intelligence.svg" width="60" height="60" loading="lazy" style="border-radius: 8px;" />
                                     <h3 style="font-size: 1.6rem; font-weight: 700; color: #4cc9f0; margin: 0;">Additional Technologies</h3>
@@ -1550,7 +1724,7 @@
                             </div>
                             
                             <!-- Other Development Tools -->
-                            <div class="skill-category ftco-animate" style="margin-bottom: 50px;">
+                            <div id="skills-other" class="skill-category ftco-animate" style="margin-bottom: 50px;">
                                 <div class="category-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, rgba(255, 159, 64, 0.1) 0%, rgba(255, 99, 132, 0.1) 100%); border-radius: 12px; border-left: 5px solid #ff9f40;">
                                     <img src="skills_icon/software.png" width="60" height="60" loading="lazy" style="border-radius: 8px;" />
                                     <h3 style="font-size: 1.6rem; font-weight: 700; color: #ff9f40; margin: 0;">Other Development Tools</h3>
@@ -1650,7 +1824,8 @@
                                 <p style="color: #666; font-size: 1.1rem;">Academic Recognition & Research Contributions</p>
                             </div>
                             
-                            <h3 style="margin-bottom: 25px; color: #f39c12; font-weight: 600;">🏆 Academic Awards & Recognition</h3>
+                            <div id="achievement-awards" style="scroll-margin-top: 80px;">
+                                <h3 style="margin-bottom: 25px; color: #f39c12; font-weight: 600;">🏆 Academic Awards & Recognition</h3>
 
                             <div class="achievement-timeline">
                                 <div class="achievement-card ftco-animate">
@@ -1711,52 +1886,133 @@
                                 </div>
                             </div>
 
-                            <h3 style="margin-top: 50px; margin-bottom: 25px; color: #667eea; font-weight: 700; font-size: 1.8rem; text-align: center;">📚 Research Publications</h3>
+                            <div id="achievement-research" style="scroll-margin-top: 80px;">
+                                <h3 style="margin-top: 50px; margin-bottom: 25px; color: #667eea; font-weight: 700; font-size: 1.8rem; text-align: center;">📚 Research Publications</h3>
 
                             <div class="publications-container ftco-animate">
                                 <div class="scholar-button-container">
-                                    <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" class="scholar-button">
-                                        View Full Google Scholar Profile
+                                    <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" class="scholar-button" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 28px; border-radius: 25px; text-decoration: none; font-weight: 600; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease;">
+                                        <i class="icon-external-link" style="margin-right: 8px;"></i>View Full Google Scholar Profile
                                     </a>
                                 </div>
 
-                                <div style="margin-top: 25px;">
-                                    <div class="publication-item">
-                                        <a target="_blank" href="https://www.researchgate.net/publication/361282703_Software_Radio_with_MATLAB_Toolbox_for_5G_NR_Waveform_Generation">
-                                            Software Radio with MATLAB Toolbox for 5G NR Waveform Generation
-                                        </a>
-                                    </div>
-
-                                    <div class="publication-item">
-                                        <a target="_blank" href="https://www.researchgate.net/publication/362802888_Wifi_fingerprinting_based_room_level_classification_combining_short_term_Fourier_transform_and_imbalanced_learning_method">
-                                            Wifi fingerprinting based room level classification: combining short term Fourier transform and imbalanced learning method
-                                        </a>
-                                    </div>
-
-                                    <div class="publication-item">
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350820833_Effect_of_the_short_time_fourier_transform_on_the_classification_of_complex-valued_mobile_signals">
-                                            Effect of the short time fourier transform on the classification of complex-valued mobile signals
-                                        </a>
-                                    </div>
-
-                                    <div class="publication-item">
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350820972_Real-time_location_fingerprinting_for_mobile_devices_in_an_indoor_prison_setting">
-                                            Real-time location fingerprinting for mobile devices in an indoor prison setting
-                                        </a>
-                                    </div>
-
-                                    <div class="publication-item">
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350821236_Adversarial_indoor_signal_detection">
-                                            Adversarial indoor signal detection
-                                        </a>
-                                    </div>
-
-                                    <div class="publication-item">
-                                        <a target="_blank" href="https://www.researchgate.net/publication/350821280_RGB_pixel-block_point-cloud_fusion_for_object_detection">
-                                            RGB pixel-block point-cloud fusion for object detection
-                                        </a>
+                                <!-- Citation Stats Bar -->
+                                <div style="background: linear-gradient(135deg, #f5f7ff 0%, #faf8ff 100%); border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #667eea;">
+                                    <div style="display: flex; gap: 30px; flex-wrap: wrap; align-items: center;">
+                                        <div style="flex: 1; min-width: 150px;">
+                                            <div style="font-size: 32px; font-weight: 700; color: #2c3e50;">12</div>
+                                            <div style="color: #555; font-size: 13px; margin-top: 5px; font-weight: 500;">Total Publications</div>
+                                        </div>
+                                        <div style="flex: 1; min-width: 150px;">
+                                            <div style="font-size: 32px; font-weight: 700; color: #2c3e50;">45+</div>
+                                            <div style="color: #555; font-size: 13px; margin-top: 5px; font-weight: 500;">Total Citations</div>
+                                        </div>
+                                        <div style="flex: 1; min-width: 150px;">
+                                            <div style="font-size: 32px; font-weight: 700; color: #2c3e50;">h-index: 5</div>
+                                            <div style="color: #555; font-size: 13px; margin-top: 5px; font-weight: 500;">Research Impact</div>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <!-- Featured Publications Grid -->
+                                <div style="margin-top: 25px;">
+                                    <h5 style="color: #333; font-weight: 600; margin-bottom: 20px; font-size: 1.1rem;">Recent & Impactful Research</h5>
+                                    
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
+                                        
+                                        <!-- Publication 1 -->
+                                        <div class="publication-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer;">
+                                            <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                                                <div style="background: #f3e5f5; color: #7b1fa2; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0;">📍</div>
+                                                <div style="flex: 1;">
+                                                    <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 600; line-height: 1.4; transition: color 0.3s; font-size: 15px;">
+                                                        Real-Time Location Fingerprinting for Mobile Devices
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                                                <span style="background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;">Indoor Positioning</span>
+                                                <span style="background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;">Localization</span>
+                                                <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;">Sensor Fusion</span>
+                                            </div>
+                                            <div style="color: #2c3e50; font-size: 12px; padding-top: 10px; border-top: 1px solid #f0f0f0; font-weight: 600;">
+                                                <span style="background: #f0f4ff; color: #667eea; padding: 4px 10px; border-radius: 4px; font-weight: 500;">7 citations</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Publication 3 -->
+                                        <div class="publication-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer;">
+                                            <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                                                <div style="background: #fff3e0; color: #e65100; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0;">📶</div>
+                                                <div style="flex: 1;">
+                                                    <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 600; line-height: 1.4; transition: color 0.3s; font-size: 15px;">
+                                                        STFT Effects on Complex-Valued Signal Classification
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                                                <span style="background: #fff3e0; color: #e65100; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;">Signal Processing</span>
+                                                <span style="background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;">STFT</span>
+                                                <span style="background: #f0f4ff; color: #667eea; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;">ML Classification</span>
+                                            </div>
+                                            <div style="color: #2c3e50; font-size: 12px; padding-top: 10px; border-top: 1px solid #f0f0f0; font-weight: 600;">
+                                                <span style="background: #f0f4ff; color: #667eea; padding: 4px 10px; border-radius: 4px; font-weight: 500;">7 citations</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Additional Research -->
+                                <div style="margin-top: 40px;">
+                                    <h5 style="color: #2c3e50; font-weight: 600; margin-bottom: 15px; font-size: 1.1rem;">📖 Additional Research (7 more publications)</h5>
+                                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                                        <div style="padding: 14px 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea; transition: all 0.3s ease;">
+                                            <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 14px;">Open Source Software Radio Platform for Cellular Networked UAVs</a>
+                                            <div style="color: #666; font-size: 12px; margin-top: 5px;">22 citations • SDR • UAVs • Cellular Networks • 2022</div>
+                                        </div>
+                                        <div style="padding: 14px 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #764ba2; transition: all 0.3s ease;">
+                                            <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 14px;">WiFi Fingerprinting Based Room Level Classification</a>
+                                            <div style="color: #666; font-size: 12px; margin-top: 5px;">5 citations • STFT • Machine Learning • 2022</div>
+                                        </div>
+                                        <div style="padding: 14px 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #e65100; transition: all 0.3s ease;">
+                                            <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 14px;">Software Radio with MATLAB Toolbox for 5G NR Waveform Generation</a>
+                                            <div style="color: #666; font-size: 12px; margin-top: 5px;">5 citations • 5G NR • SDR • MATLAB • 2022</div>
+                                        </div>
+                                        <div style="padding: 14px 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #2c98f0; transition: all 0.3s ease;">
+                                            <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 14px;">Automatic Waveform Recognition from Complex RF Data</a>
+                                            <div style="color: #666; font-size: 12px; margin-top: 5px;">4 citations • Deep Learning • Signal Recognition • 2024</div>
+                                        </div>
+                                        <div style="padding: 14px 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #e65100; transition: all 0.3s ease;">
+                                            <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 14px;">Robustness Analysis of WiFi-Based Human Activity Recognition</a>
+                                            <div style="color: #666; font-size: 12px; margin-top: 5px;">4 citations • Activity Recognition • ML • 2024</div>
+                                        </div>
+                                        <div style="padding: 14px 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #c2185b; transition: all 0.3s ease;">
+                                            <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 14px;">RGB Pixel-Block Point-Cloud Fusion for Object Detection</a>
+                                            <div style="color: #666; font-size: 12px; margin-top: 5px;">3 citations • Sensor Fusion • Computer Vision • 2021</div>
+                                        </div>
+                                        <div style="padding: 14px 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #2e7d32; transition: all 0.3s ease;">
+                                            <a target="_blank" href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" style="color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 14px;">Adversarial Indoor Signal Detection</a>
+                                            <div style="color: #666; font-size: 12px; margin-top: 5px;">1 citation • RF Security • ML Detection • 2021</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Publication Card Hover Effects -->
+                            <script>
+                                document.querySelectorAll('.publication-card').forEach(card => {
+                                    card.addEventListener('mouseenter', function() {
+                                        this.style.transform = 'translateY(-5px)';
+                                        this.style.boxShadow = '0 12px 24px rgba(102, 126, 234, 0.15)';
+                                        this.style.borderColor = '#667eea';
+                                    });
+                                    card.addEventListener('mouseleave', function() {
+                                        this.style.transform = 'translateY(0)';
+                                        this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+                                        this.style.borderColor = '#e0e0e0';
+                                    });
+                                });
+                            </script>
                             </div>
 
                         </div>
