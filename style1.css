@@ -3,19 +3,28 @@ html, body {
   font-family: 'Roboto Mono', monospace;
   background: #16191b;
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-  padding-top: 100px;
+  padding: 40px 20px;
   max-width: 700px;
   width: 100%;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
 .text {
   font-weight: 100;
-  font-size: 18px;
+  font-size: clamp(14px, 4vw, 18px);
   color: #e2e6e8;
+  line-height: 1.8;
+  text-align: center;
 }
 
 .text-wrap {
@@ -34,4 +43,24 @@ html, body {
 
 .d {
   color: #757575;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 15px;
+  }
+  
+  .text {
+    font-size: clamp(13px, 3.5vw, 16px);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 15px;
+  }
+  
+  .text {
+    font-size: clamp(12px, 3vw, 14px);
+  }
 }

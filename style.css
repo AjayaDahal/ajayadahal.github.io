@@ -12,20 +12,47 @@ body {
   overflow: hidden;
   padding: 30px 0 0 30px;
   text-align: center;
+  margin: 0;
 }
 
 .word {
   bottom: 0;
   color: #fff;
-  font-size: 2.5em;
-  height: 2.5em;
+  font-size: clamp(1.5em, 5vw, 2.5em);
+  height: auto;
   left: 0;
-  line-height: 2.5em;
+  line-height: 1.4;
   margin: auto;
   right: 0;
   position: absolute;
   text-shadow: 0 0 10px rgba(50, 255, 50, 0.5), 0 0 5px rgba(100, 255, 100, 0.5);
-  top: 0
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px 0 0 20px;
+  }
+  
+  .word {
+    font-size: clamp(1.2em, 4vw, 1.8em);
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px 0 0 15px;
+  }
+  
+  .word {
+    font-size: clamp(1em, 3vw, 1.5em);
+    padding: 10px;
+  }
 }
 
 .word span {
