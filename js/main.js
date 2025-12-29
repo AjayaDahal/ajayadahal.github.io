@@ -309,7 +309,13 @@ TxtRotate.prototype.tick = function() {
     this.txt = fullTxt.substring(0, this.txt.length + 1);
   }
 
-  this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+  var wrapSpan = this.el.querySelector('.wrap');
+  if (!wrapSpan) {
+    wrapSpan = document.createElement('span');
+    wrapSpan.className = 'wrap';
+    this.el.appendChild(wrapSpan);
+  }
+  wrapSpan.textContent = this.txt;
 
   var that = this;
   var delta = 300 - Math.random() * 100;
