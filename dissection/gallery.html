@@ -1,203 +1,449 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DC-DC Buck Boost Converter Photo Gallery - Detailed teardown images">
+    <meta name="author" content="Ajaya Dahal">
+    <title>Photo Gallery | DC-DC Buck Boost Converter Analysis</title>
+    
     <style>
+        /* ============================================
+           CSS RESET & BASE STYLES
+           ============================================ */
         * {
-            box-sizing: border-box
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151b24;
+            --bg-tertiary: #1f2937;
+            --text-primary: #e6e8eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-cyan: #00d9ff;
+            --accent-green: #00ff9f;
+            --accent-orange: #ff9500;
+            --border-color: #2d3748;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --spacing-unit: 8px;
+            --container-width: 1400px;
+        }
+
         body {
-            font-family: Verdana, sans-serif;
-            margin: 0
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 159, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
         }
-        
-        .mySlides {
-            display: none
+
+        h1, h2 {
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-primary);
         }
-        
-        img {
-            vertical-align: middle;
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: calc(var(--spacing-unit) * 2);
         }
-        /* Slideshow container */
-        
-        .slideshow-container {
-            max-width: 1000px;
-            position: relative;
-            margin: auto;
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 4);
         }
-        /* Next & previous buttons */
-        
-        .prev,
-        .next {
+
+        header {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 8) 0 calc(var(--spacing-unit) * 6);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: calc(var(--spacing-unit) * 6);
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
+            color: var(--bg-primary);
+            font-weight: 600;
+            border-radius: 6px;
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 217, 255, 0.4);
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: calc(var(--spacing-unit) * 4);
+            margin: calc(var(--spacing-unit) * 6) 0;
+        }
+
+        .gallery-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 217, 255, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            padding: calc(var(--spacing-unit) * 3);
+        }
+
+        .gallery-number {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: calc(var(--spacing-unit));
+        }
+
+        .gallery-title {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: calc(var(--spacing-unit));
+        }
+
+        .gallery-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: calc(var(--spacing-unit) * 4);
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .lightbox img {
+            width: 100%;
+            height: auto;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.4);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--text-primary);
+            font-size: 2rem;
+            cursor: pointer;
+            background: var(--bg-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .lightbox-close:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        .lightbox-nav {
             position: absolute;
             top: 50%;
-            width: auto;
-            padding: 16px;
-            margin-top: -22px;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            transition: 0.6s ease;
-            border-radius: 0 3px 3px 0;
+            transform: translateY(-50%);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 2rem;
+            padding: calc(var(--spacing-unit) * 2);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s;
             user-select: none;
         }
-        /* Position the "next button" to the right */
-        
-        .next {
-            right: 0;
-            border-radius: 3px 0 0 3px;
+
+        .lightbox-nav:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
         }
-        /* On hover, add a black background color with a little bit see-through */
-        
-        .prev:hover,
-        .next:hover {
-            background-color: rgba(0, 0, 0, 0.8);
+
+        .lightbox-prev {
+            left: calc(var(--spacing-unit) * 4);
         }
-        /* Caption text */
-        
-        .text {
-            color: #f2f2f2;
-            font-size: 15px;
-            padding: 8px 12px;
-            position: absolute;
-            bottom: 8px;
-            width: 100%;
+
+        .lightbox-next {
+            right: calc(var(--spacing-unit) * 4);
+        }
+
+        .lightbox-caption {
             text-align: center;
+            margin-top: calc(var(--spacing-unit) * 2);
+            color: var(--text-secondary);
+            font-size: 1rem;
         }
-        /* Number text (1/3 etc) */
-        
-        .numbertext {
-            color: #f2f2f2;
-            font-size: 12px;
-            padding: 8px 12px;
-            position: absolute;
-            top: 0;
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: calc(var(--spacing-unit) * 6) 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: calc(var(--spacing-unit) * 10);
         }
-        /* The dots/bullets/indicators */
-        
-        .dot {
-            cursor: pointer;
-            height: 15px;
-            width: 15px;
-            margin: 0 2px;
-            background-color: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.6s ease;
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
         }
-        
-        .active,
-        .dot:hover {
-            background-color: #717171;
+
+        footer a:hover {
+            color: var(--accent-green);
         }
-        /* Fading animation */
-        
-        .fade {
-            -webkit-animation-name: fade;
-            -webkit-animation-duration: 1.5s;
-            animation-name: fade;
-            animation-duration: 1.5s;
-        }
-        
-        @-webkit-keyframes fade {
-            from {
-                opacity: .4
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
             }
-            to {
-                opacity: 1
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
             }
-        }
-        
-        @keyframes fade {
-            from {
-                opacity: .4
+
+            .lightbox-nav {
+                font-size: 1.5rem;
+                padding: calc(var(--spacing-unit));
             }
-            to {
-                opacity: 1
+
+            .lightbox-prev {
+                left: calc(var(--spacing-unit));
             }
-        }
-        /* On smaller screens, decrease text size */
-        
-        @media only screen and (max-width: 300px) {
-            .prev,
-            .next,
-            .text {
-                font-size: 11px
+
+            .lightbox-next {
+                right: calc(var(--spacing-unit));
             }
         }
     </style>
 </head>
-
 <body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-btn">← Back to Analysis</a>
+            <h1>Photo Gallery</h1>
+            <p class="subtitle">DC-DC Buck Boost Converter Teardown</p>
+        </header>
 
-    <div class="slideshow-container">
+        <div class="gallery-grid">
+            <div class="gallery-item" data-index="0">
+                <img src="static/images/unbox1.jpg" alt="Unboxing">
+                <div class="gallery-caption">
+                    <div class="gallery-number">IMAGE 01</div>
+                    <div class="gallery-title">Initial Unboxing</div>
+                    <div class="gallery-description">Module arrives in anti-static packaging with protective foam. Note the compact form factor optimized for breadboard prototyping.</div>
+                </div>
+            </div>
 
-        <div class="mySlides fade">
-            <div class="numbertext">1 / 3</div>
-            <img src="static/images/Joey.jpg" style="width:100%">
-            <div class="text">Caption Text</div>
+            <div class="gallery-item" data-index="1">
+                <img src="static/images/unbox2.jpg" alt="Top View">
+                <div class="gallery-caption">
+                    <div class="gallery-number">IMAGE 02</div>
+                    <div class="gallery-title">Top View - Controls</div>
+                    <div class="gallery-description">Two potentiometers for voltage and current adjustment. LED display provides real-time voltage readout.</div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="2">
+                <img src="static/images/unbox3.jpg" alt="Bottom View">
+                <div class="gallery-caption">
+                    <div class="gallery-number">IMAGE 03</div>
+                    <div class="gallery-title">Bottom View - PCB</div>
+                    <div class="gallery-description">PCB layout reveals power trace routing. Wide copper pours handle 4A current without excessive I²R losses.</div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="3">
+                <img src="static/images/unbox4.jpg" alt="Inductor Closeup">
+                <div class="gallery-caption">
+                    <div class="gallery-number">IMAGE 04</div>
+                    <div class="gallery-title">Power Inductor</div>
+                    <div class="gallery-description">Toroidal inductor (~100µH) with ferrite core. Critical component for storing energy in buck-boost switching cycle.</div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="4">
+                <img src="static/images/unbox5.jpg" alt="Display Module">
+                <div class="gallery-caption">
+                    <div class="gallery-number">IMAGE 05</div>
+                    <div class="gallery-title">LED Display Driver</div>
+                    <div class="gallery-description">3-digit 7-segment LED with dedicated driver IC. Multiplexed display reduces pin count requirements.</div>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="5">
+                <img src="static/images/unbox6.jpg" alt="Heatsink">
+                <div class="gallery-caption">
+                    <div class="gallery-number">IMAGE 06</div>
+                    <div class="gallery-title">MOSFET Heatsinking</div>
+                    <div class="gallery-description">Aluminum heatsink bonded to switching MOSFET. Essential for thermal management at max 4A load.</div>
+                </div>
+            </div>
         </div>
 
-        <div class="mySlides fade">
-            <div class="numbertext">2 / 3</div>
-            <img src="static/images/Walker.png" style="width:100%">
-            <div class="text">Caption Two</div>
+        <!-- Lightbox Modal -->
+        <div class="lightbox" id="lightbox">
+            <div class="lightbox-content">
+                <span class="lightbox-close" id="lightbox-close">&times;</span>
+                <span class="lightbox-nav lightbox-prev" id="lightbox-prev">‹</span>
+                <img id="lightbox-img" src="" alt="">
+                <span class="lightbox-nav lightbox-next" id="lightbox-next">›</span>
+                <div class="lightbox-caption" id="lightbox-caption"></div>
+            </div>
         </div>
 
-        <div class="mySlides fade">
-            <div class="numbertext">3 / 3</div>
-            <img src="static/images/Zack.jpg" style="width:100%">
-            <div class="text">Caption Three</div>
-        </div>
-
-        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1)">&#10095;</a>
-
-    </div>
-    <br>
-
-    <div style="text-align:center">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
+        <footer>
+            <p>
+                <a href="index.html">← Return to Analysis</a> | 
+                <a href="../home.html">Main Portfolio</a>
+            </p>
+            <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem;">
+                ECE 6723 - Electronics Dissection | Mississippi State University | April 2022
+            </p>
+        </footer>
     </div>
 
     <script>
-        var slideIndex = 1;
-        showSlides(slideIndex);
+        // Gallery data
+        const images = [
+            { src: 'static/images/unbox1.jpg', title: 'Initial Unboxing', desc: 'Module arrives in anti-static packaging' },
+            { src: 'static/images/unbox2.jpg', title: 'Top View - Controls', desc: 'Voltage and current adjustment potentiometers' },
+            { src: 'static/images/unbox3.jpg', title: 'Bottom View - PCB', desc: 'Power trace routing and copper pours' },
+            { src: 'static/images/unbox4.jpg', title: 'Power Inductor', desc: 'Toroidal inductor with ferrite core' },
+            { src: 'static/images/unbox5.jpg', title: 'LED Display Driver', desc: '3-digit 7-segment multiplexed display' },
+            { src: 'static/images/unbox6.jpg', title: 'MOSFET Heatsinking', desc: 'Aluminum heatsink for thermal management' }
+        ];
 
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-        }
+        let currentIndex = 0;
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const closeBtn = document.getElementById('lightbox-close');
+        const prevBtn = document.getElementById('lightbox-prev');
+        const nextBtn = document.getElementById('lightbox-next');
 
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-        }
+        // Open lightbox
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                currentIndex = parseInt(item.dataset.index);
+                showImage(currentIndex);
+                lightbox.classList.add('active');
+            });
+        });
 
-        function showSlides(n) {
-            var i;
-            var slides = document.getElementsByClassName("mySlides");
-            var dots = document.getElementsByClassName("dot");
-            if (n > slides.length) {
-                slideIndex = 1
+        // Close lightbox
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
             }
-            if (n < 1) {
-                slideIndex = slides.length
+        });
+
+        // Navigation
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+            } else if (e.key === 'ArrowLeft') {
+                prevBtn.click();
+            } else if (e.key === 'ArrowRight') {
+                nextBtn.click();
             }
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            for (i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-            slides[slideIndex - 1].style.display = "block";
-            dots[slideIndex - 1].className += " active";
+        });
+
+        function showImage(index) {
+            const img = images[index];
+            lightboxImg.src = img.src;
+            lightboxCaption.textContent = `${img.title} - ${img.desc}`;
         }
     </script>
-
 </body>
-
 </html>
