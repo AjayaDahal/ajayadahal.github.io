@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="72ns Gateway: A Versal ACAP HFT Accelerator - Deep dive into nanosecond-latency network processing on FPGA">
+    <meta name="keywords" content="FPGA, HFT, Low Latency, Versal, Xilinx, UDP, Network Processing, NASDAQ ITCH, Hardware Acceleration">
+    <meta name="author" content="FPGA Engineer">
+    <title>72ns Gateway: A Versal ACAP HFT Accelerator</title>
+    
+    <!-- Mermaid.js for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <style>
+        /* ============================================
+           CSS RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Dark Terminal Color Palette */
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151b24;
+            --bg-tertiary: #1f2937;
+            --text-primary: #e6e8eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-cyan: #00d9ff;
+            --accent-green: #00ff9f;
+            --accent-orange: #ff9500;
+            --accent-red: #ff4757;
+            --border-color: #2d3748;
+            --code-bg: #161d27;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            
+            /* Typography */
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            
+            /* Spacing */
+            --spacing-unit: 8px;
+            --container-width: 1200px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 159, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ============================================
+           TYPOGRAPHY
+           ============================================ */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            color: var(--text-primary);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: calc(var(--spacing-unit) * 2);
+            margin-top: calc(var(--spacing-unit) * 8);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            color: var(--accent-green);
+            margin-top: calc(var(--spacing-unit) * 4);
+        }
+
+        p {
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            color: var(--text-secondary);
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--accent-orange);
+            font-style: normal;
+        }
+
+        /* ============================================
+           LAYOUT
+           ============================================ */
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 4);
+        }
+
+        header {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 10) 0 calc(var(--spacing-unit) * 6);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: calc(var(--spacing-unit) * 8);
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        .metadata {
+            display: flex;
+            justify-content: center;
+            gap: calc(var(--spacing-unit) * 3);
+            margin-top: calc(var(--spacing-unit) * 3);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .metadata span {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit));
+        }
+
+        .metadata .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        section {
+            margin-bottom: calc(var(--spacing-unit) * 10);
+        }
+
+        /* ============================================
+           COMPONENTS
+           ============================================ */
+        
+        /* Call-out boxes */
+        .callout {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-cyan);
+            padding: calc(var(--spacing-unit) * 3);
+            margin: calc(var(--spacing-unit) * 4) 0;
+            border-radius: 4px;
+        }
+
+        .callout.warning {
+            border-left-color: var(--accent-orange);
+        }
+
+        .callout.success {
+            border-left-color: var(--accent-green);
+        }
+
+        .callout p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: var(--accent-green);
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: calc(var(--spacing-unit) * 3);
+            overflow-x: auto;
+            margin: calc(var(--spacing-unit) * 3) 0;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: calc(var(--spacing-unit) * 4) 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        thead {
+            background: var(--bg-tertiary);
+        }
+
+        th {
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--border-color);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: calc(var(--spacing-unit) * 4);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        li {
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            color: var(--text-secondary);
+        }
+
+        li strong {
+            color: var(--accent-cyan);
+        }
+
+        /* Specs grid */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--spacing-unit) * 3);
+            margin: calc(var(--spacing-unit) * 4) 0;
+        }
+
+        .spec-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: calc(var(--spacing-unit) * 3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .spec-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 217, 255, 0.2);
+        }
+
+        .spec-label {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: calc(var(--spacing-unit));
+        }
+
+        .spec-value {
+            font-size: 1.5rem;
+            color: var(--accent-green);
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        /* Diagram container */
+        .diagram-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: calc(var(--spacing-unit) * 4);
+            margin: calc(var(--spacing-unit) * 4) 0;
+            overflow-x: auto;
+        }
+
+        /* Mermaid styling */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            background: transparent !important;
+        }
+
+        /* References */
+        .references {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: calc(var(--spacing-unit) * 4);
+            margin: calc(var(--spacing-unit) * 4) 0;
+        }
+
+        .reference-item {
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            padding-bottom: calc(var(--spacing-unit) * 3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .reference-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .reference-title {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            margin-bottom: calc(var(--spacing-unit));
+        }
+
+        .reference-authors {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: calc(var(--spacing-unit) * 6) 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: calc(var(--spacing-unit) * 10);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .container {
+                padding: calc(var(--spacing-unit) * 2);
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2);
+            }
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: calc(var(--spacing-unit) * 4);
+        }
+
+        .mb-4 {
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ==================== HEADER ==================== -->
+        <header>
+            <div style="display: inline-block; background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(255, 71, 87, 0.15) 100%); border: 2px solid var(--accent-orange); border-radius: 8px; padding: 12px 24px; margin-bottom: 24px; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--accent-orange);">
+                ⚠️ WORK IN PROGRESS • Active Development
+            </div>
+            <h1>72ns Gateway: A Versal ACAP HFT Accelerator</h1>
+            <p class="subtitle">Exploring the Physics of Nanosecond-Latency Network Processing</p>
+            <div class="metadata">
+                <span><div class="dot"></div> Xilinx Versal VCK190</span>
+                <span>• 1G/2.5G Ethernet</span>
+                <span>• RTL/Verilog</span>
+                <span>• Dec 2025</span>
+            </div>
+        </header>
+
+        <!-- ==================== SECTION 1: MOTIVATION ==================== -->
+        <section id="motivation">
+            <h2>01. The Motivation: Chasing Zero Latency</h2>
+            
+            <p>
+                In the world of high-frequency trading, the speed of light becomes a tangible constraint. At <strong>299,792,458 meters per second</strong>, 
+                light travels approximately <strong>30 centimeters in one nanosecond</strong>. This means that by the time a photon traverses a single 
+                meter of fiber optic cable (~5ns), market opportunities may have already evaporated. The question becomes: <em>How fast can we process 
+                incoming market data before physics itself becomes the bottleneck?</em>
+            </p>
+
+            <p>
+                Traditional software-based network stacks—even those optimized with kernel bypass (DPDK), zero-copy techniques (io_uring), and RDMA—still 
+                operate in the realm of <strong>microseconds</strong>. A well-tuned C++ application with SR-IOV and CPU pinning might achieve 
+                1-2 microseconds of processing latency. But this is <em>three orders of magnitude</em> slower than what's physically possible.
+            </p>
+
+            <p>
+                The shift from software to hardware represents the ultimate frontier of optimization. By moving packet processing logic into reconfigurable 
+                fabric—specifically, <strong>Field-Programmable Gate Arrays (FPGAs)</strong>—we can achieve deterministic, sub-100ns latency. This is not 
+                about incremental improvement; this is a <em>paradigm shift</em>.
+            </p>
+
+            <div class="callout success">
+                <p><strong>Goal:</strong> Design a deterministic, wire-speed network stack on the <strong>Xilinx Versal VCK190 ACAP</strong> 
+                (Adaptive Compute Acceleration Platform) capable of filtering, parsing, and forwarding UDP packets in <strong>&lt;100ns</strong> 
+                with zero CPU intervention.</p>
+            </div>
+
+            <p>
+                This project is a personal R&D initiative to master the art of <strong>heterogeneous computing</strong>—bridging the gap between 
+                software algorithms and hardware implementation. The goal is not just to build a faster system, but to understand the <em>engineering 
+                trade-offs</em> involved in nanosecond-latency design: clock domain crossings, metastability, pipeline hazards, and the cruel reality 
+                of propagation delay.
+            </p>
+
+            <div class="specs-grid">
+                <div class="spec-card">
+                    <div class="spec-label">Target Latency</div>
+                    <div class="spec-value">72ns</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Clock Frequency</div>
+                    <div class="spec-value">125 MHz</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Throughput</div>
+                    <div class="spec-value">1 Gbps</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-label">Platform</div>
+                    <div class="spec-value">Versal ACAP</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 2: ARCHITECTURE ==================== -->
+        <section id="architecture">
+            <h2>02. The Architecture: From Wire to Application</h2>
+
+            <h3>System Overview</h3>
+            
+            <p>
+                The current prototype implements a <strong>receive (RX) path</strong> for processing inbound Ethernet frames. The architecture 
+                is modular, pipelined, and designed for scalability—while the current implementation uses <strong>1G/2.5G Ethernet</strong>, 
+                the design can be extended to <strong>40G/100G</strong> using the Versal <strong>MRMAC</strong> (Multirate Ethernet MAC) hard IP.
+            </p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                graph LR
+                    A[SFP+ Cage<br/>1000BASE-X] -->|SGMII| B[AXI 1G/2.5G<br/>Ethernet Subsystem]
+                    B -->|AXI-Stream<br/>8-bit @ 125MHz| C[UDP Filter<br/>RTL Module]
+                    C -->|Payload Only<br/>Header Stripped| D[Async FIFO<br/>Gray Code CDC]
+                    D -->|250MHz → 100MHz<br/>Clock Domain Cross| E[Packet Parser<br/>FSM Decoder]
+                    E -->|Decoded Messages| F[Application Logic<br/>Order Book Update]
+                    
+                    style A fill:#1f2937,stroke:#00d9ff,stroke-width:2px
+                    style B fill:#1f2937,stroke:#00d9ff,stroke-width:2px
+                    style C fill:#1f2937,stroke:#00ff9f,stroke-width:3px
+                    style D fill:#1f2937,stroke:#ff9500,stroke-width:2px
+                    style E fill:#1f2937,stroke:#00ff9f,stroke-width:2px
+                    style F fill:#1f2937,stroke:#00d9ff,stroke-width:2px
+                </div>
+            </div>
+
+            <h3>Component Breakdown</h3>
+
+            <h4>1. AXI 1G/2.5G Ethernet Subsystem</h4>
+            <p>
+                Xilinx IP core that handles the MAC layer (Media Access Control) and presents received frames via <strong>AXI4-Stream</strong>. 
+                The interface runs at <strong>125 MHz</strong> with an 8-bit data bus (<code>TDATA[7:0]</code>), providing <strong>1 Gbps</strong> 
+                of throughput (125 MHz × 8 bits = 1000 Mbps).
+            </p>
+
+            <h4>2. UDP Filter (Custom RTL)</h4>
+            <p>
+                A <strong>byte-by-byte state machine</strong> that processes incoming Ethernet frames and performs the following operations:
+            </p>
+            <ul>
+                <li><strong>Header Validation:</strong> Checks EtherType = <code>0x0800</code> (IPv4) at byte 12</li>
+                <li><strong>Protocol Check:</strong> Verifies IP Protocol = <code>0x11</code> (UDP) at byte 23</li>
+                <li><strong>Port Filtering:</strong> Matches UDP Destination Port (default: 1234) at bytes 36-37</li>
+                <li><strong>Header Stripping:</strong> Removes 42 bytes (14 Ethernet + 20 IP + 8 UDP) and forwards only the <em>payload</em></li>
+            </ul>
+            
+            <div class="callout">
+                <p>
+                    <strong>Latency:</strong> The filter makes a go/no-go decision by byte 37. At 125 MHz (8ns per byte), 
+                    this is <strong>~296ns</strong> from frame start to decision. However, the first payload byte is forwarded immediately 
+                    after byte 42, resulting in <strong>~40ns of processing latency</strong> (5 clock cycles).
+                </p>
+            </div>
+
+            <h4>3. Async FIFO (Clock Domain Crossing)</h4>
+            <p>
+                A <strong>metastability-safe</strong> FIFO implementing the <em>Cummings 2-flop synchronizer</em> technique. This module 
+                bridges two asynchronous clock domains:
+            </p>
+            <ul>
+                <li><strong>Write Domain:</strong> 250 MHz (Ethernet subsystem)</li>
+                <li><strong>Read Domain:</strong> 100 MHz (Application logic)</li>
+            </ul>
+            <p>
+                The design uses <strong>Gray code</strong> for pointer synchronization—a critical technique to avoid race conditions when 
+                crossing clock boundaries. Gray code ensures that only one bit changes between consecutive values, minimizing the risk of 
+                metastability during clock domain crossing.
+            </p>
+
+            <div class="callout warning">
+                <p>
+                    <strong>CDC Hazard:</strong> Violating setup/hold times on a flip-flop during clock domain crossing can result in 
+                    metastability—a state where the output oscillates unpredictably. The 2-flop synchronizer gives the signal <em>two full 
+                    clock cycles</em> to resolve, reducing the probability of metastability to negligible levels (MTBF &gt; 10^15 years).
+                </p>
+            </div>
+
+            <h4>4. Packet Parser (FSM Decoder)</h4>
+            <p>
+                A finite state machine that decodes application-layer protocols. The current implementation supports a custom framing protocol 
+                (<code>0xAA55</code> sync pattern + length + payload + checksum), but is designed to be extended for industry-standard protocols 
+                like <strong>MoldUDP64</strong> and <strong>NASDAQ TotalView-ITCH 5.0</strong>.
+            </p>
+
+            <h4>5. Testbench: Laptop as "Exchange Venue"</h4>
+            <p>
+                To validate the design, a <strong>Python/Scapy</strong> script running on a laptop injects raw Ethernet frames directly into 
+                the VCK190's SFP+ port. This simulates a realistic market data feed and allows for controlled testing of edge cases (fragmented 
+                packets, out-of-order delivery, checksum errors).
+            </p>
+
+            <h3>Hardware Specifications</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Specification</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Device</td>
+                        <td>Xilinx Versal AI Core</td>
+                        <td>xcvc1902-vsva2197-2MP-e-S</td>
+                    </tr>
+                    <tr>
+                        <td>Fabric</td>
+                        <td>1,039,104 Logic Cells</td>
+                        <td>~899K LUTs, 1.8M Flip-Flops</td>
+                    </tr>
+                    <tr>
+                        <td>Memory</td>
+                        <td>42.7 Mb Block RAM</td>
+                        <td>968 UltraRAM blocks (36Kb each)</td>
+                    </tr>
+                    <tr>
+                        <td>DSP</td>
+                        <td>1,968 DSP58 Slices</td>
+                        <td>INT8/FP32 MAC engines</td>
+                    </tr>
+                    <tr>
+                        <td>AI Engines</td>
+                        <td>400 AI Engine Tiles</td>
+                        <td>8 TFLOPS @ INT8</td>
+                    </tr>
+                    <tr>
+                        <td>Ethernet</td>
+                        <td>4x 100GbE MRMAC</td>
+                        <td>Multirate: 1G/10G/25G/100G</td>
+                    </tr>
+                    <tr>
+                        <td>PCIe</td>
+                        <td>Gen5 x16</td>
+                        <td>64 GB/s bidirectional</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ==================== SECTION 2.5: END-TO-END SYSTEM ==================== -->
+        <section id="end-to-end">
+            <h2>02.5 The Complete Vision: From Market Feed to Strategy Execution</h2>
+
+            <div class="callout success">
+                <p><strong>Status:</strong> The UDP filter, async FIFO, and protocol parser modules are functional. Currently developing the downstream trading components: <strong>Book Builder</strong>, <strong>Order Manager</strong>, and <strong>Strategy Creator</strong>.</p>
+            </div>
+
+            <h3>System Architecture Overview</h3>
+            <p>
+                While the current implementation focuses on the <strong>packet processing pipeline</strong> (Sections 02 and 03), the broader vision 
+                is to build a complete <strong>end-to-end HFT system</strong> that spans from simulated market data generation to strategy execution. 
+                This demonstrates not just hardware expertise, but a comprehensive understanding of the <em>full trading stack</em>.
+            </p>
+
+            <div style="text-align: center; margin: calc(var(--spacing-unit) * 4) 0;">
+                <img src="vck190.avif" alt="Xilinx Versal VCK190 Evaluation Board" style="max-width: 600px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);" />
+                <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
+                    Xilinx Versal VCK190 Evaluation Board: 1M+ logic cells, 400 AI engines, 4x 100GbE MRMAC
+                </p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                graph TB
+                    subgraph Laptop["🖥️ Laptop: Market Data Simulator"]
+                        A[Python Script<br/>MoldUDP64 Generator]
+                        A2[Synthetic Order Book<br/>ITCH 5.0 Messages]
+                    end
+
+                    subgraph Network["🌐 Network Layer"]
+                        B[1G Ethernet<br/>UDP/IP Stack]
+                    end
+
+                    subgraph VCK190["⚡ Xilinx Versal VCK190 FPGA"]
+                        C[1. UDP Filter<br/>Header Stripping]
+                        D[2. Async FIFO<br/>Clock Domain Crossing]
+                        E[3. MoldUDP64 Parser<br/>Packet Decoder]
+                        F[4. ITCH Message Parser<br/>Message Type FSM]
+                        
+                        subgraph Trading["Trading Logic (In Development)"]
+                            G[📖 Book Builder<br/>Order Book Reconstruction]
+                            H[📋 Order Manager<br/>Position Tracking]
+                            I[🎯 Strategy Creator<br/>Signal Generation]
+                        end
+                        
+                        J[Strategy Output<br/>Trade Signals]
+                    end
+
+                    subgraph Output["📊 Output / Monitoring"]
+                        K[ChipScope ILA<br/>Debug Probes]
+                        L[PCIe DMA<br/>to Host Software]
+                    end
+
+                    A --> A2
+                    A2 --> B
+                    B -->|Ethernet Frames| C
+                    C -->|Payload Only| D
+                    D -->|Synchronized Data| E
+                    E -->|Unpacked Messages| F
+                    F -->|Add Order<br/>Execute<br/>Cancel| G
+                    G -->|Best Bid/Ask<br/>Depth Levels| H
+                    H -->|Position State| I
+                    I -->|Buy/Sell Signals| J
+                    J --> K
+                    J --> L
+
+                    style Laptop fill:#1f2937,stroke:#f093fb,stroke-width:3px
+                    style Network fill:#1f2937,stroke:#4cc9f0,stroke-width:2px
+                    style VCK190 fill:#0a0e14,stroke:#00d9ff,stroke-width:4px
+                    style Trading fill:#151b24,stroke:#ff9500,stroke-width:3px,stroke-dasharray: 5 5
+                    style Output fill:#1f2937,stroke:#00ff9f,stroke-width:2px
+
+                    style C fill:#1f2937,stroke:#00ff9f,stroke-width:2px
+                    style D fill:#1f2937,stroke:#ff9500,stroke-width:2px
+                    style E fill:#1f2937,stroke:#00ff9f,stroke-width:2px
+                    style F fill:#1f2937,stroke:#00ff9f,stroke-width:2px
+                    style G fill:#1f2937,stroke:#ff9500,stroke-width:2px
+                    style H fill:#1f2937,stroke:#ff9500,stroke-width:2px
+                    style I fill:#1f2937,stroke:#ff9500,stroke-width:2px
+                    style J fill:#1f2937,stroke:#00d9ff,stroke-width:2px
+                </div>
+            </div>
+
+            <h3>Component Details</h3>
+
+            <h4>📡 Stage 1: Market Data Simulation (Laptop)</h4>
+            <p>
+                A <strong>Python script</strong> running on a standard laptop generates synthetic market data packets conforming to the 
+                <strong>MoldUDP64</strong> protocol. This simulates the NASDAQ ITCH 5.0 feed by:
+            </p>
+            <ul>
+                <li><strong>Generating realistic order book events:</strong> Add Order, Order Executed, Order Cancel, Trade messages</li>
+                <li><strong>Encapsulating messages in MoldUDP64 frames:</strong> Session ID, sequence numbers, message count headers</li>
+                <li><strong>Transmitting via UDP:</strong> Sends packets to the VCK190's 1G Ethernet port (destination port 1234)</li>
+                <li><strong>Rate control:</strong> Configurable message rate to test throughput and latency under load</li>
+            </ul>
+
+            <div class="callout">
+                <p><strong>Tool Stack:</strong> Python 3.11 • <code>socket</code> library for UDP transmission • <code>struct</code> for binary packing • NumPy for synthetic data generation</p>
+            </div>
+
+            <h4>⚡ Stage 2-4: Packet Processing Pipeline (FPGA - Implemented)</h4>
+            <p>
+                These modules are <strong>currently functional</strong> and documented in Sections 02-04:
+            </p>
+            <ul>
+                <li><strong>UDP Filter:</strong> Validates IP/UDP headers, strips 42-byte header, forwards payload (40ns latency)</li>
+                <li><strong>Async FIFO:</strong> Clock domain crossing with Gray code synchronizers (24ns latency)</li>
+                <li><strong>MoldUDP64 Parser:</strong> Unpacks session header, extracts individual ITCH messages</li>
+                <li><strong>ITCH Message Parser:</strong> Decodes message types (Add Order, Execute, Cancel, etc.)</li>
+            </ul>
+
+            <h4>📖 Stage 5: Book Builder (In Development)</h4>
+            <p>
+                The <strong>Order Book Reconstruction</strong> module maintains a real-time view of market depth by:
+            </p>
+            <ul>
+                <li><strong>Order tracking:</strong> Uses on-chip BRAM to store active orders (Order Reference Number → Price/Quantity)</li>
+                <li><strong>Price level aggregation:</strong> Maintains sorted bid/ask queues with total quantity at each price</li>
+                <li><strong>Update logic:</strong> Handles Add Order (insert), Cancel (remove), Execute (modify quantity)</li>
+                <li><strong>Latency target:</strong> &lt;10ns per order book update (1-2 clock cycles @ 125 MHz)</li>
+            </ul>
+
+            <div class="callout">
+                <p><strong>Challenge:</strong> Managing <strong>10,000+ active orders</strong> in BRAM (limited to ~35 Mb on Versal). Requires efficient data structures: hash tables for O(1) lookup, binary heap for price priority sorting.</p>
+            </div>
+
+            <h4>📋 Stage 6: Order Manager (In Development)</h4>
+            <p>
+                Tracks positions, P&L, and risk metrics in real-time:
+            </p>
+            <ul>
+                <li><strong>Position tracking:</strong> Net shares held per symbol (long/short)</li>
+                <li><strong>P&L calculation:</strong> Mark-to-market using latest trade price</li>
+                <li><strong>Risk limits:</strong> Max position size, max notional exposure, loss limits</li>
+                <li><strong>Trade attribution:</strong> Links executions to strategy signals for performance analysis</li>
+            </ul>
+
+            <h4>🎯 Stage 7: Strategy Creator (In Development)</h4>
+            <p>
+                The <strong>alpha generation engine</strong>—where market microstructure patterns are exploited:
+            </p>
+            <ul>
+                <li><strong>Market making:</strong> Post quotes on both sides, capture spread (bid-ask arbitrage)</li>
+                <li><strong>Order flow imbalance:</strong> Detect aggressive buying/selling pressure from order book dynamics</li>
+                <li><strong>Momentum signals:</strong> Trade direction based on recent price moves and volume</li>
+                <li><strong>Arbitrage detection:</strong> Cross-exchange price discrepancies (requires multiple feeds)</li>
+            </ul>
+
+            <p>
+                <em>Note:</em> The strategy logic will be parameterizable via <strong>PCIe register writes</strong>, allowing 
+                dynamic reconfiguration without FPGA reprogramming.
+            </p>
+
+            <h3>Why This Matters</h3>
+            <p>
+                This end-to-end implementation demonstrates:
+            </p>
+            <ul>
+                <li><strong>Heterogeneous computing mastery:</strong> Bridging Python simulation, network protocols, and FPGA RTL</li>
+                <li><strong>Vertical integration:</strong> Understanding the <em>full stack</em> from packets to P&L</li>
+                <li><strong>Production-grade thinking:</strong> Not just a prototype—designed for real-world trading scenarios</li>
+                <li><strong>Latency obsession:</strong> Every clock cycle counts; every module is timed and optimized</li>
+            </ul>
+
+            <div class="callout success">
+                <p><strong>Next Milestones:</strong></p>
+                <ul style="margin-bottom: 0;">
+                    <li>Complete Book Builder BRAM implementation (ETA: Jan 2025)</li>
+                    <li>Integrate Order Manager with position tracking (ETA: Feb 2025)</li>
+                    <li>Deploy first strategy: Market making with 2-tick spread (ETA: Mar 2025)</li>
+                    <li>Backtest using historical ITCH data feeds (ETA: Apr 2025)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 3: PROTOCOL DEEP DIVE ==================== -->
+        <section id="protocol">
+            <h2>03. The Protocol: NASDAQ TotalView-ITCH 5.0</h2>
+
+            <h3>Why NASDAQ ITCH?</h3>
+            <p>
+                <strong>NASDAQ TotalView-ITCH 5.0</strong> is the <em>de facto</em> standard for low-latency market data feeds in U.S. equities. 
+                Broadcast from the NASDAQ data center in <strong>Carteret, New Jersey</strong>, this feed delivers:
+            </p>
+            <ul>
+                <li><strong>Order Book Updates:</strong> Add, delete, replace, and execute messages</li>
+                <li><strong>Trade Reports:</strong> Matched executions with timestamps</li>
+                <li><strong>NOII (Net Order Imbalance Indicator):</strong> Auction data</li>
+                <li><strong>System Events:</strong> Trading halts, circuit breakers</li>
+            </ul>
+
+            <p>
+                The protocol uses <strong>UDP multicast</strong> for one-to-many delivery, with <strong>MoldUDP64</strong> as the session-layer 
+                framing protocol. This design eliminates TCP's handshake overhead and provides <em>deterministic latency</em>—critical for 
+                time-sensitive strategies like market making and statistical arbitrage.
+            </p>
+
+            <div class="callout">
+                <p>
+                    <strong>Scaling Note:</strong> While the current prototype uses <strong>1G Ethernet</strong>, the architecture is designed 
+                    to scale to <strong>40G/100G</strong> using the Versal <strong>MRMAC</strong> hard IP. The MoldUDP64 parser and ITCH decoder 
+                    can be parallelized across multiple lanes (e.g., 4x 25G links) to achieve line-rate processing at 100 Gbps.
+                </p>
+            </div>
+
+            <h3>MoldUDP64 Frame Structure</h3>
+            <p>
+                MoldUDP64 is NASDAQ's proprietary session-layer protocol. Each UDP datagram contains:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Size (Bytes)</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Session</strong></td>
+                        <td>10</td>
+                        <td>ASCII session identifier (space-padded)</td>
+                        <td><code>"NASDAQ    "</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sequence Number</strong></td>
+                        <td>8</td>
+                        <td>64-bit packet sequence (big-endian)</td>
+                        <td><code>0x0000000000001234</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Message Count</strong></td>
+                        <td>2</td>
+                        <td>Number of ITCH messages in packet (1-255)</td>
+                        <td><code>0x0005</code> (5 messages)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Message Block</strong></td>
+                        <td>Variable</td>
+                        <td>Concatenated ITCH 5.0 messages</td>
+                        <td><code>[Len][Msg1][Len][Msg2]...</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Each message in the block is prefixed with a <strong>2-byte length field</strong> (big-endian) followed by the ITCH message itself. 
+                The parser must:
+            </p>
+            <ol>
+                <li>Verify the session ID matches the expected value</li>
+                <li>Check sequence numbers for gaps (indicating packet loss)</li>
+                <li>Iterate through the message block, parsing each ITCH message type</li>
+            </ol>
+
+            <h3>ITCH 5.0 Message Types (Sample)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message Type</th>
+                        <th>Code</th>
+                        <th>Length (Bytes)</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>System Event</strong></td>
+                        <td>'S'</td>
+                        <td>12</td>
+                        <td>Start of day, end of day, trading halt</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Add Order</strong></td>
+                        <td>'A'</td>
+                        <td>36</td>
+                        <td>New limit order added to book</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Order Executed</strong></td>
+                        <td>'E'</td>
+                        <td>31</td>
+                        <td>Partial or full execution of order</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Order Cancel</strong></td>
+                        <td>'X'</td>
+                        <td>23</td>
+                        <td>Order canceled (full or partial)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trade (Non-Cross)</strong></td>
+                        <td>'P'</td>
+                        <td>44</td>
+                        <td>Matched trade execution</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout warning">
+                <p>
+                    <strong>Hardware Challenge:</strong> The variable-length message format means the parser cannot use a fixed pipeline depth. 
+                    The state machine must dynamically switch between message types based on the first byte (message type code). This requires 
+                    careful FSM design to avoid pipeline stalls.
+                </p>
+            </div>
+
+            <h3>Target Deployment: Carteret, NJ</h3>
+            <p>
+                NASDAQ's primary data center is located in <strong>Carteret, New Jersey</strong>, approximately 10 miles from New York City. 
+                Co-location providers (e.g., Equinix NY4, NY5) offer rack space within the same facility, providing sub-millisecond fiber latency 
+                to the exchange. For HFT strategies, proximity is critical:
+            </p>
+            <ul>
+                <li><strong>500 meters of fiber:</strong> ~2.5 microseconds round-trip (light travels at ~2/3 speed of light in glass)</li>
+                <li><strong>50 meters of fiber:</strong> ~250 nanoseconds round-trip</li>
+                <li><strong>5 meters of fiber:</strong> ~25 nanoseconds round-trip</li>
+            </ul>
+            <p>
+                With <strong>72ns of FPGA processing latency</strong> and <strong>~25ns of fiber delay</strong>, the total system latency 
+                can approach <strong>100ns</strong>—faster than a single memory access on a modern CPU.
+            </p>
+        </section>
+
+        <!-- ==================== SECTION 4: VISUALS & DIAGRAMS ==================== -->
+        <section id="diagrams">
+            <h2>04. The Engineering: Clock Domain Crossing & Metastability</h2>
+
+            <h3>Cummings 2-Flop Synchronizer: The Gold Standard for CDC</h3>
+            <p>
+                When data crosses from one clock domain to another, there's a risk of <strong>metastability</strong>—a state where a flip-flop's 
+                output oscillates unpredictably because the setup/hold timing was violated. This can propagate through the design, causing 
+                functional failures or even system crashes.
+            </p>
+
+            <p>
+                The <strong>2-flop synchronizer</strong> (also called a "double synchronizer") is the industry-standard solution. By passing the 
+                signal through two flip-flops in the destination clock domain, we give it <em>two full clock cycles</em> to resolve to a stable 
+                state. The probability of metastability persisting through both stages is astronomically low (MTBF &gt; 10^15 years for typical 
+                FPGA process nodes).
+            </p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                sequenceDiagram
+                    participant WD as Write Domain<br/>(250 MHz)
+                    participant GC as Binary→Gray<br/>Converter
+                    participant S1 as Sync Stage 1<br/>(FF @ 100 MHz)
+                    participant S2 as Sync Stage 2<br/>(FF @ 100 MHz)
+                    participant RD as Read Domain<br/>(100 MHz)
+                    
+                    WD->>GC: Write Pointer (Binary)
+                    GC->>GC: Convert to Gray Code
+                    Note over GC: Only 1 bit changes<br/>per increment
+                    GC->>S1: Gray Code Pointer
+                    Note over S1: Metastability Zone<br/>Setup/Hold Risk
+                    S1->>S2: Synchronized (Stage 1)
+                    Note over S2: Second Sync Stage<br/>Resolves Metastability
+                    S2->>RD: Stable Gray Pointer
+                    RD->>RD: Convert Gray→Binary
+                    RD->>RD: Compare with Read Ptr<br/>Generate FIFO Empty
+                </div>
+            </div>
+
+            <h3>Why Gray Code?</h3>
+            <p>
+                <strong>Gray code</strong> is a binary numeral system where two successive values differ in only one bit. This is critical for 
+                CDC because if multiple bits changed simultaneously during a clock edge, the synchronizer might capture an <em>invalid intermediate 
+                state</em>. For example:
+            </p>
+
+            <pre><code>Binary:  0011 (3) → 0100 (4)  [2 bits change]
+Gray:    0010 (3) → 0110 (4)  [1 bit changes]</code></pre>
+
+            <p>
+                If the synchronizer captures the binary transition at the wrong moment, it might see <code>0000</code>, <code>0001</code>, 
+                <code>0101</code>, or <code>0111</code>—none of which are valid. With Gray code, the only possible captured values are 
+                <code>0010</code> (old value) or <code>0110</code> (new value)—both correct.
+            </p>
+
+            <h3>FIFO Full/Empty Logic</h3>
+            <p>
+                The async FIFO uses separate logic for detecting <strong>full</strong> and <strong>empty</strong> conditions:
+            </p>
+            <ul>
+                <li><strong>Full Detection (Write Domain):</strong> Compares the write pointer (in Gray code) with the <em>synchronized read 
+                pointer</em>. If they match (after accounting for wraparound), the FIFO is full.</li>
+                <li><strong>Empty Detection (Read Domain):</strong> Compares the read pointer (in Gray code) with the <em>synchronized write 
+                pointer</em>. If they match, the FIFO is empty.</li>
+            </ul>
+
+            <div class="callout">
+                <p>
+                    <strong>Insight:</strong> The FIFO depth must be a <em>power of 2</em> for Gray code pointer arithmetic to work correctly. 
+                    Additionally, the pointers must be <strong>1 bit wider</strong> than the address width to distinguish between "full" 
+                    (write caught up to read after wraparound) and "empty" (write and read at same address).
+                </p>
+            </div>
+
+            <h3>System Data Flow (Detailed)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+                flowchart TD
+                    A[SFP+ Transceiver<br/>1000BASE-X Physical Layer] -->|SGMII Serial| B[PCS/PMA Sublayer<br/>8B/10B Decode]
+                    B -->|GMII Parallel 8-bit| C[Ethernet MAC<br/>CRC Check, Preamble Strip]
+                    C -->|AXI-Stream<br/>TDATA TVALID TREADY TLAST| D{UDP Filter FSM}
+                    
+                    D -->|EtherType ≠ 0x0800| E[Drop Packet<br/>Non-IPv4]
+                    D -->|IP Proto ≠ 0x11| F[Drop Packet<br/>Non-UDP]
+                    D -->|Port ≠ 1234| G[Drop Packet<br/>Wrong Port]
+                    D -->|Valid UDP Payload| H[Strip 42-byte Header<br/>Forward Payload Only]
+                    
+                    H -->|AXI-Stream 8-bit| I[Async FIFO Write<br/>@ 250 MHz]
+                    I -->|Gray Code Sync| J[Async FIFO Read<br/>@ 100 MHz]
+                    J -->|AXI-Stream 8-bit| K[Packet Parser FSM<br/>0xAA55 Framing]
+                    K -->|Decoded Message| L[Application Logic<br/>Market Data Handler]
+                    
+                    style D fill:#00ff9f,stroke:#00ff9f,color:#0a0e14,stroke-width:3px
+                    style I fill:#ff9500,stroke:#ff9500,color:#0a0e14,stroke-width:3px
+                    style J fill:#ff9500,stroke:#ff9500,color:#0a0e14,stroke-width:3px
+                    style K fill:#00ff9f,stroke:#00ff9f,color:#0a0e14,stroke-width:3px
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 5: REFERENCES ==================== -->
+        <section id="references">
+            <h2>05. The Library: Recommended Reading</h2>
+
+            <p>
+                This project builds upon decades of research in asynchronous design, network protocols, and quantitative finance. 
+                The following texts are <em>essential reading</em> for anyone serious about low-latency systems engineering:
+            </p>
+
+            <div class="references">
+                <div class="reference-item">
+                    <div class="reference-title">
+                        Simulation and Synthesis Techniques for Asynchronous FIFO Design
+                    </div>
+                    <div class="reference-authors">
+                        Clifford E. Cummings, Sunburst Design, Inc. | SNUG 2002
+                    </div>
+                    <p>
+                        The <strong>definitive paper</strong> on clock domain crossing (CDC) for FIFOs. Cummings' work on Gray code synchronizers 
+                        is cited in nearly every FPGA vendor's design guide. This paper explains why naive CDC techniques (e.g., single-flop 
+                        synchronizers) fail and provides Verilog implementations of production-grade async FIFOs. A must-read for understanding 
+                        metastability, MTBF calculations, and proper synchronizer design.
+                    </p>
+                </div>
+
+                <div class="reference-item">
+                    <div class="reference-title">
+                        NASDAQ TotalView-ITCH 5.0 Specification
+                    </div>
+                    <div class="reference-authors">
+                        NASDAQ OMX Group | Official Protocol Specification
+                    </div>
+                    <p>
+                        The authoritative reference for NASDAQ's market data feed protocol. Covers all 23 message types, byte-level encoding, 
+                        multicast group assignments, and retransmission request (MITCH) procedures. Essential for implementing ITCH decoders 
+                        in hardware or software. Available from NASDAQ's developer portal.
+                    </p>
+                </div>
+
+                <div class="reference-item">
+                    <div class="reference-title">
+                        Developing High-Frequency Trading Systems: Learn How to Implement High-Frequency Trading from Scratch with C++ or Java Basics
+                    </div>
+                    <div class="reference-authors">
+                        Sebastien Donadio, Sourav Ghosh, Romain Vernois | Packt Publishing, 2022
+                    </div>
+                    <p>
+                        A comprehensive guide to building HFT systems from first principles. Covers market microstructure, order book dynamics, 
+                        low-latency networking (kernel bypass, RDMA), and C++ optimization techniques. While focused on software, the system 
+                        architecture principles apply equally to FPGA-based designs. Excellent for understanding the <em>why</em> behind 
+                        nanosecond-latency requirements.
+                    </p>
+                </div>
+
+                <div class="reference-item">
+                    <div class="reference-title">
+                        Max Dama on Automated Trading
+                    </div>
+                    <div class="reference-authors">
+                        Max Dama | Self-Published White Paper (Archived)
+                    </div>
+                    <p>
+                        A legendary (and hard-to-find) PDF that circulated in quantitative trading circles circa 2010. Dama's writing demystifies 
+                        the engineering challenges of automated trading systems: feed handlers, risk checks, order routing, and latency measurement. 
+                        The section on <em>"The Cost of a Microsecond"</em> is particularly relevant for understanding the economic incentives 
+                        driving FPGA adoption in HFT.
+                    </p>
+                </div>
+
+                <div class="reference-item">
+                    <div class="reference-title">
+                        Algorithmic Trading: Winning Strategies and Their Rationale
+                    </div>
+                    <div class="reference-authors">
+                        Ernest P. Chan | Wiley Trading, 2013
+                    </div>
+                    <p>
+                        While not exclusively about latency, Chan's book provides context on <em>when</em> speed matters. Statistical arbitrage, 
+                        mean reversion, and momentum strategies all have different latency sensitivities. Understanding the alpha decay curve 
+                        helps justify the engineering effort (and cost) of sub-microsecond systems. Essential for aligning technical capabilities 
+                        with trading strategy requirements.
+                    </p>
+                </div>
+
+                <div class="reference-item">
+                    <div class="reference-title">
+                        UltraScale Architecture Clocking Resources (UG572)
+                    </div>
+                    <div class="reference-authors">
+                        Xilinx (AMD) | User Guide v1.11, 2023
+                    </div>
+                    <p>
+                        Xilinx's official guide to clock management on 7-series, UltraScale, and Versal devices. Covers MMCMs (Mixed-Mode Clock 
+                        Managers), PLLs, clock domain crossing constraints, and timing closure techniques. Critical for understanding how to 
+                        achieve the <strong>125 MHz</strong> and <strong>250 MHz</strong> clocks used in this design without introducing jitter 
+                        or skew.
+                    </p>
+                </div>
+            </div>
+
+            <div class="callout">
+                <p>
+                    <strong>Additional Resources:</strong> The <a href="https://www.xilinx.com" style="color: var(--accent-cyan);">Xilinx 
+                    Developer Zone</a> hosts excellent application notes on high-speed Ethernet (XAPP1082), PCIe DMA (PG195), and Versal AI 
+                    Engine programming (UG1076). For hardware timestamping and PTP (Precision Time Protocol), see IEEE 1588-2019.
+                </p>
+            </div>
+        </section>
+
+        <!-- ==================== FOOTER ==================== -->
+        <footer>
+            <p>
+                Built with curiosity, caffeine, and a deep respect for Clifford Cummings.<br>
+                Hardware design files and testbenches available upon request.
+            </p>
+            <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem;">
+                <em>"The speed of light is not just a physical constraint—it's a design parameter."</em>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Initialize Mermaid.js -->
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                background: '#0a0e14',
+                primaryColor: '#00d9ff',
+                primaryTextColor: '#e6e8eb',
+                primaryBorderColor: '#00d9ff',
+                lineColor: '#00ff9f',
+                secondaryColor: '#1f2937',
+                tertiaryColor: '#2d3748',
+                fontSize: '14px',
+                fontFamily: 'JetBrains Mono, monospace'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1201,6 +1201,77 @@
                             <p style="color: #666; font-size: 1.1rem;">Open-source FPGA reference designs and hardware projects spanning high-speed networking, embedded systems, and robotics.</p>
                         </div>
 
+                        <!-- Featured: 72ns Gateway HFT Accelerator -->
+                        <div class="row mb-5" style="margin-bottom: 50px !important;">
+                            <div class="col-md-12 ftco-animate">
+                                <div class="project-card" style="background: linear-gradient(135deg, rgba(44, 152, 240, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%); border: 2px solid #2c98f0; border-radius: 12px; padding: 30px; box-shadow: 0 4px 16px rgba(44, 152, 240, 0.15); transition: all 0.3s ease; position: relative; overflow: hidden;">
+                                    <!-- Accent Corner Badge -->
+                                    <div style="position: absolute; top: 15px; right: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px;">
+                                        ⚡ FEATURED PROJECT
+                                    </div>
+                                    
+                                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2c98f0 0%, #667eea 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 28px; color: white;">
+                                            ⚡
+                                        </div>
+                                        <div>
+                                            <span style="color: #6c757d; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">DECEMBER 2025 • R&D INITIATIVE</span>
+                                            <h3 style="margin: 5px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 28px; font-weight: 700;">
+                                                72ns Gateway: A Versal ACAP HFT Accelerator
+                                            </h3>
+                                            <p style="margin: 5px 0; color: #495057; font-weight: 600; font-size: 15px;">
+                                                Nanosecond-Latency Network Processing on FPGA
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <p style="color: #495057; line-height: 1.8; margin-bottom: 20px; font-size: 15px;">
+                                        Personal R&D exploration into <strong>sub-100ns packet processing</strong> on Xilinx Versal ACAP. Implements a complete hardware network stack: 
+                                        <strong>UDP filtering at wire speed</strong>, <strong>clock domain crossing with Gray code synchronizers</strong>, and protocol parsing for 
+                                        <strong>NASDAQ TotalView-ITCH 5.0</strong> market data feeds. Demonstrates mastery of heterogeneous computing, metastability prevention, and 
+                                        low-latency architecture design. Target latency: <strong>72ns</strong> (9 clock cycles @ 125 MHz).
+                                    </p>
+                                    
+                                    <!-- Key Metrics Grid -->
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 22px; font-weight: 700; color: #2c98f0;">72ns</div>
+                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Target Latency</div>
+                                        </div>
+                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 22px; font-weight: 700; color: #667eea;">125 MHz</div>
+                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Clock Frequency</div>
+                                        </div>
+                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 22px; font-weight: 700; color: #764ba2;">1 Gbps</div>
+                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Throughput</div>
+                                        </div>
+                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 22px; font-weight: 700; color: #f5576c;">42 Bytes</div>
+                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Header Stripped</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 20px;">
+                                        <span class="tech-badge" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">Versal VCK190</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f3e5f5; color: #7b1fa2; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">UDP Filter RTL</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fff3e0; color: #e65100; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">Async FIFO CDC</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">Gray Code Sync</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #fce4ec; color: #c2185b; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">NASDAQ ITCH 5.0</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #f1f8e9; color: #558b2f; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">MoldUDP64</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #e0f2f1; color: #00695c; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">AXI Stream</span>
+                                        <span class="tech-badge" style="display: inline-block; background: #efebe9; color: #4e342e; padding: 6px 14px; border-radius: 15px; font-size: 12px; margin: 4px; font-weight: 600;">Vivado 2024.2</span>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 12px;">
+                                        <a href="fpga-portfolio-site/72ns-gateway.html" target="_blank" class="btn btn-primary" style="flex: 1; text-align: center; padding: 14px; font-size: 15px; font-weight: 600; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                                            ⚡ View Full Technical Documentation
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Featured AMD Reference Designs -->
                         <div id="featured-amd" style="scroll-margin-top: 80px;">
                             <h3 class="mb-4" style="color: #2c98f0; font-weight: 600;">Featured: AMD Xilinx Reference Designs (2023-Present)</h3>
