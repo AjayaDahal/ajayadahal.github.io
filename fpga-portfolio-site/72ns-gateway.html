@@ -1179,6 +1179,153 @@ Gray:    0010 (3) → 0110 (4)  [1 bit changes]</code></pre>
                 </p>
             </div>
 
+            <h3>Phase 1 Complete: End-to-End Pipeline Architecture</h3>
+            <p>
+                The complete packet processing pipeline spans six modules, transforming raw Ethernet frames at 125 MHz into structured 
+                market tick data ready for the order book builder. This architecture demonstrates the full journey from physical layer 
+                (PHY) to application layer—every byte accounted for, every clock cycle optimized.
+            </p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                graph TD
+                    subgraph PHY["Physical Layer - 1000BASE-X @ 125 MHz"]
+                        A[Ethernet MAC<br/>AXI-Stream Output]
+                    end
+
+                    subgraph FILTER["Layer 3/4 Filtering - 32-bit Words"]
+                        B[udp_filter Module<br/>Header Validation and Stripping]
+                    end
+
+                    subgraph CDC["Clock Domain Crossing - Buffering"]
+                        C[axis_data_fifo<br/>2048 Words Deep]
+                    end
+
+                    subgraph PARSE["Protocol Decoding - Serialization Bottleneck"]
+                        D[packet_parser Module<br/>32-bit to 8-bit Serializer]
+                    end
+
+                    subgraph SHIM["Data Assembly - Tick Structuring"]
+                        E[parser_shim Module<br/>Byte Stream to Tick Data]
+                    end
+
+                    subgraph BOOK["Order Book Management"]
+                        F[book_builder Module<br/>Best Bid/Offer Tracker]
+                    end
+
+                    A -->|"32-bit TDATA<br/>Full Ethernet Frame<br/>1518 bytes max"| B
+                    B -->|"32-bit Payload Only<br/>Headers Stripped<br/>Starts at Byte 42"| C
+                    C -->|"32-bit Buffered<br/>Backpressure Handling<br/>TVALID/TREADY"| D
+                    D -->|"8-bit Byte Stream<br/>AA 55 Len Payload CS<br/>9 clocks for 9 bytes"| E
+                    E -->|"Structured Tick<br/>Price 32b + Qty 32b + Side 1b<br/>Valid Pulse"| F
+                    F -->|"Best Bid/Ask<br/>BBO Updated<br/>bbo_updated Pulse"| G[Trading Strategy<br/>Signal Generation]
+
+                    style A fill:#1f2937,stroke:#00d9ff,stroke-width:2px
+                    style B fill:#1f2937,stroke:#00ff9f,stroke-width:3px
+                    style C fill:#1f2937,stroke:#ff9500,stroke-width:2px
+                    style D fill:#1f2937,stroke:#ff4757,stroke-width:3px
+                    style E fill:#1f2937,stroke:#00ff9f,stroke-width:2px
+                    style F fill:#1f2937,stroke:#00d9ff,stroke-width:3px
+                    style G fill:#1f2937,stroke:#f093fb,stroke-width:2px,stroke-dasharray: 5 5
+                </div>
+            </div>
+
+            <h4>Pipeline Stage Breakdown</h4>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Input Format</th>
+                        <th>Output Format</th>
+                        <th>Key Function</th>
+                        <th>Latency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>udp_filter</code></td>
+                        <td>32-bit words<br/>Full Ethernet frame</td>
+                        <td>32-bit words<br/>UDP payload only</td>
+                        <td>• Validates EtherType = 0x0800 (IPv4)<br/>• Checks IP Protocol = 0x11 (UDP)<br/>• Filters UDP Port = 1234<br/>• Strips 42-byte header (14+20+8)</td>
+                        <td>~40ns<br/>(5 cycles)</td>
+                    </tr>
+                    <tr>
+                        <td><code>axis_data_fifo</code></td>
+                        <td>32-bit words<br/>@ 125 MHz</td>
+                        <td>32-bit words<br/>@ 100 MHz</td>
+                        <td>• Clock domain crossing (125→100 MHz)<br/>• 2048-word buffering<br/>• Gray code pointer sync<br/>• Backpressure handling</td>
+                        <td>~24ns<br/>(3 cycles)</td>
+                    </tr>
+                    <tr>
+                        <td><code>packet_parser</code></td>
+                        <td>32-bit words<br/>Parallel data</td>
+                        <td>8-bit bytes<br/>Serial stream</td>
+                        <td>• <strong>32→8 bit serialization</strong><br/>• Finds [AA 55] sync header<br/>• Reads length byte<br/>• Validates XOR checksum</td>
+                        <td>~72ns<br/>(9 cycles for 9 bytes)</td>
+                    </tr>
+                    <tr>
+                        <td><code>parser_shim</code></td>
+                        <td>8-bit byte stream<br/>Sequential bytes</td>
+                        <td>Structured tick<br/>Parallel fields</td>
+                        <td>• Assembles 9-byte payload:<br/>&nbsp;&nbsp;4B price (big-endian)<br/>&nbsp;&nbsp;4B quantity<br/>&nbsp;&nbsp;1B side ('B'/'S')<br/>• Converts to parallel output</td>
+                        <td>~8ns<br/>(1 cycle)</td>
+                    </tr>
+                    <tr>
+                        <td><code>book_builder</code></td>
+                        <td>Tick data<br/>(price, qty, side)</td>
+                        <td>Best Bid/Offer<br/>(BBO)</td>
+                        <td>• Maintains best_bid (highest buy)<br/>• Maintains best_ask (lowest sell)<br/>• Generates bbo_updated pulse</td>
+                        <td>~8ns<br/>(1 cycle)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout">
+                <p>
+                    <strong>Performance Metrics:</strong> Total pipeline latency from Ethernet MAC to BBO update is approximately 
+                    <strong>152ns</strong> (19 clock cycles @ 125 MHz). The serialization stage (<code>packet_parser</code>) accounts 
+                    for nearly half of this delay—a deliberate trade-off to simplify downstream byte-oriented protocol parsing. For 
+                    ultra-low latency applications, the parser could be re-architected to operate on 32-bit chunks directly, reducing 
+                    latency to <strong>&lt;50ns</strong> at the cost of significantly more complex state machine logic.
+                </p>
+            </div>
+
+            <h4>Protocol Format: Custom Framing</h4>
+            <p>
+                The current implementation uses a lightweight custom framing protocol optimized for simplicity and determinism:
+            </p>
+
+            <pre style="background: var(--code-bg); padding: calc(var(--spacing-unit) * 2); border-radius: 4px; overflow-x: auto; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.85rem;">
+[Byte 0-1]   Header:   0xAA55 (sync pattern for frame alignment)
+[Byte 2]     Length:   N (payload size in bytes, excludes header/checksum)
+[Byte 3..N+2] Payload:  N bytes of application data
+[Byte N+3]   Checksum: XOR of all payload bytes (simple error detection)
+
+Example: Market Tick (9-byte payload)
+AA 55 09 | 00 00 27 10 | 00 00 03 E8 | 42 | A3
+^Header  ^Len ^Price=$10000 ^Qty=1000   ^Buy ^XOR
+            </pre>
+
+            <p>
+                This format provides:
+            </p>
+            <ul style="list-style: disc; margin-left: calc(var(--spacing-unit) * 4); margin-bottom: calc(var(--spacing-unit) * 3); color: var(--text-secondary);">
+                <li><strong>Fast synchronization:</strong> 2-byte header is unique and easy to detect with a simple FSM</li>
+                <li><strong>Variable-length support:</strong> Length field allows payloads from 1-255 bytes</li>
+                <li><strong>Basic error detection:</strong> XOR checksum catches single-bit errors (not CRC-grade, but sufficient for development)</li>
+                <li><strong>Minimal overhead:</strong> Only 4 bytes of framing per packet (header + length + checksum)</li>
+            </ul>
+
+            <div class="callout warning">
+                <p>
+                    <strong>Production Note:</strong> For deployment with real NASDAQ ITCH 5.0 feeds, this custom framing layer would 
+                    be replaced by <strong>MoldUDP64</strong> decoding (session ID + sequence number + message count), followed by 
+                    ITCH message type parsing. The serialization architecture remains unchanged—only the state machine logic in 
+                    <code>packet_parser</code> would be updated to handle the 23 ITCH message types.
+                </p>
+            </div>
+
             <h3>The Bring-up Challenge: When Reset Meets Reality</h3>
             <p>
                 Hardware bring-up is where theory meets silicon—and where assumptions are ruthlessly tested. The initial attempt to establish 
