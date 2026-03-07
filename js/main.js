@@ -374,13 +374,16 @@ window.onload = function() {
   var $navbara = $('#navi a');
   
   $navbara.click(function(e){
+    var href = $(this).attr('href');
+    // Allow external/relative links to navigate normally
+    if (!href.startsWith('#')) return;
     //prevent the page from refreshing
     e.preventDefault();
     //set the top offset animation and speed
     $('html, body').animate({
-      scrollTop: $($(this).attr('href')).offset().top - 180
+      scrollTop: $(href).offset().top - 180
 },500);
-    hash($(this).attr('href'));
+    hash(href);
   });
   
   
@@ -389,7 +392,8 @@ window.onload = function() {
   $navbara.each(function(){
    // and adds them in the sections variable
     var href = $(this).attr('href');
-    // Handle both direct IDs (like #page-1) and nested section IDs (like #featured-amd)
+    // Skip external/relative links — only track hash-based anchors
+    if (!href.startsWith('#')) return;
     var $target = $(href);
     if ($target.length > 0) {
       sections.push($target);
