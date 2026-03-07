@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Automation Engine | Ajaya Dahal</title>
+    <meta name="description" content="Open-source autonomous content pipeline: Telegram bot → AI script generation → voiceover → video rendering → multi-platform publishing. Built with Temporal.io, GPT-4o, FFmpeg, Docker. 24,700 lines of Python.">
+    <meta name="keywords" content="AI pipeline, Temporal.io, social media automation, GPT-4o, FFmpeg video rendering, Python distributed systems, workflow orchestration, content pipeline, self-hosted AI, open source">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/sma.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Social Media Automation Engine | Ajaya Dahal">
+    <meta property="og:description" content="Autonomous AI pipeline: Telegram → AI script → voiceover → video render → multi-platform publish. 24,700 LOC Python, $0/month.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/sma.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Social Media Automation Engine",
+        "author": { "@type": "Person", "name": "Ajaya Dahal", "url": "https://ajayadahal.github.io" },
+        "programmingLanguage": "Python",
+        "codeRepository": "https://github.com/AjayaDahal/sma",
+        "description": "Autonomous content pipeline with Temporal workflow orchestration, multi-model AI, and video rendering",
+        "runtimePlatform": "Docker",
+        "dateCreated": "2025-06-01"
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151b24;
+            --bg-tertiary: #1f2937;
+            --bg-card: #161d27;
+            --text-primary: #e6e8eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #667eea;
+            --accent-purple: #764ba2;
+            --accent-cyan: #00d9ff;
+            --accent-green: #00ff9f;
+            --accent-orange: #ff9500;
+            --accent-red: #ff4757;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --max-width: 1100px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                radial-gradient(circle at 15% 25%, rgba(102, 126, 234, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 85% 75%, rgba(118, 75, 162, 0.06) 0%, transparent 50%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-green); }
+
+        /* ── NAV ── */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 0;
+        }
+        .top-nav .inner {
+            max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+        .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; }
+        .top-nav .links a { color: var(--text-secondary); font-weight: 500; }
+        .top-nav .links a:hover { color: var(--accent-cyan); }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px;
+        }
+        .hero .breadcrumb {
+            font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px;
+        }
+        .hero .breadcrumb a { color: var(--text-muted); }
+        .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .hero .badge-row .badge {
+            background: rgba(102, 126, 234, 0.15); color: var(--accent-blue);
+            padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 16px;
+        }
+        .hero .subtitle {
+            font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6;
+            max-width: 750px; margin-bottom: 32px;
+        }
+        .hero .subtitle code {
+            font-family: var(--font-mono); font-size: 0.95rem;
+            background: rgba(0, 217, 255, 0.1); color: var(--accent-cyan);
+            padding: 2px 8px; border-radius: 4px;
+        }
+
+        /* ── STAT BAR ── */
+        .stat-bar {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px; margin-bottom: 36px;
+        }
+        .stat-card {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 20px; text-align: center;
+        }
+        .stat-card .number {
+            font-size: 1.8rem; font-weight: 800; font-family: var(--font-mono);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+            transition: all 0.2s; border: none; cursor: pointer; text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white; box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(102, 126, 234, 0.4); color: white; }
+        .btn-outline {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+        /* ── SECTIONS ── */
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; }
+        section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+
+        .section-label {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent-blue); margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);
+        }
+        .section-desc {
+            font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px;
+        }
+
+        /* ── PIPELINE DIAGRAM ── */
+        .pipeline-flow {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 32px; overflow-x: auto; margin-bottom: 16px;
+        }
+        .pipeline-steps {
+            display: flex; align-items: center; gap: 0; min-width: max-content;
+            justify-content: center; flex-wrap: wrap;
+        }
+        .pipeline-step {
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            padding: 12px 14px; min-width: 90px; text-align: center;
+        }
+        .pipeline-step .icon {
+            width: 44px; height: 44px; border-radius: 10px; display: flex;
+            align-items: center; justify-content: center; font-size: 1.2rem;
+            background: var(--bg-tertiary); border: 1px solid var(--border-color);
+        }
+        .pipeline-step .step-name {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-secondary);
+            line-height: 1.3;
+        }
+        .pipeline-step .step-tech {
+            font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono);
+        }
+        .pipeline-arrow {
+            color: var(--accent-cyan); font-size: 1.1rem; flex-shrink: 0;
+            font-weight: 700; margin: 0 2px;
+        }
+
+        /* ── DECISION CARDS ── */
+        .decisions-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .decision-card {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 28px; transition: border-color 0.2s;
+        }
+        .decision-card:hover { border-color: rgba(102, 126, 234, 0.4); }
+        .decision-card .card-icon {
+            font-size: 1.5rem; margin-bottom: 12px;
+        }
+        .decision-card h3 {
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);
+        }
+        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
+        .decision-card .meta-row {
+            display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem;
+        }
+        .decision-card .meta-row .meta-label {
+            color: var(--text-muted); font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; font-size: 0.7rem;
+        }
+        .decision-card .meta-row .meta-value {
+            color: var(--accent-green); font-family: var(--font-mono); font-size: 0.8rem;
+        }
+        .decision-card .alt {
+            color: var(--text-muted); font-family: var(--font-mono); font-size: 0.78rem;
+            font-style: italic;
+        }
+
+        /* ── TECH STACK TABLE ── */
+        .stack-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; overflow: hidden;
+        }
+        .stack-table th {
+            text-align: left; padding: 14px 20px; font-size: 0.75rem;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--text-muted); background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .stack-table td {
+            padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary);
+            border-bottom: 1px solid rgba(45, 55, 72, 0.4);
+        }
+        .stack-table tr:last-child td { border-bottom: none; }
+        .stack-table td:first-child { color: var(--accent-cyan); font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+        .stack-table td code {
+            font-family: var(--font-mono); font-size: 0.82rem;
+            background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan);
+            padding: 2px 7px; border-radius: 4px;
+        }
+
+        /* ── FALLBACK CHAIN ── */
+        .chain-row {
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .chain-label {
+            font-size: 0.8rem; font-weight: 700; color: var(--text-muted);
+            min-width: 55px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .chain-node {
+            background: var(--bg-tertiary); border: 1px solid var(--border-color);
+            padding: 6px 14px; border-radius: 8px; font-size: 0.82rem;
+            font-family: var(--font-mono); color: var(--text-secondary);
+        }
+        .chain-node.local { border-color: var(--accent-green); color: var(--accent-green); }
+        .chain-node.cloud { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .chain-node.free { border-color: var(--accent-orange); color: var(--accent-orange); }
+        .chain-arrow-sm { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* ── QA PIPELINE ── */
+        .qa-gates {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 14px;
+        }
+        .qa-gate {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 20px; text-align: center;
+        }
+        .qa-gate .gate-num {
+            font-size: 0.65rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+        }
+        .qa-gate .gate-name {
+            font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;
+        }
+        .qa-gate .gate-checks {
+            font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5;
+            text-align: left;
+        }
+        .qa-gate .gate-checks span {
+            display: block; padding: 2px 0;
+        }
+
+        /* ── COST TABLE ── */
+        .cost-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        .cost-item {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 16px; text-align: center;
+        }
+        .cost-item .cost-name { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .cost-item .cost-val {
+            font-size: 1.4rem; font-weight: 800; font-family: var(--font-mono);
+            color: var(--accent-green);
+        }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0; margin-top: 40px; text-align: center;
+        }
+        .page-footer p { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ── CODE BLOCK ── */
+        .code-block {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 20px 24px; overflow-x: auto;
+            font-family: var(--font-mono); font-size: 0.82rem;
+            line-height: 1.7; color: var(--text-secondary);
+        }
+        .code-block .comment { color: var(--text-muted); }
+        .code-block .keyword { color: var(--accent-blue); }
+        .code-block .string { color: var(--accent-green); }
+        .code-block .fn { color: var(--accent-cyan); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hero { padding-top: 100px; }
+            .hero h1 { font-size: 2rem; }
+            .stat-bar { grid-template-columns: repeat(2, 1fr); }
+            .decisions-grid { grid-template-columns: 1fr; }
+            .stack-table { font-size: 0.85rem; }
+            .stack-table th, .stack-table td { padding: 10px 14px; }
+            .pipeline-steps { justify-content: flex-start; }
+            .qa-gates { grid-template-columns: repeat(2, 1fr); }
+            .top-nav .links { gap: 12px; font-size: 0.8rem; }
+        }
+        @media (max-width: 480px) {
+            .stat-bar { grid-template-columns: 1fr 1fr; }
+            .qa-gates { grid-template-columns: 1fr; }
+            .cta-row { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="top-nav">
+    <div class="inner">
+        <a href="../home.html" class="brand"><span>A</span>jaya</a>
+        <div class="links">
+            <a href="../home.html">Home</a>
+            <a href="../home.html#resume-section">Resume</a>
+            <a href="sma-architecture.html">Architecture</a>
+            <a href="https://github.com/AjayaDahal/sma" target="_blank">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+    <div class="breadcrumb">
+        <a href="../home.html">Home</a> / <a href="../home.html#page-3">Projects</a> / <strong style="color: var(--text-secondary);">SMA</strong>
+    </div>
+    <div class="badge-row">
+        <span class="badge">Hobby Project</span>
+        <span class="badge" style="background: rgba(0, 255, 159, 0.12); color: var(--accent-green);">Production Running</span>
+    </div>
+    <h1>Social Media Automation Engine</h1>
+    <p class="subtitle">
+        End-to-end autonomous pipeline: send a <code>text message</code> to a Telegram bot →
+        AI generates a script → voiceover → captions → video render → you approve → auto-publish
+        to Facebook, Instagram, YouTube, and TikTok. Fully self-hosted. Zero recurring cost.
+    </p>
+
+    <div class="stat-bar">
+        <div class="stat-card">
+            <div class="number">24,700</div>
+            <div class="label">Lines of Python</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">80+</div>
+            <div class="label">Source Files</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">5</div>
+            <div class="label">Temporal Workflows</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">55</div>
+            <div class="label">Pipeline Activities</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">$0</div>
+            <div class="label">Monthly Cost</div>
+        </div>
+    </div>
+
+    <div class="cta-row">
+        <a href="sma-architecture.html" class="btn btn-primary">View Architecture Deep-Dive →</a>
+        <a href="https://github.com/AjayaDahal/sma" target="_blank" class="btn btn-outline">GitHub Repository</a>
+    </div>
+</header>
+
+<!-- ═══════════ PIPELINE ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">How It Works</div>
+        <div class="section-title">The 11-Step Pipeline</div>
+        <p class="section-desc">
+            A Temporal durable workflow orchestrates every step. If any step fails, it retries automatically.
+            If the process crashes, it resumes exactly where it left off.
+        </p>
+
+        <div class="pipeline-flow">
+            <div class="pipeline-steps">
+                <div class="pipeline-step">
+                    <div class="icon">💬</div>
+                    <div class="step-name">Telegram<br>Input</div>
+                    <div class="step-tech">text / photo / video</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon">👁</div>
+                    <div class="step-name">Media<br>Analysis</div>
+                    <div class="step-tech">GPT-4o Vision</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon" style="border-color: var(--accent-blue);">✍️</div>
+                    <div class="step-name">Script<br>Generation</div>
+                    <div class="step-tech">LLM + QA Gate</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon">🎙</div>
+                    <div class="step-name">Voice<br>Over</div>
+                    <div class="step-tech">TTS + QA Gate</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon">📝</div>
+                    <div class="step-name">Captions</div>
+                    <div class="step-tech">Whisper + QA</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon">🎵</div>
+                    <div class="step-name">Background<br>Music</div>
+                    <div class="step-tech">MusicGen</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon">🎬</div>
+                    <div class="step-name">Video<br>Render</div>
+                    <div class="step-tech">FFmpeg + QA</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon">☁️</div>
+                    <div class="step-name">Cloud<br>Upload</div>
+                    <div class="step-tech">Cloudinary</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon" style="border-color: var(--accent-orange);">✅</div>
+                    <div class="step-name">Human<br>Approval</div>
+                    <div class="step-tech">Temporal Signal</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="icon" style="border-color: var(--accent-green);">🚀</div>
+                    <div class="step-name">Multi-Platform<br>Publish</div>
+                    <div class="step-tech">4 platforms</div>
+                </div>
+            </div>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 10px;">
+            Rejection loops back to Script Generation with accumulated feedback (up to 5 rounds)
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ ENGINEERING DECISIONS ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Engineering Decisions</div>
+        <div class="section-title">Why It's Built This Way</div>
+        <p class="section-desc">
+            Every architectural choice was deliberate. Here are the six decisions that define the system.
+        </p>
+
+        <div class="decisions-grid">
+            <!-- Decision 1 -->
+            <div class="decision-card">
+                <div class="card-icon">⚙️</div>
+                <h3>Temporal.io for Workflow Orchestration</h3>
+                <p>
+                    The entire pipeline is event-sourced via Temporal. Every step is recorded, replayable,
+                    and automatically recoverable on crash. Workflow state persists across process restarts.
+                </p>
+                <div class="meta-row">
+                    <div>
+                        <div class="meta-label">Alternatives Considered</div>
+                        <div class="alt">Celery, custom state machine, cron jobs</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Result</div>
+                        <div class="meta-value">Zero state management code. Full replay debugging.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision 2 -->
+            <div class="decision-card">
+                <div class="card-icon">🧠</div>
+                <h3>Local-First AI with Cascading Fallbacks</h3>
+                <p>
+                    Every AI call chains through local GPU → cloud free tier → paid fallback.
+                    The pipeline never fails from a single service outage.
+                </p>
+                <div class="meta-row">
+                    <div>
+                        <div class="meta-label">LLM Chain</div>
+                        <div class="alt">Ollama (local) → GitHub Models → Anthropic Claude</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Result</div>
+                        <div class="meta-value">$0 cost. No vendor lock-in. Graceful degradation.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision 3 -->
+            <div class="decision-card">
+                <div class="card-icon">⏸</div>
+                <h3>Signal-Based Human-in-the-Loop</h3>
+                <p>
+                    Telegram approval uses Temporal Signals — the workflow pauses indefinitely at the
+                    approval step, then resumes when the user taps Approve/Reject. No polling. No timeouts.
+                </p>
+                <div class="meta-row">
+                    <div>
+                        <div class="meta-label">Mechanism</div>
+                        <div class="alt">workflow.wait_condition() → Telegram inline keyboard → Signal</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Result</div>
+                        <div class="meta-value">Event-driven. Architecturally clean.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision 4 -->
+            <div class="decision-card">
+                <div class="card-icon">🔍</div>
+                <h3>5-Gate QA Pipeline with Auto-Remediation</h3>
+                <p>
+                    Five automated validation gates catch issues at every stage. Each gate retries
+                    up to 3× with corrective feedback injection before alerting.
+                </p>
+                <div class="meta-row">
+                    <div>
+                        <div class="meta-label">Gates</div>
+                        <div class="alt">Script → TTS → Captions → Render → Visual (screenshot sampling)</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Result</div>
+                        <div class="meta-value">Bugs caught before any human sees output.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision 5 -->
+            <div class="decision-card">
+                <div class="card-icon">🔐</div>
+                <h3>Content-Addressable Asset Store</h3>
+                <p>
+                    Every asset is SHA-256 fingerprinted and stored in SQLite. Trigram Jaccard similarity
+                    (threshold 0.35) catches near-duplicate scripts automatically.
+                </p>
+                <div class="meta-row">
+                    <div>
+                        <div class="meta-label">Dedup Strategy</div>
+                        <div class="alt">SHA-256 fingerprint → trigram Jaccard → same content = same row</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Result</div>
+                        <div class="meta-value">Zero redundant work. Automatic deduplication.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision 6 -->
+            <div class="decision-card">
+                <div class="card-icon">📈</div>
+                <h3>Self-Learning Intelligence Layer</h3>
+                <p>
+                    The system learns from its own performance data: hook type analysis, audience
+                    profiling, trend scoring. Performance metrics feed back into scriptwriter prompts via Mem0.
+                </p>
+                <div class="meta-row">
+                    <div>
+                        <div class="meta-label">Feedback Loop</div>
+                        <div class="alt">Engagement metrics → hook analysis → prompt enrichment → better scripts</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Result</div>
+                        <div class="meta-value">Genuine closed-loop. System improves every run.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FALLBACK CHAINS ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Fault Tolerance</div>
+        <div class="section-title">Multi-Tier Fallback Chains</div>
+        <p class="section-desc">
+            Every external dependency has a cascading fallback. If the local GPU is down, cloud takes over.
+            If cloud is unreachable, a free alternative kicks in.
+        </p>
+
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px;">
+            <div class="chain-row">
+                <span class="chain-label">LLM</span>
+                <span class="chain-node local">Ollama (local GPU)</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node cloud">GitHub Models</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node cloud">Anthropic Claude</span>
+            </div>
+            <div class="chain-row">
+                <span class="chain-label">TTS</span>
+                <span class="chain-node local">XTTS-v2 (local)</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node local">Speaches (local)</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node cloud">ElevenLabs</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node free">edge-tts (free)</span>
+            </div>
+            <div class="chain-row">
+                <span class="chain-label">Music</span>
+                <span class="chain-node local">MusicGen (local)</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node cloud">Freesound API</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node cloud">ElevenLabs</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node free">FFmpeg ambient</span>
+            </div>
+            <div class="chain-row">
+                <span class="chain-label">Image</span>
+                <span class="chain-node local">ComfyUI + FLUX</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node cloud">DALL-E 3</span>
+            </div>
+            <div class="chain-row" style="margin-bottom: 0;">
+                <span class="chain-label">Video</span>
+                <span class="chain-node cloud">Pexels API</span>
+                <span class="chain-arrow-sm">→</span>
+                <span class="chain-node free">FFmpeg procedural</span>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 16px; margin-top: 16px; font-size: 0.78rem; color: var(--text-muted); flex-wrap: wrap;">
+            <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--accent-green); margin-right: 6px;"></span>Local (GPU)</span>
+            <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--accent-blue); margin-right: 6px;"></span>Cloud (free tier)</span>
+            <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--accent-orange); margin-right: 6px;"></span>Free / unlimited</span>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ QA PIPELINE ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Quality Assurance</div>
+        <div class="section-title">5 Automated QA Gates</div>
+        <p class="section-desc">
+            Every artifact passes through automated validation before proceeding. Each gate retries 3× with
+            corrective feedback injection, then sends a Telegram alert if remediation fails.
+        </p>
+
+        <div class="qa-gates">
+            <div class="qa-gate">
+                <div class="gate-num">Gate 1</div>
+                <div class="gate-name">QA_SCRIPT</div>
+                <div class="gate-checks">
+                    <span>✓ Word count range</span>
+                    <span>✓ Duration estimate</span>
+                    <span>✓ Hook quality analysis</span>
+                    <span>✓ CTA presence</span>
+                    <span>✓ Code backtick validation</span>
+                </div>
+            </div>
+            <div class="qa-gate">
+                <div class="gate-num">Gate 2</div>
+                <div class="gate-name">QA_TTS</div>
+                <div class="gate-checks">
+                    <span>✓ File size &amp; existence</span>
+                    <span>✓ Duration match</span>
+                    <span>✓ Silence ratio</span>
+                    <span>✓ Reverse transcription</span>
+                    <span style="font-size:0.7rem;color:var(--text-muted);">(Whisper verification)</span>
+                </div>
+            </div>
+            <div class="qa-gate">
+                <div class="gate-num">Gate 3</div>
+                <div class="gate-name">QA_CAPTIONS</div>
+                <div class="gate-checks">
+                    <span>✓ ASS format parsing</span>
+                    <span>✓ Word coverage %</span>
+                    <span>✓ Timing range validation</span>
+                    <span>✓ Font validation</span>
+                    <span>✓ Spatial overlap detection</span>
+                </div>
+            </div>
+            <div class="qa-gate">
+                <div class="gate-num">Gate 4</div>
+                <div class="gate-name">QA_RENDER</div>
+                <div class="gate-checks">
+                    <span>✓ Resolution (1080×1920)</span>
+                    <span>✓ Duration &amp; codec</span>
+                    <span>✓ File size bounds</span>
+                    <span>✓ Black frame detection</span>
+                    <span>✓ Frozen frame detection</span>
+                </div>
+            </div>
+            <div class="qa-gate">
+                <div class="gate-num">Gate 5</div>
+                <div class="gate-name">QA_VISUAL</div>
+                <div class="gate-checks">
+                    <span>✓ 5-point frame sampling</span>
+                    <span>✓ Brightness analysis</span>
+                    <span>✓ Text visibility check</span>
+                    <span>✓ Layout overlap audit</span>
+                    <span style="font-size:0.7rem;color:var(--text-muted);">(screenshot-based)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ TECH STACK ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Technology</div>
+        <div class="section-title">Full Stack Breakdown</div>
+        <div style="overflow-x: auto;">
+            <table class="stack-table">
+                <thead>
+                    <tr>
+                        <th>Layer</th>
+                        <th>Technology</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Orchestration</td><td><code>Temporal.io</code></td><td>Durable workflow execution, event sourcing, crash recovery</td></tr>
+                    <tr><td>Bot Interface</td><td><code>python-telegram-bot</code></td><td>User interaction — briefs, approvals, analytics</td></tr>
+                    <tr><td>AI - Script</td><td><code>GPT-4o</code> / <code>DeepSeek</code> / <code>Claude</code></td><td>Multi-provider LLM chain with local-first priority</td></tr>
+                    <tr><td>AI - Vision</td><td><code>GPT-4o Vision</code> / <code>Llama 3.3</code></td><td>Multimodal media analysis for photos/videos</td></tr>
+                    <tr><td>AI - Image</td><td><code>ComfyUI + FLUX</code> / <code>DALL-E 3</code></td><td>AI-generated visuals with local GPU priority</td></tr>
+                    <tr><td>TTS</td><td><code>XTTS-v2</code> / <code>ElevenLabs</code> / <code>edge-tts</code></td><td>4-tier voice synthesis with local voice cloning</td></tr>
+                    <tr><td>Music</td><td><code>MusicGen</code> (Meta) / <code>Freesound</code></td><td>Local generative music on GPU</td></tr>
+                    <tr><td>Captions</td><td><code>OpenAI Whisper</code> (local)</td><td>Word-level timestamps for karaoke-style captions</td></tr>
+                    <tr><td>Video</td><td><code>FFmpeg</code></td><td>1080×1920 compositing: backgrounds, code blocks, diagrams, captions</td></tr>
+                    <tr><td>Diagrams</td><td><code>Mermaid CLI</code> + Chromium</td><td>Mermaid → PNG with adaptive theming, overlaid on video</td></tr>
+                    <tr><td>Code Blocks</td><td><code>Pygments</code> + <code>Pillow</code></td><td>VS Code-style syntax highlighting → PNG</td></tr>
+                    <tr><td>Storage</td><td><code>Cloudinary</code> / <code>SQLite</code></td><td>Cloud hosting + local content-addressable asset DB</td></tr>
+                    <tr><td>Memory</td><td><code>Mem0</code> (self-hosted)</td><td>Semantic memory for script context and learning</td></tr>
+                    <tr><td>Dashboard</td><td><code>FastAPI</code> + <code>HTMX</code> + <code>Alpine.js</code></td><td>12-page Command Center (zero build step)</td></tr>
+                    <tr><td>Trends</td><td>Reddit / HN / Google Trends / GitHub / YouTube</td><td>5-source trend discovery with scoring algorithm</td></tr>
+                    <tr><td>Publishing</td><td>Facebook / Instagram / YouTube / TikTok APIs</td><td>Multi-platform auto-publish with per-platform optimization</td></tr>
+                    <tr><td>Deployment</td><td><code>Docker Compose</code> (6 services)</td><td>PostgreSQL, Temporal, Worker, Bot, Dashboard</td></tr>
+                    <tr><td>Testing</td><td><code>pytest-asyncio</code></td><td>8 test modules, shared fixtures, async-native</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ COST ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Economics</div>
+        <div class="section-title">$0/month Total Recurring Cost</div>
+        <p class="section-desc">
+            Every component is open-source, free tier, or self-hosted. The system delivers capabilities
+            comparable to paid SaaS tools (Descript, Opus Clip, Repurpose.io) at zero cost.
+        </p>
+
+        <div class="cost-grid">
+            <div class="cost-item"><div class="cost-name">Temporal</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">MIT, self-hosted</div></div>
+            <div class="cost-item"><div class="cost-name">LLM (GPT-4o)</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">GitHub Models free</div></div>
+            <div class="cost-item"><div class="cost-name">ElevenLabs</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">10k chars/mo free</div></div>
+            <div class="cost-item"><div class="cost-name">Whisper</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">Local CPU, MIT</div></div>
+            <div class="cost-item"><div class="cost-name">FFmpeg</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">Local rendering</div></div>
+            <div class="cost-item"><div class="cost-name">Cloudinary</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">25GB free tier</div></div>
+            <div class="cost-item"><div class="cost-name">Facebook API</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">Graph API</div></div>
+            <div class="cost-item"><div class="cost-name">Docker</div><div class="cost-val">$0</div><div style="font-size:0.7rem;color:var(--text-muted);">Self-hosted</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ ARCHITECTURE CTA ═══════════ -->
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Want the Full Technical Details?</div>
+        <p style="color: var(--text-secondary); margin-bottom: 28px; max-width: 550px; margin-left: auto; margin-right: auto;">
+            The architecture deep-dive covers Temporal workflow anatomy, rendering engine internals,
+            intelligence layer design, deployment topology, and the complete project structure.
+        </p>
+        <div class="cta-row" style="justify-content: center;">
+            <a href="sma-architecture.html" class="btn btn-primary">Architecture Deep-Dive →</a>
+            <a href="cognitive-silo.html" class="btn btn-outline">🧠 Runs on Cognitive Silo →</a>
+            <a href="https://github.com/AjayaDahal/sma" target="_blank" class="btn btn-outline">View Source Code</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="page-footer">
+    <div class="container">
+        <p>
+            <a href="../home.html">← Back to Portfolio</a> &nbsp;·&nbsp;
+            <a href="sma-architecture.html">Architecture Deep-Dive</a> &nbsp;·&nbsp;
+            <a href="cognitive-silo.html">Cognitive Silo</a> &nbsp;·&nbsp;
+            <a href="https://github.com/AjayaDahal/sma" target="_blank">GitHub</a> &nbsp;·&nbsp;
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a>
+        </p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p>
+    </div>
+</footer>
+
+</body>
+</html>

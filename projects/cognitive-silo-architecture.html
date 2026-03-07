@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Silo: Architecture Deep-Dive | Ajaya Dahal</title>
+    <meta name="description" content="VRAM management strategy, service dependency DAG, LiteLLM routing config, init container pattern, Docker Compose internals for a 15-service self-hosted AI stack on AMD W7900.">
+    <meta name="keywords" content="AI infrastructure architecture, Docker Compose GPU, VRAM budgeting, LiteLLM config, Ollama ROCm, init container pattern, Qdrant vector DB, ComfyUI workflows">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/cognitive-silo-architecture.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Cognitive Silo: Architecture Deep-Dive | Ajaya Dahal">
+    <meta property="og:description" content="VRAM management, service DAG, init containers, LiteLLM routing, Docker Compose internals for 15 AI services on a single GPU.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/cognitive-silo-architecture.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "name": "Cognitive Silo — Architecture Deep-Dive",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "about": "Self-hosted AI infrastructure architecture: VRAM management, Docker Compose orchestration, LiteLLM gateway routing",
+        "url": "https://ajayadahal.github.io/projects/cognitive-silo-architecture.html"
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151b24;
+            --bg-tertiary: #1f2937;
+            --bg-card: #161d27;
+            --text-primary: #e6e8eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-orange: #ff9500;
+            --accent-amber: #ffbd2e;
+            --accent-cyan: #00d9ff;
+            --accent-green: #00ff9f;
+            --accent-blue: #667eea;
+            --accent-purple: #764ba2;
+            --accent-red: #ff4757;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --max-width: 1100px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(255, 149, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 189, 46, 0.04) 0%, transparent 50%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-green); }
+        code {
+            font-family: var(--font-mono); background: rgba(255, 149, 0, 0.1);
+            color: var(--accent-orange); padding: 2px 6px; border-radius: 4px; font-size: 0.85em;
+        }
+
+        /* ── NAV ── */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color); padding: 14px 0;
+        }
+        .top-nav .inner {
+            max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+        .top-nav .brand span { color: var(--accent-orange); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; }
+        .top-nav .links a { color: var(--text-secondary); font-weight: 500; }
+        .top-nav .links a:hover { color: var(--accent-orange); }
+
+        /* ── LAYOUT ── */
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; }
+        section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+
+        .section-label {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent-orange); margin-bottom: 10px;
+        }
+        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 700px; margin-bottom: 36px; line-height: 1.7; }
+
+        /* ── HERO ── */
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 110px 24px 30px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
+        .hero .breadcrumb a { color: var(--text-muted); }
+        .hero .breadcrumb a:hover { color: var(--accent-orange); }
+        .hero h1 {
+            font-size: clamp(2rem, 4.5vw, 2.6rem); font-weight: 800; line-height: 1.2;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber), var(--accent-cyan));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 14px;
+        }
+        .hero .lead { font-size: 1.05rem; color: var(--text-secondary); max-width: 740px; line-height: 1.7; }
+
+        /* ── TOC ── */
+        .toc {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 22px 28px; margin-top: 28px;
+        }
+        .toc h3 { font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
+        .toc ol { padding-left: 18px; columns: 2; column-gap: 32px; }
+        .toc li { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 6px; break-inside: avoid; }
+        .toc li a { color: var(--accent-cyan); }
+        .toc li a:hover { color: var(--accent-orange); }
+
+        /* ── DIAGRAM BOX ── */
+        .diagram-box {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 28px; overflow-x: auto;
+            font-family: var(--font-mono); font-size: 0.78rem;
+            line-height: 1.65; color: var(--text-secondary);
+        }
+        .diagram-box pre { white-space: pre; overflow-x: auto; }
+        .hl-orange { color: var(--accent-orange); font-weight: 600; }
+        .hl-cyan { color: var(--accent-cyan); font-weight: 600; }
+        .hl-green { color: var(--accent-green); font-weight: 600; }
+        .hl-amber { color: var(--accent-amber); font-weight: 600; }
+        .hl-blue { color: var(--accent-blue); font-weight: 600; }
+        .hl-red { color: var(--accent-red); font-weight: 600; }
+        .hl-muted { color: var(--text-muted); }
+        .hl-purple { color: var(--accent-purple); font-weight: 600; }
+
+        /* ── CODE BLOCK ── */
+        .code-block {
+            background: #0d1117; border: 1px solid var(--border-color);
+            border-radius: 12px; overflow: hidden; margin-bottom: 16px;
+        }
+        .code-block .code-header {
+            background: var(--bg-tertiary); padding: 10px 16px; font-family: var(--font-mono);
+            font-size: 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .code-block .code-lang { color: var(--accent-orange); font-weight: 600; }
+        .code-block pre {
+            padding: 18px 20px; overflow-x: auto; font-family: var(--font-mono);
+            font-size: 0.78rem; line-height: 1.6; color: var(--text-secondary);
+        }
+        .code-block .cm-key { color: var(--accent-cyan); }
+        .code-block .cm-val { color: var(--accent-green); }
+        .code-block .cm-str { color: var(--accent-amber); }
+        .code-block .cm-comment { color: var(--text-muted); font-style: italic; }
+        .code-block .cm-num { color: var(--accent-orange); }
+
+        /* ── TABLE ── */
+        .data-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; overflow: hidden; margin-bottom: 16px;
+        }
+        .data-table th {
+            text-align: left; padding: 12px 16px; font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--text-muted); background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table td {
+            padding: 10px 16px; font-size: 0.82rem; color: var(--text-secondary);
+            border-bottom: 1px solid rgba(45, 55, 72, 0.4);
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table td:first-child { font-weight: 600; color: var(--text-primary); }
+        .data-table .mono { font-family: var(--font-mono); font-size: 0.78rem; }
+        .data-table .hl { color: var(--accent-orange); }
+
+        /* ── INFO CARD ── */
+        .info-card {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 24px; margin-bottom: 16px;
+        }
+        .info-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .info-card p, .info-card ul { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; }
+        .info-card ul { padding-left: 18px; margin-top: 8px; }
+        .info-card li { margin-bottom: 4px; }
+
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+        /* ── VRAM BAR ── */
+        .vram-bar-wrap { margin-bottom: 24px; }
+        .vram-bar-label { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 6px; }
+        .vram-bar-label .name { color: var(--text-primary); font-weight: 600; }
+        .vram-bar-label .size { color: var(--text-muted); font-family: var(--font-mono); }
+        .vram-bar {
+            height: 28px; border-radius: 6px; overflow: hidden; background: var(--bg-tertiary);
+            display: flex;
+        }
+        .vram-bar .seg {
+            height: 100%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.68rem; font-weight: 600; color: #0a0e14; font-family: var(--font-mono);
+            transition: width 0.4s ease;
+        }
+
+        /* ── BTN ── */
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+            transition: all 0.2s; border: none; cursor: pointer; text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            color: #0a0e14; box-shadow: 0 4px 16px rgba(255, 149, 0, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(255, 149, 0, 0.4); color: #0a0e14; }
+        .btn-outline {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-outline:hover { border-color: var(--accent-orange); color: var(--accent-orange); }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0; margin-top: 40px; text-align: center;
+        }
+        .page-footer p { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hero { padding-top: 95px; }
+            .hero h1 { font-size: 1.6rem; }
+            .toc ol { columns: 1; }
+            .info-grid { grid-template-columns: 1fr; }
+            .top-nav .links { gap: 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="top-nav">
+    <div class="inner">
+        <a href="../home.html" class="brand"><span>A</span>jaya</a>
+        <div class="links">
+            <a href="../home.html">Home</a>
+            <a href="cognitive-silo.html">Overview</a>
+            <a href="sma.html">SMA Engine</a>
+            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+    <div class="breadcrumb">
+        <a href="../home.html">Home</a> / <a href="cognitive-silo.html">Cognitive Silo</a> / <strong style="color: var(--text-secondary);">Architecture</strong>
+    </div>
+    <h1>Architecture Deep-Dive</h1>
+    <p class="lead">
+        How 15 Docker services, 12 AI models, and 48 GB of VRAM are orchestrated into a single-command
+        deployment. This page covers every internal: the service dependency DAG, VRAM budgeting strategy,
+        init container pattern, LiteLLM routing configuration, and the 544-line interactive setup wizard.
+    </p>
+
+    <nav class="toc">
+        <h3>Contents</h3>
+        <ol>
+            <li><a href="#macro">Macro Architecture</a></li>
+            <li><a href="#dependency">Service Dependency DAG</a></li>
+            <li><a href="#vram">VRAM Budget Management</a></li>
+            <li><a href="#init">Init Container Pattern</a></li>
+            <li><a href="#litellm">LiteLLM Gateway Config</a></li>
+            <li><a href="#models">12-Model Inventory</a></li>
+            <li><a href="#compose">Docker Compose Internals</a></li>
+            <li><a href="#setup">Setup Wizard (544 lines)</a></li>
+            <li><a href="#dashboard">Dashboard & GPU Monitor</a></li>
+            <li><a href="#continue">Continue.dev IDE Integration</a></li>
+            <li><a href="#agents">Agent Prompt System</a></li>
+            <li><a href="#comfyui">ComfyUI Workflows</a></li>
+        </ol>
+    </nav>
+</header>
+
+<!-- ═══════════ §1 MACRO ARCHITECTURE ═══════════ -->
+<section id="macro">
+    <div class="container">
+        <div class="section-label">§1</div>
+        <div class="section-title">Macro Architecture</div>
+        <p class="section-desc">
+            The system is organized in layers: external clients → API gateway → inference engines → data stores → init containers.
+            Every service lives in Docker with explicit health checks and dependency ordering.
+        </p>
+
+        <div class="diagram-box">
+            <pre>
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │  <span class="hl-muted">CLIENTS (any OpenAI SDK)</span>                                          │
+  │  VS Code · SMA Pipeline · Open WebUI · curl · Telegram Bot         │
+  └────────────────────────────────┬────────────────────────────────────┘
+                                   │  :4000 (OpenAI API)
+  ┌────────────────────────────────▼────────────────────────────────────┐
+  │  <span class="hl-orange">LITELLM GATEWAY</span>                                                    │
+  │  Auth (master_key) · Routing · Fallbacks · Retries · Logging       │
+  │  9 model entries · 4 fallback chains → GPT-4o (GitHub Models)      │
+  └──┬──────────┬──────────┬──────────┬──────────┬─────────────────────┘
+     │          │          │          │          │
+     ▼          ▼          ▼          ▼          ▼
+  ┌──────┐ ┌────────┐ ┌────────┐ ┌───────┐ ┌─────────────┐
+  │<span class="hl-cyan">OLLAMA</span>│ │<span class="hl-green">SPEACHES</span>│ │<span class="hl-amber">COMFYUI</span> │ │<span class="hl-blue">MEM0</span>  │ │<span class="hl-purple">GPT-4o</span>       │
+  │:11434│ │ :8000  │ │ :8188  │ │:8080  │ │(cloud only)  │
+  │ROCm  │ │Whisper │ │FLUX    │ │Memory │ │GitHub Models │
+  │5 LLMs│ │+Kokoro │ │CogVideo│ │+Qdrant│ │              │
+  └──┬───┘ └────────┘ └────────┘ └───┬───┘ └──────────────┘
+     │                                │
+     │  ┌──────────┐ ┌──────────┐ ┌──┴───────┐
+     │  │<span class="hl-green">FISH-SPCH</span>│ │<span class="hl-green">XTTS-v2</span>  │ │<span class="hl-blue">QDRANT</span>    │
+     │  │ :8001    │ │ :8002    │ │ :6333    │
+     │  │S1-Mini   │ │Voice Cln │ │Vector DB │
+     │  └──────────┘ └──────────┘ └──────────┘
+     │
+  ┌──┴────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
+  │<span class="hl-amber">MUSICGEN</span>   │ │<span class="hl-muted">POSTGRES</span> │ │<span class="hl-muted">REDIS</span>    │ │<span class="hl-muted">DASHBOARD</span>│
+  │:8003/:8004│ │ :5432    │ │ internal │ │ :9000    │
+  │AudioCraft │ │LiteLLM DB│ │Cache/Rate│ │nginx+GPU │
+  └───────────┘ └──────────┘ └──────────┘ └──────────┘</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §2 SERVICE DEPENDENCY DAG ═══════════ -->
+<section id="dependency">
+    <div class="container">
+        <div class="section-label">§2</div>
+        <div class="section-title">Service Dependency DAG</div>
+        <p class="section-desc">
+            Docker Compose <code>depends_on</code> with <code>condition: service_healthy</code> enforces strict startup ordering.
+            Init containers run once and exit. Services only start after their dependencies pass health checks.
+        </p>
+
+        <div class="diagram-box">
+            <pre>
+  <span class="hl-muted">Boot sequence (left → right = dependency order):</span>
+
+  <span class="hl-orange">TIER 0 — No Dependencies (start immediately)</span>
+  ├── ollama          <span class="hl-muted">(health: TCP 11434)</span>
+  ├── db (postgres)   <span class="hl-muted">(health: pg_isready)</span>
+  ├── qdrant          <span class="hl-muted">(health: TCP 6333)</span>
+  ├── redis           <span class="hl-muted">(health: redis-cli ping)</span>
+  └── model-downloader <span class="hl-muted">(init: pip install + download_models.sh → exit)</span>
+
+  <span class="hl-cyan">TIER 1 — Depends on Tier 0</span>
+  ├── ollama-init     → <span class="hl-muted">waits: ollama (healthy) → pulls 5 models + pre-warms 2 → exit</span>
+  ├── speaches        <span class="hl-muted">(self-contained, no depends_on, health: /health)</span>
+  ├── fish-speech     → <span class="hl-muted">waits: model-downloader (completed)</span>
+  ├── xtts            → <span class="hl-muted">waits: model-downloader (completed)</span>
+  ├── musicgen        <span class="hl-muted">(self-contained, health: /health)</span>
+  └── comfyui         → <span class="hl-muted">waits: model-downloader (completed)</span>
+
+  <span class="hl-green">TIER 2 — Depends on Tier 0 + Tier 1</span>
+  ├── litellm         → <span class="hl-muted">waits: db (healthy) + ollama (healthy)</span>
+  ├── mem0            → <span class="hl-muted">waits: qdrant (healthy) + ollama (healthy)</span>
+  ├── speaches-init   → <span class="hl-muted">waits: speaches (healthy) → install whisper model → exit</span>
+  └── musicgen-ui     → <span class="hl-muted">waits: musicgen (healthy)</span>
+
+  <span class="hl-amber">TIER 3 — Depends on Tier 2</span>
+  ├── open-webui      → <span class="hl-muted">waits: litellm (healthy) + speaches (healthy)</span>
+  └── dashboard       <span class="hl-muted">(static nginx, no hard dependencies)</span></pre>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 16px;">
+            <strong style="color: var(--text-secondary);">Key insight:</strong> Init containers use <code>restart: "no"</code> + <code>condition: service_completed_successfully</code>.
+            They download models, configure state, then exit. This means subsequent <code>docker compose up</code> starts are instant — no re-downloads.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ §3 VRAM BUDGET ═══════════ -->
+<section id="vram">
+    <div class="container">
+        <div class="section-label">§3</div>
+        <div class="section-title">VRAM Budget Management</div>
+        <p class="section-desc">
+            48 GB is a hard ceiling. Every byte is accounted for. The strategy: keep two LLMs permanently resident in
+            VRAM for instant inference, and reserve the remainder for ComfyUI media generation.
+        </p>
+
+        <!-- VRAM BAR VISUALIZATION -->
+        <div style="margin-bottom: 28px;">
+            <div class="vram-bar-label">
+                <span class="name">AMD Radeon PRO W7900 — 48 GB VRAM Budget</span>
+                <span class="size">48 GB total</span>
+            </div>
+            <div class="vram-bar">
+                <div class="seg" style="width: 41.7%; background: linear-gradient(135deg, #ff9500, #ffbd2e);">R1:32b ~20 GB</div>
+                <div class="seg" style="width: 20.8%; background: linear-gradient(135deg, #00d9ff, #667eea);">V2:16b ~10 GB</div>
+                <div class="seg" style="width: 35.4%; background: linear-gradient(135deg, #00ff9f, #4ecdc4);">ComfyUI ~17 GB</div>
+                <div class="seg" style="width: 2.1%; background: #2d3748; color: var(--text-muted); font-size: 0.6rem;">~1</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; font-family: var(--font-mono);">
+                <span>0 GB</span>
+                <span>│ 20 GB</span>
+                <span>│ 30 GB</span>
+                <span>│ 47 GB</span>
+                <span>48 GB</span>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>🔥 Pre-Warmed Models (30 GB)</h4>
+                <p>Two models are loaded into VRAM at boot and <strong>never evicted</strong>:</p>
+                <ul>
+                    <li><code>deepseek-r1:32b</code> — ~20 GB — primary coding + reasoning</li>
+                    <li><code>deepseek-v2:16b</code> — ~10 GB — fast autocomplete + light tasks</li>
+                </ul>
+                <p style="margin-top: 8px;">Controlled by Ollama env vars:</p>
+                <ul>
+                    <li><code>OLLAMA_MAX_LOADED_MODELS=2</code></li>
+                    <li><code>OLLAMA_KEEP_ALIVE=-1</code> (infinite TTL)</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>🎨 ComfyUI Reserve (~17 GB)</h4>
+                <p>FLUX.1-schnell FP8 requires ~17 GB VRAM per image generation. CogVideoX-2b uses ~14 GB plus T5-XXL encoder.</p>
+                <p style="margin-top: 8px;"><strong>Concurrency rule:</strong> Image/video gen is sequential — only one workflow runs at a time. The remaining ~1 GB is OS overhead.</p>
+            </div>
+            <div class="info-card">
+                <h4>📊 LRU Overflow Strategy</h4>
+                <p>If a third Ollama model is requested (e.g., <code>deepseek-r1:70b</code>), Ollama evicts the least-recently-used model to make room. The 70B model requires the full 48 GB — ComfyUI and both pre-warmed models get evicted.</p>
+                <p style="margin-top: 8px;"><strong>Safety net:</strong> LiteLLM fallback chains route to GPT-4o if the local model fails to load within 120 seconds.</p>
+            </div>
+            <div class="info-card">
+                <h4>⚡ Result: Sub-Second First Token</h4>
+                <p>Pre-warming eliminates cold-start penalties. First-token latency for R1:32b and V2:16b is measured in milliseconds, not seconds. Compare to cloud API round-trip: ~200-800ms network latency alone.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §4 INIT CONTAINER PATTERN ═══════════ -->
+<section id="init">
+    <div class="container">
+        <div class="section-label">§4</div>
+        <div class="section-title">Init Container Pattern</div>
+        <p class="section-desc">
+            Three ephemeral containers execute one-shot setup tasks on first deploy, then exit cleanly.
+            This Kubernetes-inspired pattern keeps Docker images small, avoids redundant downloads, and ensures idempotent deployments.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>📦 model-downloader</h4>
+                <p><strong>Image:</strong> <code>python:3.12-slim</code></p>
+                <p><strong>Runs:</strong> <code>pip install huggingface_hub + bash download-models.sh</code></p>
+                <p><strong>Downloads:</strong></p>
+                <ul>
+                    <li>Fish Speech (OpenAudio S1-Mini)</li>
+                    <li>XTTS-v2 (Coqui voice cloning)</li>
+                    <li>FLUX.1-schnell FP8 (~17 GB)</li>
+                    <li>CogVideoX-2b (~14 GB)</li>
+                </ul>
+                <p style="margin-top: 8px;"><strong>Persistence:</strong> <code>./models/</code> bind-mounted volume. Skip logic: checks if directory has files before downloading.</p>
+            </div>
+            <div class="info-card">
+                <h4>🤖 ollama-init</h4>
+                <p><strong>Image:</strong> <code>python:3.12-slim</code> + curl</p>
+                <p><strong>Waits for:</strong> <code>ollama: service_healthy</code></p>
+                <p><strong>Pulls:</strong></p>
+                <ul>
+                    <li><code>deepseek-r1:32b</code> (19.9 GB)</li>
+                    <li><code>deepseek-v2:16b</code> (8.9 GB)</li>
+                    <li><code>deepseek-r1:70b</code> (42.5 GB)</li>
+                    <li><code>llama3.3:latest</code> (42.5 GB)</li>
+                    <li><code>nomic-embed-text:latest</code> (274 MB)</li>
+                </ul>
+                <p style="margin-top: 8px;"><strong>Pre-warms:</strong> Sends a dummy prompt to R1:32b and V2:16b to load them into VRAM.</p>
+            </div>
+            <div class="info-card" style="grid-column: 1 / -1;">
+                <h4>🎙️ speaches-init</h4>
+                <p><strong>Image:</strong> <code>python:3.12-slim</code> + curl</p>
+                <p><strong>Waits for:</strong> <code>speaches: service_healthy</code></p>
+                <p><strong>Logic:</strong> Queries <code>GET /v1/models</code> to check if <code>deepdml/faster-whisper-large-v3-turbo-ct2</code> is already installed. If not, sends <code>POST /v1/models</code> to trigger download. Idempotent — safe to re-run.</p>
+            </div>
+        </div>
+
+        <div class="diagram-box" style="margin-top: 20px;">
+            <pre>
+  <span class="hl-muted">First deploy (cold):</span>
+  model-downloader ─── <span class="hl-orange">30-60 min</span> ───┬── fish-speech ✓
+                                      ├── xtts ✓
+                                      ├── comfyui ✓
+  ollama-init ─────── <span class="hl-cyan">10-20 min</span> ────── ollama models pulled + pre-warmed
+  speaches-init ───── <span class="hl-green">30 sec</span> ──────── whisper model installed
+
+  <span class="hl-muted">Subsequent deploys (warm):</span>
+  model-downloader ── <span class="hl-green">SKIP</span> (files exist) ── exits in &lt;2s
+  ollama-init ─────── <span class="hl-green">SKIP</span> (models pulled) ─ exits in &lt;5s
+  speaches-init ───── <span class="hl-green">SKIP</span> (model installed) exits in &lt;2s</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §5 LITELLM GATEWAY CONFIG ═══════════ -->
+<section id="litellm">
+    <div class="container">
+        <div class="section-label">§5</div>
+        <div class="section-title">LiteLLM Gateway Configuration</div>
+        <p class="section-desc">
+            One YAML file maps 9 model entries to local services or cloud overflow. Every client
+            sees a single OpenAI-compatible endpoint at port 4000 with master_key authentication.
+        </p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span>litellm_config.yaml</span>
+                <span class="code-lang">YAML</span>
+            </div>
+            <pre><span class="cm-key">model_list:</span>
+  <span class="cm-comment"># ── Local LLMs (AMD W7900, ROCm GPU) ──</span>
+  - <span class="cm-key">model_name:</span> <span class="cm-str">deepseek-r1-32b</span>
+    <span class="cm-key">litellm_params:</span>
+      <span class="cm-key">model:</span> <span class="cm-val">ollama/deepseek-r1:32b</span>
+      <span class="cm-key">api_base:</span> <span class="cm-str">"http://ollama:11434"</span>
+
+  - <span class="cm-key">model_name:</span> <span class="cm-str">deepseek-v2-16b</span>         <span class="cm-comment"># fast autocomplete</span>
+  - <span class="cm-key">model_name:</span> <span class="cm-str">deepseek-r1-70b</span>         <span class="cm-comment"># deep reasoning (swaps VRAM)</span>
+  - <span class="cm-key">model_name:</span> <span class="cm-str">llama3-8b</span>               <span class="cm-comment"># general purpose</span>
+  - <span class="cm-key">model_name:</span> <span class="cm-str">nomic-embed-text</span>        <span class="cm-comment"># embeddings for Mem0/@codebase</span>
+
+  <span class="cm-comment"># ── Speech (Speaches — OpenAI-compatible) ──</span>
+  - <span class="cm-key">model_name:</span> <span class="cm-str">whisper-turbo</span>
+    <span class="cm-key">litellm_params:</span>
+      <span class="cm-key">model:</span> <span class="cm-val">openai/deepdml/faster-whisper-large-v3-turbo-ct2</span>
+      <span class="cm-key">api_base:</span> <span class="cm-str">"http://speaches:8000/v1"</span>
+
+  - <span class="cm-key">model_name:</span> <span class="cm-str">kokoro-tts</span>              <span class="cm-comment"># fast TTS</span>
+
+  <span class="cm-comment"># ── Cloud Overflow ──</span>
+  - <span class="cm-key">model_name:</span> <span class="cm-str">github-fallback</span>
+    <span class="cm-key">litellm_params:</span>
+      <span class="cm-key">model:</span> <span class="cm-val">openai/gpt-4o</span>
+      <span class="cm-key">api_key:</span> <span class="cm-str">"os.environ/GITHUB_TOKEN"</span>
+      <span class="cm-key">api_base:</span> <span class="cm-str">"https://models.inference.ai.azure.com"</span>
+
+<span class="cm-key">litellm_settings:</span>
+  <span class="cm-key">request_timeout:</span> <span class="cm-num">120</span>
+  <span class="cm-key">num_retries:</span> <span class="cm-num">2</span>
+  <span class="cm-key">fallbacks:</span>
+    - <span class="cm-str">deepseek-r1-32b:</span> [<span class="cm-val">github-fallback</span>]  <span class="cm-comment"># every local → GPT-4o</span>
+    - <span class="cm-str">deepseek-v2-16b:</span> [<span class="cm-val">github-fallback</span>]
+    - <span class="cm-str">deepseek-r1-70b:</span> [<span class="cm-val">github-fallback</span>]
+    - <span class="cm-str">llama3-8b:</span>       [<span class="cm-val">github-fallback</span>]</pre>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>🔑 Authentication</h4>
+                <p><code>master_key</code> from <code>os.environ/LITELLM_MASTER_KEY</code> — set during setup wizard. All requests require <code>Authorization: Bearer sk-...</code> header. PostgreSQL 16 stores usage analytics and spend tracking.</p>
+            </div>
+            <div class="info-card">
+                <h4>🔄 Fallback Chains</h4>
+                <p>Every local LLM has a fallback to <code>github-fallback</code> (GPT-4o via GitHub Models). If the local model times out (120s) or the GPU is busy with ComfyUI, the request transparently routes to cloud. Clients see identical API responses.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §6 MODEL INVENTORY ═══════════ -->
+<section id="models">
+    <div class="container">
+        <div class="section-label">§6</div>
+        <div class="section-title">12-Model Inventory</div>
+        <p class="section-desc">
+            Every model deployed across the stack, with parameter count, VRAM usage, and inference context.
+        </p>
+
+        <table class="data-table">
+            <thead>
+                <tr><th>Model</th><th>Params</th><th>VRAM</th><th>Service</th><th>Modality</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DeepSeek-R1:32B</td>
+                    <td class="mono">32B</td>
+                    <td class="mono hl">~20 GB</td>
+                    <td>Ollama (ROCm)</td>
+                    <td>Chat / Code / Reasoning</td>
+                </tr>
+                <tr>
+                    <td>DeepSeek-V2:16B</td>
+                    <td class="mono">16B</td>
+                    <td class="mono hl">~10 GB</td>
+                    <td>Ollama (ROCm)</td>
+                    <td>Fast Code / Autocomplete</td>
+                </tr>
+                <tr>
+                    <td>DeepSeek-R1:70B</td>
+                    <td class="mono">70B</td>
+                    <td class="mono hl">~42 GB</td>
+                    <td>Ollama (ROCm)</td>
+                    <td>Deep Reasoning (swap)</td>
+                </tr>
+                <tr>
+                    <td>Llama 3.3</td>
+                    <td class="mono">8B</td>
+                    <td class="mono">~5 GB</td>
+                    <td>Ollama (ROCm)</td>
+                    <td>General Purpose</td>
+                </tr>
+                <tr>
+                    <td>nomic-embed-text</td>
+                    <td class="mono">137M</td>
+                    <td class="mono">~0.3 GB</td>
+                    <td>Ollama (ROCm)</td>
+                    <td>768D Embeddings</td>
+                </tr>
+                <tr>
+                    <td>Whisper Large v3 Turbo</td>
+                    <td class="mono">809M</td>
+                    <td class="mono">CPU</td>
+                    <td>Speaches</td>
+                    <td>Speech-to-Text</td>
+                </tr>
+                <tr>
+                    <td>Kokoro-82M</td>
+                    <td class="mono">82M</td>
+                    <td class="mono">CPU</td>
+                    <td>Speaches</td>
+                    <td>Text-to-Speech (fast)</td>
+                </tr>
+                <tr>
+                    <td>OpenAudio S1-Mini</td>
+                    <td class="mono">—</td>
+                    <td class="mono">CPU</td>
+                    <td>Fish Speech</td>
+                    <td>Text-to-Speech (expressive)</td>
+                </tr>
+                <tr>
+                    <td>XTTS-v2</td>
+                    <td class="mono">~400M</td>
+                    <td class="mono">CPU</td>
+                    <td>XTTS-v2</td>
+                    <td>Voice Cloning (17 languages)</td>
+                </tr>
+                <tr>
+                    <td>FLUX.1-schnell FP8</td>
+                    <td class="mono">12B</td>
+                    <td class="mono hl">~17 GB</td>
+                    <td>ComfyUI (ROCm)</td>
+                    <td>Image Generation</td>
+                </tr>
+                <tr>
+                    <td>CogVideoX-2b + T5-XXL</td>
+                    <td class="mono">2B+11B</td>
+                    <td class="mono hl">~14 GB</td>
+                    <td>ComfyUI (ROCm)</td>
+                    <td>Video Generation</td>
+                </tr>
+                <tr>
+                    <td>MusicGen-small</td>
+                    <td class="mono">300M</td>
+                    <td class="mono">CPU</td>
+                    <td>MusicGen API</td>
+                    <td>Text-to-Music</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 10px;">
+            <strong>GPU models</strong> (orange VRAM) share the W7900. <strong>CPU models</strong> run on system RAM (64 GB DDR5).
+            Whisper, Kokoro, Fish Speech, XTTS-v2, and MusicGen use CPU to avoid VRAM contention with LLMs.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ §7 DOCKER COMPOSE INTERNALS ═══════════ -->
+<section id="compose">
+    <div class="container">
+        <div class="section-label">§7</div>
+        <div class="section-title">Docker Compose Internals</div>
+        <p class="section-desc">
+            453 lines of orchestration. Key patterns used throughout the compose file.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>🔌 GPU Passthrough (ROCm)</h4>
+                <p>AMD GPUs require <code>/dev/kfd</code> (KFD kernel driver) and <code>/dev/dri</code> (DRI render nodes). Two services use GPU: <code>ollama</code> and <code>comfyui</code>.</p>
+                <div class="code-block" style="margin-top: 10px; margin-bottom: 0;">
+                    <div class="code-header"><span>docker-compose.yml</span><span class="code-lang">YAML</span></div>
+                    <pre><span class="cm-key">devices:</span>
+  - <span class="cm-val">/dev/kfd:/dev/kfd</span>
+  - <span class="cm-val">/dev/dri:/dev/dri</span></pre>
+                </div>
+            </div>
+            <div class="info-card">
+                <h4>🩺 Health Checks</h4>
+                <p>Every long-running service has a health check. Docker won't start dependent services until the health check passes. Patterns used:</p>
+                <ul>
+                    <li><strong>TCP probe:</strong> <code>echo > /dev/tcp/localhost/PORT</code> (Ollama, Qdrant)</li>
+                    <li><strong>CLI probe:</strong> <code>pg_isready</code>, <code>redis-cli ping</code></li>
+                    <li><strong>HTTP probe:</strong> <code>python3 urllib.request.urlopen()</code> (LiteLLM, Mem0, Speaches)</li>
+                    <li><strong>curl probe:</strong> <code>curl -sf URL</code> (Fish Speech, XTTS, Open WebUI)</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>💾 Volume Strategy</h4>
+                <p>Named volumes for database state. Bind mounts for models (allows sharing across rebuilds).</p>
+                <ul>
+                    <li><code>postgres_data</code>, <code>redis_data</code>, <code>qdrant_data</code> — named volumes</li>
+                    <li><code>./models/</code> — bind-mounted for all AI model weights</li>
+                    <li><code>comfyui_data</code> — named volume for generated outputs</li>
+                    <li><code>open_webui_data</code> — named volume for chat history</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>🔒 Security Model</h4>
+                <p>Secrets stored in <code>.env</code> (chmod 600, gitignored). Injected via <code>${VAR:-default}</code> syntax. Internal services use Docker network DNS (no exposed ports for Redis). <code>LITELLM_MASTER_KEY</code> gates all external API access.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §8 SETUP WIZARD ═══════════ -->
+<section id="setup">
+    <div class="container">
+        <div class="section-label">§8</div>
+        <div class="section-title">Setup Wizard — 544-Line Interactive Installer</div>
+        <p class="section-desc">
+            One command (<code>./setup.sh</code>) takes a fresh clone to a fully running AI stack. Six phases, all idempotent.
+        </p>
+
+        <div class="diagram-box">
+            <pre>
+  $ <span class="hl-cyan">./setup.sh</span>
+
+  <span class="hl-orange">PHASE 0</span> — Prerequisites
+  │ Check: Docker, Docker Compose, docker group, /dev/kfd + /dev/dri, HF CLI
+  │ Aborts with actionable error if anything missing
+  │
+  <span class="hl-orange">PHASE 1</span> — Interactive API Key Configuration
+  │ Prompts for: HF_TOKEN, LITELLM_MASTER_KEY, POSTGRES_PASSWORD, GITHUB_TOKEN
+  │ Loads existing .env if present → "Keep this value? [Y/n]"
+  │ Auto-generates secure defaults: <span class="hl-cyan">sk-master-$(openssl rand -hex 8)</span>
+  │ Writes .env (chmod 600)
+  │
+  <span class="hl-orange">PHASE 2</span> — Install HuggingFace CLI
+  │ Creates .venv if needed → pip install huggingface_hub[cli]
+  │ Login with HF_TOKEN for gated models (Fish Speech)
+  │
+  <span class="hl-orange">PHASE 3</span> — Download HuggingFace Models
+  │ Interactive: "Which groups? [1] Speech ~6GB [2] Creative ~31GB"
+  │ Per-model skip: checks if directory has files → "SKIP (already downloaded)"
+  │ Downloads: whisper-turbo, kokoro, fish-speech, xtts-v2, flux-schnell, cogvideox-2b
+  │
+  <span class="hl-orange">PHASE 4</span> — Build & Start Docker Stack
+  │ docker compose pull → build (mem0-api) → start core (ollama, db, qdrant, redis)
+  │ Wait for Ollama healthy → pull 5 Ollama models → start all remaining services
+  │ Wait for LiteLLM healthy
+  │
+  <span class="hl-orange">PHASE 5</span> — Pull Ollama Models
+  │ Shows existing vs. missing models with ✓/○ markers
+  │ Interactive: "Pull missing models? [Y/n]"
+  │ Streaming progress: <span class="hl-green">pulling manifest 45%</span>
+  │
+  <span class="hl-orange">PHASE 6</span> — Health Check & Summary
+  │ Container status: ✓ Up / ✗ Down for each container
+  │ Endpoint reachability: ✓ localhost:PORT for each service
+  │ Final banner with all URLs and management commands
+
+  <span class="hl-muted">Flags: --skip-downloads, --skip-keys, --help</span></pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §9 DASHBOARD ═══════════ -->
+<section id="dashboard">
+    <div class="container">
+        <div class="section-label">§9</div>
+        <div class="section-title">Dashboard & Live GPU Monitor</div>
+        <p class="section-desc">
+            A 674-line single-file HTML dashboard served by nginx:alpine on port 9000. Features live GPU monitoring
+            and service health checks.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>📊 Live GPU Monitor</h4>
+                <p>Polls <code>GET /api/ps</code> on Ollama every 5 seconds to show loaded models, VRAM usage, and active inference requests. Color-coded status: green (loaded), yellow (loading), red (error).</p>
+            </div>
+            <div class="info-card">
+                <h4>🩺 Service Health Grid</h4>
+                <p>11 service cards with live health status. Each card pings its service endpoint and displays ✓ (healthy) or ✗ (unreachable). Includes direct links to each service UI.</p>
+            </div>
+            <div class="info-card">
+                <h4>🌐 Tailscale-Aware URLs</h4>
+                <p>Auto-detects current hostname via <code>window.location.hostname</code> and rewrites all service URLs to match. Works seamlessly when accessed over Tailscale from any device on the mesh network.</p>
+            </div>
+            <div class="info-card">
+                <h4>🎨 Design</h4>
+                <p>Dark theme (<code>#0f0f13</code>), purple/teal gradient accents, fully responsive grid layout. Zero dependencies — pure HTML/CSS/JS. GPU badge displays hardware info prominently.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §10 CONTINUE.DEV ═══════════ -->
+<section id="continue">
+    <div class="container">
+        <div class="section-label">§10</div>
+        <div class="section-title">Continue.dev IDE Integration</div>
+        <p class="section-desc">
+            A YAML configuration file that connects VS Code to all local Ollama models via Continue.dev,
+            with 4 specialized chat agents, tab autocomplete, and semantic codebase search.
+        </p>
+
+        <div class="code-block">
+            <div class="code-header"><span>continue-config.yaml</span><span class="code-lang">YAML</span></div>
+            <pre><span class="cm-key">models:</span>
+  <span class="cm-comment"># 4 chat agents, each with a specialized system prompt</span>
+  - <span class="cm-key">name:</span> <span class="cm-str">DeepSeek R1 32B (Coding Agent)</span>     <span class="cm-comment"># primary — Claude Code patterns</span>
+  - <span class="cm-key">name:</span> <span class="cm-str">DeepSeek V2 16B (Fast Code)</span>         <span class="cm-comment"># light tasks + autocomplete</span>
+  - <span class="cm-key">name:</span> <span class="cm-str">DeepSeek R1 70B (Deep Reasoning)</span>    <span class="cm-comment"># complex architecture</span>
+  - <span class="cm-key">name:</span> <span class="cm-str">Llama 3.3 8B (General)</span>              <span class="cm-comment"># general purpose</span>
+
+<span class="cm-key">tabAutocomplete:</span>
+  <span class="cm-key">provider:</span> <span class="cm-val">ollama</span>
+  <span class="cm-key">model:</span> <span class="cm-val">deepseek-v2:16b</span>                      <span class="cm-comment"># fast inline completions</span>
+
+<span class="cm-key">embeddings:</span>
+  <span class="cm-key">provider:</span> <span class="cm-val">ollama</span>
+  <span class="cm-key">model:</span> <span class="cm-val">nomic-embed-text</span>                     <span class="cm-comment"># @codebase semantic search</span>
+
+<span class="cm-key">context:</span>
+  - <span class="cm-val">code</span>, <span class="cm-val">docs</span>, <span class="cm-val">diff</span>, <span class="cm-val">terminal</span>, <span class="cm-val">problems</span>, <span class="cm-val">folder</span>, <span class="cm-val">codebase</span></pre>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7;">
+            <strong>@codebase</strong> searches the entire workspace using <code>nomic-embed-text</code> embeddings indexed locally.
+            When you type <code>@codebase how does the auth middleware work?</code>, Continue embeds the query, searches the local vector index,
+            and injects the top-k relevant code snippets into the LLM context. All local — nothing leaves the machine.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ §11 AGENT PROMPTS ═══════════ -->
+<section id="agents">
+    <div class="container">
+        <div class="section-label">§11</div>
+        <div class="section-title">Agent Prompt Distillation</div>
+        <p class="section-desc">
+            Four specialized system prompts in <code>prompts/</code> — distilled from analyzing the behavioral patterns of
+            commercial AI coding agents. Designed for local models that need stronger steering than cloud models.
+        </p>
+
+        <table class="data-table">
+            <thead>
+                <tr><th>Agent</th><th>File</th><th>Distilled From</th><th>Domain</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Coding Agent</td>
+                    <td class="mono">coding-agent.md</td>
+                    <td>Claude Code + Cursor Agent 2.0</td>
+                    <td>Software engineering, code generation, file editing</td>
+                </tr>
+                <tr>
+                    <td>UI Agent</td>
+                    <td class="mono">ui-agent.md</td>
+                    <td>v0 (Vercel) + Bolt.new</td>
+                    <td>Frontend development, CSS, component design</td>
+                </tr>
+                <tr>
+                    <td>Debugging Agent</td>
+                    <td class="mono">debugging-agent.md</td>
+                    <td>Claude Code + Devin AI</td>
+                    <td>Root cause analysis, hypothesis ranking, fix verification</td>
+                </tr>
+                <tr>
+                    <td>Hardware Agent</td>
+                    <td class="mono">hardware-agent.md</td>
+                    <td>Domain expertise</td>
+                    <td>Drones, ESC firmware, PX4, sensor fusion</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-card" style="margin-top: 16px;">
+            <h4>📝 Prompt Engineering for Local Models</h4>
+            <p>
+                Cloud models (Claude, GPT-4o) produce good results with minimal instruction. Local models (DeepSeek 32B)
+                need explicit behavioral rules to match that quality. The system prompts encode hundreds of behavioral rules
+                distilled from observing commercial agents: no preamble/postamble, concise answers, convention-following, 
+                security practices, debugging methodology (observe → hypothesize → test → fix → prevent), and proactiveness
+                constraints. The result is near-commercial quality coding assistance running entirely on local hardware.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ §12 COMFYUI WORKFLOWS ═══════════ -->
+<section id="comfyui">
+    <div class="container">
+        <div class="section-label">§12</div>
+        <div class="section-title">ComfyUI Workflows</div>
+        <p class="section-desc">
+            Two JSON workflow files for visual media generation, both using CogVideoX-2b for video synthesis.
+            ComfyUI runs a custom ROCm 6.0 Docker build with GPU passthrough.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>🎬 Text-to-Video (Animated WEBP)</h4>
+                <p><strong>File:</strong> <code>cogvideox-2b-text-to-video.json</code></p>
+                <p><strong>Pipeline:</strong> 8 ComfyUI nodes → CogVideoX-2b generates 17 frames at 480×320 → assembled into animated WEBP at 6 FPS.</p>
+                <p style="margin-top: 8px;"><strong>Generation time:</strong> ~200 seconds per clip on W7900.</p>
+                <p><strong>VRAM:</strong> ~14 GB (model + T5-XXL encoder).</p>
+            </div>
+            <div class="info-card">
+                <h4>🖼️ Text-to-Video (Frame Sequence)</h4>
+                <p><strong>File:</strong> <code>cogvideox-2b-frames.json</code></p>
+                <p><strong>Pipeline:</strong> Same CogVideoX-2b generation, but outputs 17 individual PNG frames instead of assembled video. Useful for post-processing or custom frame manipulation.</p>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 16px;">
+            <strong>Image generation</strong> uses FLUX.1-schnell FP8 (~17 GB VRAM, ~10s per image) directly through ComfyUI's built-in
+            checkpoints system. Open WebUI can trigger image generation via the ComfyUI API integration.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ PROJECT STRUCTURE ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Repository</div>
+        <div class="section-title">Project Structure</div>
+
+        <div class="code-block">
+            <div class="code-header"><span>cognitive-silo/</span><span class="code-lang">24 files · 4,076 LOC</span></div>
+            <pre>├── <span class="cm-key">docker-compose.yml</span>         <span class="cm-comment"># 453 lines — 15 services, health checks, GPU passthrough</span>
+├── <span class="cm-key">litellm_config.yaml</span>         <span class="cm-comment"># 71 lines — 9 model entries, fallback chains</span>
+├── <span class="cm-key">continue-config.yaml</span>        <span class="cm-comment"># 103 lines — 4 agents, autocomplete, embeddings</span>
+├── <span class="cm-key">setup.sh</span>                    <span class="cm-comment"># 544 lines — 6-phase interactive installer</span>
+├── <span class="cm-key">dashboard.html</span>              <span class="cm-comment"># 674 lines — service portal + live GPU monitor</span>
+├── <span class="cm-key">README.md</span>                   <span class="cm-comment"># project documentation</span>
+├── comfyui/
+│   └── <span class="cm-key">Dockerfile</span>              <span class="cm-comment"># ROCm 6.0 custom ComfyUI build</span>
+├── mem0-api/
+│   ├── <span class="cm-key">Dockerfile</span>              <span class="cm-comment"># Python 3.12 + Mem0 + Qdrant client</span>
+│   └── <span class="cm-key">main.py</span>                 <span class="cm-comment"># Memory API (FastAPI)</span>
+├── musicgen-api/
+│   ├── <span class="cm-key">Dockerfile</span>              <span class="cm-comment"># Python + AudioCraft</span>
+│   └── <span class="cm-key">main.py</span>                 <span class="cm-comment"># Text-to-music REST API</span>
+├── musicgen-ui/
+│   ├── <span class="cm-key">Dockerfile</span>              <span class="cm-comment"># Gradio web UI</span>
+│   └── <span class="cm-key">app.py</span>                  <span class="cm-comment"># MusicGen playground</span>
+├── prompts/
+│   ├── <span class="cm-key">coding-agent.md</span>         <span class="cm-comment"># Claude Code + Cursor patterns</span>
+│   ├── <span class="cm-key">ui-agent.md</span>             <span class="cm-comment"># v0/Vercel + Bolt.new patterns</span>
+│   ├── <span class="cm-key">debugging-agent.md</span>      <span class="cm-comment"># Claude Code + Devin patterns</span>
+│   └── <span class="cm-key">hardware-agent.md</span>       <span class="cm-comment"># Drone/ESC/PX4 domain</span>
+├── scripts/
+│   ├── <span class="cm-key">download-models.sh</span>      <span class="cm-comment"># HuggingFace model downloader</span>
+│   ├── <span class="cm-key">ollama-init.sh</span>          <span class="cm-comment"># Pull + pre-warm Ollama models</span>
+│   └── <span class="cm-key">configure-openwebui-images.py</span>
+└── workflows/
+    ├── <span class="cm-key">cogvideox-2b-text-to-video.json</span>
+    └── <span class="cm-key">cogvideox-2b-frames.json</span></pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Explore More</div>
+        <p style="color: var(--text-secondary); margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto;">
+            See the overview for capabilities and cost savings, or explore the SMA pipeline that runs on this infrastructure.
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+            <a href="cognitive-silo.html" class="btn btn-primary">← Overview</a>
+            <a href="sma.html" class="btn btn-outline">SMA Engine</a>
+            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank" class="btn btn-outline">View Source</a>
+            <a href="../home.html" class="btn btn-outline">Portfolio Home</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="page-footer">
+    <div class="container">
+        <p>
+            <a href="../home.html">← Portfolio</a> &nbsp;·&nbsp;
+            <a href="cognitive-silo.html">Overview</a> &nbsp;·&nbsp;
+            <a href="sma.html">SMA Engine</a> &nbsp;·&nbsp;
+            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank">GitHub</a> &nbsp;·&nbsp;
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a>
+        </p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p>
+    </div>
+</footer>
+
+</body>
+</html>

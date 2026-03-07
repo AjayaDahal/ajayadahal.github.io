@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMA Architecture Deep-Dive | Ajaya Dahal</title>
+    <meta name="description" content="Technical deep-dive into a 24,700-line Python system: Temporal workflow orchestration, multi-tier AI fallback chains, 5-gate QA pipeline, video rendering engine, self-learning intelligence layer.">
+    <meta name="keywords" content="distributed systems architecture, Temporal workflow, AI pipeline design, video rendering engine, systems design, software architecture, durable execution, event sourcing">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/sma-architecture.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="SMA Architecture Deep-Dive | Ajaya Dahal">
+    <meta property="og:description" content="Technical deep-dive: Temporal workflows, multi-model AI orchestration, FFmpeg video rendering, self-learning intelligence layer.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/sma-architecture.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "name": "SMA Architecture Deep-Dive",
+        "author": { "@type": "Person", "name": "Ajaya Dahal", "url": "https://ajayadahal.github.io" },
+        "about": "Technical deep-dive into a 24,700-line Python system: Temporal workflow orchestration, multi-tier AI fallback chains, 5-gate QA pipeline, video rendering engine",
+        "isPartOf": {
+            "@type": "SoftwareSourceCode",
+            "name": "Social Media Automation Engine",
+            "codeRepository": "https://github.com/AjayaDahal/sma"
+        }
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151b24;
+            --bg-tertiary: #1f2937;
+            --bg-card: #161d27;
+            --text-primary: #e6e8eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #667eea;
+            --accent-purple: #764ba2;
+            --accent-cyan: #00d9ff;
+            --accent-green: #00ff9f;
+            --accent-orange: #ff9500;
+            --accent-red: #ff4757;
+            --accent-yellow: #ffd93d;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --max-width: 1100px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                radial-gradient(circle at 15% 25%, rgba(102, 126, 234, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 85% 75%, rgba(118, 75, 162, 0.06) 0%, transparent 50%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-green); }
+
+        /* ── NAV ── */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color); padding: 14px 0;
+        }
+        .top-nav .inner {
+            max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+        .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; }
+        .top-nav .links a { color: var(--text-secondary); font-weight: 500; }
+        .top-nav .links a:hover { color: var(--accent-cyan); }
+
+        /* ── LAYOUT ── */
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; }
+        section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+
+        .section-label {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent-blue); margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);
+        }
+        .section-desc {
+            font-size: 1rem; color: var(--text-secondary); max-width: 700px; margin-bottom: 36px; line-height: 1.7;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: var(--max-width); margin: 0 auto; padding: 110px 24px 50px;
+        }
+        .hero .breadcrumb {
+            font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;
+        }
+        .hero .breadcrumb a { color: var(--text-muted); }
+        .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero h1 {
+            font-size: clamp(2rem, 4.5vw, 2.8rem); font-weight: 800; line-height: 1.2;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 14px;
+        }
+        .hero .lead {
+            font-size: 1.05rem; color: var(--text-secondary); max-width: 700px; line-height: 1.7;
+        }
+
+        /* ── TOC ── */
+        .toc {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 28px; margin-bottom: 20px;
+        }
+        .toc h3 { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .toc ol {
+            list-style: none; padding: 0; counter-reset: toc-counter;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px;
+        }
+        .toc ol li { counter-increment: toc-counter; }
+        .toc ol li a {
+            display: flex; align-items: center; gap: 10px; padding: 6px 0;
+            color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;
+        }
+        .toc ol li a:hover { color: var(--accent-cyan); }
+        .toc ol li a::before {
+            content: counter(toc-counter, decimal-leading-zero);
+            font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600;
+            color: var(--accent-blue); min-width: 24px;
+        }
+
+        /* ── DIAGRAM BOXES ── */
+        .diagram-box {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 28px; overflow-x: auto;
+            font-family: var(--font-mono); font-size: 0.82rem;
+            line-height: 1.6; color: var(--text-secondary);
+        }
+        .diagram-box pre { white-space: pre; overflow-x: auto; }
+        .diagram-box .hl-cyan { color: var(--accent-cyan); font-weight: 600; }
+        .diagram-box .hl-green { color: var(--accent-green); font-weight: 600; }
+        .diagram-box .hl-orange { color: var(--accent-orange); font-weight: 600; }
+        .diagram-box .hl-blue { color: var(--accent-blue); font-weight: 600; }
+        .diagram-box .hl-purple { color: var(--accent-purple); font-weight: 600; }
+        .diagram-box .hl-red { color: var(--accent-red); font-weight: 600; }
+        .diagram-box .hl-muted { color: var(--text-muted); }
+
+        /* ── WORKFLOW STEPS ── */
+        .workflow-steps { display: flex; flex-direction: column; gap: 0; }
+        .wf-step {
+            display: flex; align-items: flex-start; gap: 16px; padding: 16px 0;
+            border-bottom: 1px solid rgba(45, 55, 72, 0.3);
+        }
+        .wf-step:last-child { border-bottom: none; }
+        .wf-step .step-num {
+            min-width: 36px; height: 36px; border-radius: 8px;
+            background: var(--bg-tertiary); border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
+            color: var(--accent-cyan); flex-shrink: 0;
+        }
+        .wf-step .step-content h4 {
+            font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; color: var(--text-primary);
+        }
+        .wf-step .step-content p {
+            font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;
+        }
+        .wf-step .step-content .step-tag {
+            display: inline-block; font-size: 0.7rem; font-weight: 600;
+            padding: 2px 8px; border-radius: 4px; margin-top: 6px;
+            font-family: var(--font-mono);
+        }
+        .tag-qa { background: rgba(0, 255, 159, 0.12); color: var(--accent-green); }
+        .tag-signal { background: rgba(255, 149, 0, 0.12); color: var(--accent-orange); }
+        .tag-retry { background: rgba(255, 71, 87, 0.12); color: var(--accent-red); }
+        .tag-best-effort { background: rgba(102, 126, 234, 0.12); color: var(--accent-blue); }
+
+        /* ── SCHEDULE TABLE ── */
+        .schedule-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; overflow: hidden;
+        }
+        .schedule-table th {
+            text-align: left; padding: 12px 18px; font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--text-muted); background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .schedule-table td {
+            padding: 12px 18px; font-size: 0.88rem; color: var(--text-secondary);
+            border-bottom: 1px solid rgba(45, 55, 72, 0.4);
+        }
+        .schedule-table tr:last-child td { border-bottom: none; }
+        .schedule-table td:first-child { color: var(--accent-cyan); font-weight: 600; font-family: var(--font-mono); font-size: 0.82rem; }
+
+        /* ── CODE BLOCK ── */
+        .code-block {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 10px; overflow-x: auto;
+            font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.7;
+        }
+        .code-block .code-header {
+            background: var(--bg-tertiary); padding: 10px 18px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .code-block .code-header .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .code-block pre {
+            padding: 18px; color: var(--text-secondary);
+            white-space: pre; overflow-x: auto; margin: 0;
+        }
+        .code-block .kw { color: var(--accent-blue); }
+        .code-block .fn { color: var(--accent-cyan); }
+        .code-block .st { color: var(--accent-green); }
+        .code-block .cm { color: var(--text-muted); }
+        .code-block .num { color: var(--accent-orange); }
+        .code-block .dec { color: var(--accent-purple); }
+
+        /* ── INFO GRID ── */
+        .info-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .info-card {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 24px;
+        }
+        .info-card h4 {
+            font-size: 1rem; font-weight: 700; margin-bottom: 10px;
+            color: var(--text-primary); display: flex; align-items: center; gap: 8px;
+        }
+        .info-card p, .info-card ul {
+            font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;
+        }
+        .info-card ul { list-style: none; padding: 0; }
+        .info-card ul li { padding: 4px 0; }
+        .info-card ul li::before { content: "→ "; color: var(--accent-cyan); font-weight: 600; }
+
+        /* ── RENDER FEATURES ── */
+        .render-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+        }
+        .render-item {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 20px;
+        }
+        .render-item h4 {
+            font-size: 0.9rem; font-weight: 700; margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .render-item p {
+            font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;
+        }
+
+        /* ── DIRECTORY TREE ── */
+        .dir-tree {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 24px; overflow-x: auto;
+            font-family: var(--font-mono); font-size: 0.8rem;
+            line-height: 1.8; color: var(--text-secondary);
+        }
+        .dir-tree .dir { color: var(--accent-cyan); font-weight: 600; }
+        .dir-tree .file { color: var(--text-secondary); }
+        .dir-tree .comment { color: var(--text-muted); font-style: italic; }
+
+        /* ── BTN ── */
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+            transition: all 0.2s; border: none; cursor: pointer; text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white; box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(102, 126, 234, 0.4); color: white; }
+        .btn-outline {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0; margin-top: 40px; text-align: center;
+        }
+        .page-footer p { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hero { padding-top: 95px; }
+            .hero h1 { font-size: 1.8rem; }
+            .toc ol { grid-template-columns: 1fr; }
+            .info-grid, .render-grid { grid-template-columns: 1fr; }
+            .top-nav .links { gap: 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="top-nav">
+    <div class="inner">
+        <a href="../home.html" class="brand"><span>A</span>jaya</a>
+        <div class="links">
+            <a href="../home.html">Home</a>
+            <a href="sma.html">SMA Overview</a>
+            <a href="https://github.com/AjayaDahal/sma" target="_blank">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+    <div class="breadcrumb">
+        <a href="../home.html">Home</a> / <a href="../home.html#page-3">Projects</a> / <a href="sma.html">SMA</a> / <strong style="color: var(--text-secondary);">Architecture</strong>
+    </div>
+    <h1>Architecture Deep-Dive</h1>
+    <p class="lead">
+        A technical walkthrough of how the Social Media Automation Engine works under the hood.
+        Each section covers a distinct subsystem — from macro architecture to deployment topology.
+    </p>
+</header>
+
+<!-- ═══════════ TOC ═══════════ -->
+<section style="padding-top: 0;">
+    <div class="container">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+                <li><a href="#macro">Macro Architecture</a></li>
+                <li><a href="#workflow">Temporal Workflow Anatomy</a></li>
+                <li><a href="#scheduled">Scheduled Workflows</a></li>
+                <li><a href="#rendering">Video Rendering Engine</a></li>
+                <li><a href="#trends">Trend Discovery & Intelligence</a></li>
+                <li><a href="#data">Data Layer</a></li>
+                <li><a href="#dashboard">Dashboard (12 Pages)</a></li>
+                <li><a href="#deployment">Deployment & Infrastructure</a></li>
+                <li><a href="#structure">Project Structure</a></li>
+                <li><a href="#methodology">Engineering Methodology</a></li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 1. MACRO ARCHITECTURE ═══════════ -->
+<section id="macro">
+    <div class="container">
+        <div class="section-label">01 — System Design</div>
+        <div class="section-title">Macro Architecture</div>
+        <p class="section-desc">
+            The system is composed of 6 interconnected subsystems that form a closed feedback loop.
+            Content performance data feeds back into trend scoring and script generation.
+        </p>
+
+        <div class="diagram-box">
+            <pre>
+  <span class="hl-cyan">TREND DISCOVERY</span> ───→ <span class="hl-blue">CONTENT CALENDAR</span> ───→ <span class="hl-green">CONTENT PIPELINE</span> ───→ <span class="hl-purple">MULTI-PLATFORM PUBLISHER</span>
+        ↑                                                                          │
+        │                                                                          ↓
+  <span class="hl-orange">INTELLIGENCE LAYER</span> ←───── <span class="hl-red">ANALYTICS ENGINE</span> ←────────────────────────────────┘
+
+  <span class="hl-muted">───────────────────────────────────────────────────────────────────────────────</span>
+  <span class="hl-muted">Each subsystem is a separate Temporal workflow running on independent schedules.</span>
+  <span class="hl-muted">The pipeline is event-sourced — every state transition is durable and replayable.</span></pre>
+        </div>
+
+        <div class="info-grid" style="margin-top: 24px;">
+            <div class="info-card">
+                <h4>🔍 Trend Discovery</h4>
+                <p>Scans 5 data sources (Reddit, HN, Google Trends, GitHub, YouTube) every 4 hours.
+                   Normalizes scores, deduplicates via trigram Jaccard, filters by niche, checks Mem0 for already-covered topics.</p>
+            </div>
+            <div class="info-card">
+                <h4>📅 Content Calendar</h4>
+                <p>Picks top-scored topics, assigns optimal publish times based on historical engagement data.
+                   Respects per-platform cooldowns and daily production limits.</p>
+            </div>
+            <div class="info-card">
+                <h4>🎬 Content Pipeline</h4>
+                <p>The core 11-step workflow: from script generation through video rendering to approval.
+                   Durable execution via Temporal with 5 QA gates and cascading fallback chains.</p>
+            </div>
+            <div class="info-card">
+                <h4>🚀 Multi-Platform Publisher</h4>
+                <p>Publishes to Facebook (Graph API), Instagram (Graph API), YouTube (Data API v3),
+                   and TikTok (API). Per-platform metadata optimization (aspect ratio, hashtags, descriptions).</p>
+            </div>
+            <div class="info-card">
+                <h4>📊 Analytics Engine</h4>
+                <p>Collects engagement metrics at checkpoints: 1h, 6h, 24h, 48h, 168h post-publish.
+                   Calculates viral scores and engagement rates per platform.</p>
+            </div>
+            <div class="info-card">
+                <h4>🧠 Intelligence Layer</h4>
+                <p>Learns from performance data: hook type analysis (6 styles), content feature extraction,
+                   audience fingerprinting. Enriches scriptwriter prompts via Mem0 semantic memory.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 2. TEMPORAL WORKFLOW ═══════════ -->
+<section id="workflow">
+    <div class="container">
+        <div class="section-label">02 — Core Pipeline</div>
+        <div class="section-title">Temporal Workflow Anatomy</div>
+        <p class="section-desc">
+            The <code style="font-family: var(--font-mono); background: rgba(0,217,255,0.1); color: var(--accent-cyan); padding: 2px 8px; border-radius: 4px;">ContentPipelineWorkflow</code>
+            is a Temporal durable workflow with 11 activity steps, 5 QA gates, and a human approval signal.
+            Rejection loops back to step 2 with accumulated feedback (up to 5 rounds).
+        </p>
+
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px;">
+            <div class="workflow-steps">
+                <div class="wf-step">
+                    <div class="step-num">01</div>
+                    <div class="step-content">
+                        <h4>analyse_media</h4>
+                        <p>GPT-4o Vision analyses photos/videos sent to the bot. Extracts context, mood, subjects for script generation.</p>
+                        <span class="step-tag tag-best-effort">optional — skipped for text-only</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">02</div>
+                    <div class="step-content">
+                        <h4>generate_script</h4>
+                        <p>Multi-provider LLM generates a video script. Enriched with Mem0 learned preferences and intelligence insights.</p>
+                        <span class="step-tag tag-qa">QA_SCRIPT — 3× retry with corrective feedback</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">03</div>
+                    <div class="step-content">
+                        <h4>send_progress</h4>
+                        <p>Telegram notification to user: script preview and generation progress.</p>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">04</div>
+                    <div class="step-content">
+                        <h4>generate_voiceover</h4>
+                        <p>4-tier TTS chain: XTTS-v2 (local voice cloning) → Speaches/Kokoro → ElevenLabs → edge-tts.</p>
+                        <span class="step-tag tag-qa">QA_TTS — reverse transcription verification via Whisper</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">05</div>
+                    <div class="step-content">
+                        <h4>generate_captions</h4>
+                        <p>OpenAI Whisper (local) generates word-level timestamps. Custom ASS generator produces karaoke-style word-by-word highlighting.</p>
+                        <span class="step-tag tag-qa">QA_CAPTIONS — coverage, timing, font, spatial overlap checks</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">06</div>
+                    <div class="step-content">
+                        <h4>generate_background_music</h4>
+                        <p>MusicGen (local GPU) → Freesound API → ElevenLabs → cached loops → FFmpeg procedural ambient.</p>
+                        <span class="step-tag tag-best-effort">best-effort — pipeline continues without music</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">07</div>
+                    <div class="step-content">
+                        <h4>fetch_background_video</h4>
+                        <p>Pexels API with freshness-aware selection. Falls back to procedural FFmpeg animations (gradient, bokeh).</p>
+                        <span class="step-tag tag-best-effort">best-effort</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">08</div>
+                    <div class="step-content">
+                        <h4>generate_image</h4>
+                        <p>ComfyUI + FLUX on local GPU → DALL-E 3 cloud fallback. Used for visual overlays in the video.</p>
+                        <span class="step-tag tag-best-effort">best-effort</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">09</div>
+                    <div class="step-content">
+                        <h4>render_video</h4>
+                        <p>FFmpeg compositing: animated backgrounds, text cards, code blocks, diagrams, karaoke captions, audio mixing. 1080×1920 output.</p>
+                        <span class="step-tag tag-qa">QA_RENDER + QA_VISUAL — frame sampling, black/frozen detection</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">10</div>
+                    <div class="step-content">
+                        <h4>upload → send_preview → wait_for_approval</h4>
+                        <p>Upload to Cloudinary → send preview via Telegram → Temporal Signal pauses workflow indefinitely until user taps Approve/Reject.</p>
+                        <span class="step-tag tag-signal">Temporal Signal — indefinite pause</span>
+                    </div>
+                </div>
+                <div class="wf-step">
+                    <div class="step-num">11</div>
+                    <div class="step-content">
+                        <h4>publish_multiplatform</h4>
+                        <p>Publish to all enabled platforms (Facebook, Instagram, YouTube, TikTok) with per-platform metadata. Log result to DB.</p>
+                        <span class="step-tag tag-retry">Rejection → loop to step 02 (up to 5 rounds)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 3. SCHEDULED WORKFLOWS ═══════════ -->
+<section id="scheduled">
+    <div class="container">
+        <div class="section-label">03 — Autonomous Operations</div>
+        <div class="section-title">Scheduled Workflows</div>
+        <p class="section-desc">
+            Four supporting workflows run on Temporal Schedules, operating autonomously alongside the main content pipeline.
+        </p>
+
+        <table class="schedule-table">
+            <thead>
+                <tr><th>Workflow</th><th>Schedule</th><th>Purpose</th><th>Key Activities</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TrendScanWorkflow</td>
+                    <td>Every 4h</td>
+                    <td>Discover trending topics from 5 data sources</td>
+                    <td>Scan → normalize → deduplicate → filter by niche → store to queue</td>
+                </tr>
+                <tr>
+                    <td>ContentSchedulerWorkflow</td>
+                    <td>Every 12h</td>
+                    <td>Pick top topics, assign optimal publish slots</td>
+                    <td>Score ranking → time slot optimization → platform assignment</td>
+                </tr>
+                <tr>
+                    <td>AnalyticsCollectorWorkflow</td>
+                    <td>Every 4h</td>
+                    <td>Collect engagement metrics at checkpoints</td>
+                    <td>Pull metrics at 1h, 6h, 24h, 48h, 168h → calculate viral scores</td>
+                </tr>
+                <tr>
+                    <td>IntelligenceWorkflow</td>
+                    <td>Every 24h</td>
+                    <td>Learn from performance data</td>
+                    <td>Hook analysis → feature extraction → audience profiling → Mem0 update</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ═══════════ 4. VIDEO RENDERING ═══════════ -->
+<section id="rendering">
+    <div class="container">
+        <div class="section-label">04 — Media Pipeline</div>
+        <div class="section-title">Video Rendering Engine</div>
+        <p class="section-desc">
+            The render activity (909 lines) builds complex FFmpeg filter chains that compose multiple visual layers
+            into a final 1080×1920 vertical video with synchronized audio.
+        </p>
+
+        <div class="render-grid">
+            <div class="render-item">
+                <h4>🎨 Animated Backgrounds</h4>
+                <p>Gradient animations with hue rotation + soft bokeh glow effects. 
+                   Falls back to Pexels stock footage or solid gradients.</p>
+            </div>
+            <div class="render-item">
+                <h4>💻 Code Block Overlays</h4>
+                <p>Pygments + Pillow render VS Code-style syntax-highlighted code to PNG.
+                   Title bar, line numbers, Monokai theme.</p>
+            </div>
+            <div class="render-item">
+                <h4>📊 Mermaid Diagrams</h4>
+                <p>Mermaid CLI (mmdc) + Chromium renders diagrams to PNG.
+                   Adaptive theming: samples frame brightness to pick dark/light theme.</p>
+            </div>
+            <div class="render-item">
+                <h4>📝 Karaoke Captions</h4>
+                <p>Custom ASS generator with word-by-word highlighting.
+                   68px MrBeast/Hormozi style. Word-level timestamps from Whisper.</p>
+            </div>
+            <div class="render-item">
+                <h4>🔊 Audio Mixing</h4>
+                <p>Voiceover + generated background music at calibrated levels.
+                   Ducking when speech is active. Fade in/out.</p>
+            </div>
+            <div class="render-item">
+                <h4>📐 Layout Engine</h4>
+                <p>Centralized 246-line positioning logic with platform-specific safe zones
+                   (TikTok, Instagram, YouTube). Intelligent overlay coexistence.</p>
+            </div>
+        </div>
+
+        <div class="code-block" style="margin-top: 24px;">
+            <div class="code-header">
+                <span class="dot" style="background: #ff5f56;"></span>
+                <span class="dot" style="background: #ffbd2e;"></span>
+                <span class="dot" style="background: #27c93f;"></span>
+                render_activity.py — FFmpeg filter chain composition (simplified)
+            </div>
+            <pre>
+<span class="cm"># Build the FFmpeg filter graph for final video composition</span>
+<span class="kw">def</span> <span class="fn">build_filter_chain</span>(ctx: RenderContext) -> <span class="kw">str</span>:
+    filters = []
+
+    <span class="cm"># 1. Background: animated gradient OR Pexels stock footage</span>
+    <span class="kw">if</span> ctx.background_video:
+        filters.append(<span class="st">f"[0:v]scale=1080:1920,setsar=1[bg]"</span>)
+    <span class="kw">else</span>:
+        filters.append(<span class="fn">generate_gradient_background</span>(ctx.duration))
+
+    <span class="cm"># 2. Overlay: code blocks, diagrams (position from layout engine)</span>
+    <span class="kw">for</span> overlay <span class="kw">in</span> ctx.overlays:
+        x, y = <span class="fn">layout_engine.position</span>(overlay, ctx.platform)
+        filters.append(<span class="st">f"[bg][{overlay.id}]overlay={x}:{y}:enable='..."</span>)
+
+    <span class="cm"># 3. Captions: ASS subtitle burn-in with karaoke styling</span>
+    filters.append(<span class="st">f"subtitles={ctx.caption_file}:force_style='...'"</span>)
+
+    <span class="cm"># 4. Audio: mix voiceover + music with ducking</span>
+    filters.append(<span class="st">f"[voice][music]amix=inputs=2:duration=first"</span>)
+
+    <span class="kw">return</span> <span class="st">";"</span>.join(filters)</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 5. TREND DISCOVERY & INTELLIGENCE ═══════════ -->
+<section id="trends">
+    <div class="container">
+        <div class="section-label">05 — Autonomous Intelligence</div>
+        <div class="section-title">Trend Discovery & Self-Learning</div>
+        <p class="section-desc">
+            The system discovers content ideas autonomously and learns from its own performance to improve over time.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>📡 5 Data Sources</h4>
+                <ul>
+                    <li>Reddit — public JSON API + OAuth2 (60 req/min)</li>
+                    <li>Hacker News — Firebase public API</li>
+                    <li>Google Trends — pytrends library</li>
+                    <li>GitHub Trending — ghapi (5000 req/hr)</li>
+                    <li>YouTube — Data API v3 (10K units/day)</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>🧮 Scoring Formula</h4>
+                <p style="font-family: var(--font-mono); font-size: 0.82rem; margin-top: 8px; color: var(--accent-cyan); line-height: 1.8;">
+                    score = <br>
+                    &nbsp;&nbsp;popularity × 0.35<br>
+                    + velocity × 0.30<br>
+                    + freshness × 0.20<br>
+                    + multi_source_bonus × 0.15<br>
+                    − coverage_penalty × 0.50
+                </p>
+            </div>
+            <div class="info-card">
+                <h4>🧠 Intelligence Brain</h4>
+                <ul>
+                    <li>Detects 6 hook styles (question, bold_claim, statistic, story, listicle, challenge)</li>
+                    <li>Extracts content features (word count, emoji usage, CTA presence, question density)</li>
+                    <li>Builds audience fingerprint (engagement by day/hour/platform/topic)</li>
+                    <li>Boosts (+0.3) patterns from high-performers, penalizes (−0.3) poor ones</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>💾 Mem0 Semantic Memory</h4>
+                <p>Self-hosted Mem0 stores learned insights as semantic memories. The LLM scriptwriter
+                   receives relevant memories as context — creating a genuine feedback loop where each
+                   content piece is informed by the performance of all previous ones.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 6. DATA LAYER ═══════════ -->
+<section id="data">
+    <div class="container">
+        <div class="section-label">06 — Persistence</div>
+        <div class="section-title">Data Layer</div>
+        <p class="section-desc">
+            SQLite for structured data + Mem0 for semantic memory. Pydantic v2 models enforce type safety across all boundaries.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>🗄️ SQLite — Content-Addressable Store</h4>
+                <ul>
+                    <li>SHA-256 fingerprinted assets (scripts, audio, video, images)</li>
+                    <li>Publish history with per-platform tracking</li>
+                    <li>Engagement metrics time-series</li>
+                    <li>Topic queue with status tracking</li>
+                    <li>Posting schedule with slot management</li>
+                    <li>Trigram Jaccard dedup (threshold 0.35)</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>📐 Pydantic v2 Models</h4>
+                <ul>
+                    <li><strong>schemas.py</strong> — ContentBrief, ScriptResult, VoiceResult, CaptionResult, RenderResult, PipelinePayload</li>
+                    <li><strong>trend_models.py</strong> — TrendSource, TrendItem, TopicStatus, TopicQueueItem, NicheConfig</li>
+                    <li><strong>scheduler_models.py</strong> — PostingSlot, PostMetric, ScheduledItem</li>
+                    <li><strong>autonomy_models.py</strong> — AutonomyMode, AutopilotGuards</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 7. DASHBOARD ═══════════ -->
+<section id="dashboard">
+    <div class="container">
+        <div class="section-label">07 — Command Center</div>
+        <div class="section-title">12-Page Web Dashboard</div>
+        <p class="section-desc">
+            Built with FastAPI + Jinja2 + HTMX + Alpine.js + Tailwind CSS. Zero build step — no webpack, no npm.
+            2,905 lines serving 12 pages with real-time updates via HTMX polling.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">📊</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Pipeline Monitor</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Live runs, staging artifacts, output videos, log tail</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">✂️</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Video Editor</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Re-render, trim, adjust captions, preview</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">⚙️</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Settings</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">API keys (masked), render defaults, toggles</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">📚</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Content Library</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Browse assets, scripts, publishes, dedup stats</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">🔥</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Trends</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Live trend scan results, niche filtering</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">📅</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Content Calendar</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Scheduled posts, time slot management</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">📈</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Analytics</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Engagement metrics, viral scores, platform comparison</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">🧠</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Intelligence</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Learned insights: best hooks, optimal word counts</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">🤖</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Autonomy Control</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Manual → Suggest → Autopilot mode switching</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">🎮</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">AI Playground</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Interactive model testing: chat, TTS, STT, diarize</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">🚀</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Publish</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Manual publish trigger and platform selection</div>
+            </div>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <div style="font-size: 1.1rem; margin-bottom: 6px;">💬</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Telegram Bot</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">12 commands + inline keyboards + freeform input</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 8. DEPLOYMENT ═══════════ -->
+<section id="deployment">
+    <div class="container">
+        <div class="section-label">08 — Infrastructure</div>
+        <div class="section-title">Deployment & Local GPU Stack</div>
+        <p class="section-desc">
+            Docker Compose orchestrates 6 services. A separate local GPU server ("Cognitive Silo") runs
+            all AI models — keeping the pipeline fully self-hosted.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>🐳 Docker Compose Services</h4>
+                <ul>
+                    <li><strong>temporal-db</strong> — PostgreSQL 16 Alpine</li>
+                    <li><strong>temporal</strong> — auto-setup server (depends on DB healthy)</li>
+                    <li><strong>temporal-ui</strong> — Web UI at :8233</li>
+                    <li><strong>worker</strong> — Python: 55 activities + 5 workflows</li>
+                    <li><strong>telegram-bot</strong> — Python: Telegram polling</li>
+                    <li><strong>dashboard</strong> — FastAPI on :8080</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>🖥️ Cognitive Silo (Local GPU)</h4>
+                <ul>
+                    <li><strong>Ollama</strong> (:11434) — DeepSeek R1/V2, Llama 3.3 on AMD W7900</li>
+                    <li><strong>XTTS-v2</strong> (:8002) — Local voice cloning TTS</li>
+                    <li><strong>MusicGen</strong> (:8003) — Meta's music generation model</li>
+                    <li><strong>ComfyUI</strong> (:8188) — FLUX image generation</li>
+                    <li><strong>Speaches</strong> (:8000) — Kokoro TTS, Whisper, VAD</li>
+                    <li><strong>Mem0</strong> (:8080) — Semantic memory with LLM extraction</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block" style="margin-top: 24px;">
+            <div class="code-header">
+                <span class="dot" style="background: #ff5f56;"></span>
+                <span class="dot" style="background: #ffbd2e;"></span>
+                <span class="dot" style="background: #27c93f;"></span>
+                Dockerfile — Multi-stage build (simplified)
+            </div>
+            <pre>
+<span class="kw">FROM</span> python:<span class="num">3.11</span>-slim
+
+<span class="cm"># System deps: FFmpeg for rendering, Node.js for Mermaid diagrams</span>
+<span class="kw">RUN</span> apt-get update && apt-get install -y \
+    ffmpeg fonts-dejavu \
+    nodejs npm chromium
+
+<span class="cm"># Mermaid CLI for diagram rendering via Puppeteer</span>
+<span class="kw">RUN</span> npm install -g @mermaid-js/mermaid-cli
+
+<span class="cm"># Python deps + Whisper for local captioning</span>
+<span class="kw">COPY</span> pyproject.toml .
+<span class="kw">RUN</span> pip install -e . && pip install openai-whisper
+
+<span class="kw">COPY</span> . /app
+<span class="kw">WORKDIR</span> /app</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 9. PROJECT STRUCTURE ═══════════ -->
+<section id="structure">
+    <div class="container">
+        <div class="section-label">09 — Codebase</div>
+        <div class="section-title">Project Structure</div>
+        <p class="section-desc">
+            ~24,700 lines of Python across 80+ source files. Every module has a clear responsibility boundary.
+        </p>
+
+        <div class="dir-tree">
+<pre><span class="dir">sma/</span>
+├── <span class="dir">bot/</span>                      <span class="comment"># Telegram bot: handlers, keyboards, 12 commands</span>
+│   └── main.py
+├── <span class="dir">config/</span>                   <span class="comment"># YAML config + Pydantic Settings + secrets</span>
+│   ├── config.yaml
+│   └── loader.py             <span class="comment"># Strongly typed hierarchical config</span>
+├── <span class="dir">dashboard/</span>                <span class="comment"># FastAPI + Jinja2: 12 pages, 2,905 lines</span>
+│   ├── app.py
+│   ├── <span class="dir">templates/</span>            <span class="comment"># HTMX + Alpine.js + Tailwind</span>
+│   └── <span class="dir">static/</span>
+├── <span class="dir">data/</span>                     <span class="comment"># SQLite DB: content-addressable asset store</span>
+│   ├── db.py
+│   └── models.py
+├── <span class="dir">logger/</span>                   <span class="comment"># structlog: dual-write JSONL + human-readable</span>
+├── <span class="dir">models/</span>                   <span class="comment"># Pydantic v2: 4 schema modules</span>
+│   ├── schemas.py            <span class="comment"># Pipeline data models</span>
+│   ├── trend_models.py       <span class="comment"># Trend discovery models</span>
+│   ├── scheduler_models.py   <span class="comment"># Content calendar models</span>
+│   └── autonomy_models.py    <span class="comment"># Autonomy control models</span>
+├── <span class="dir">pipeline/</span>                 <span class="comment"># Temporal workflows + activities</span>
+│   ├── workflow.py           <span class="comment"># ContentPipelineWorkflow (11 steps)</span>
+│   ├── worker.py             <span class="comment"># Registers 5 workflows + 55 activities</span>
+│   ├── trend_workflow.py     <span class="comment"># TrendScanWorkflow (4h schedule)</span>
+│   ├── scheduler_workflow.py <span class="comment"># ContentSchedulerWorkflow (12h)</span>
+│   ├── analytics_workflow.py <span class="comment"># AnalyticsCollectorWorkflow (4h)</span>
+│   ├── intelligence_workflow.py
+│   ├── layout_engine.py      <span class="comment"># Platform-specific safe zones (246 lines)</span>
+│   └── <span class="dir">activities/</span>           <span class="comment"># 27 activity modules</span>
+│       ├── ai_activity.py          <span class="comment"># Multi-provider LLM orchestration</span>
+│       ├── tts_activity.py         <span class="comment"># 4-tier TTS fallback chain</span>
+│       ├── caption_activity.py     <span class="comment"># Whisper + ASS generator</span>
+│       ├── render_activity.py      <span class="comment"># FFmpeg composition (909 lines)</span>
+│       ├── qa_activity.py          <span class="comment"># 5 QA gates (807 lines)</span>
+│       ├── code_renderer.py        <span class="comment"># VS Code-style code → PNG</span>
+│       ├── diagram_activity.py     <span class="comment"># Mermaid → PNG</span>
+│       ├── facebook_activity.py    <span class="comment"># Facebook Graph API</span>
+│       ├── instagram_activity.py   <span class="comment"># Instagram Graph API</span>
+│       ├── youtube_activity.py     <span class="comment"># YouTube Data API v3</span>
+│       ├── tiktok_activity.py      <span class="comment"># TikTok API</span>
+│       └── multiplatform_activity.py
+├── <span class="dir">prompts/</span>                  <span class="comment"># AI system prompts for each pipeline stage</span>
+├── <span class="dir">services/</span>                 <span class="comment"># Business logic services</span>
+│   ├── ai_service.py         <span class="comment"># Multi-provider gateway</span>
+│   ├── trend_scanner.py      <span class="comment"># 5-source scanner (504 lines)</span>
+│   ├── trend_aggregator.py   <span class="comment"># Normalize + score + dedup (275 lines)</span>
+│   ├── intelligence.py       <span class="comment"># Self-learning brain (603 lines)</span>
+│   ├── autonomy.py           <span class="comment"># 3-level autonomy with safety guards</span>
+│   └── posting_optimizer.py  <span class="comment"># Time slot optimization</span>
+├── <span class="dir">tests/</span>                    <span class="comment"># pytest-asyncio: 8 test modules</span>
+│   ├── conftest.py           <span class="comment"># Fixtures: isolated DB, seeded data (248 lines)</span>
+│   ├── test_e2e.py           <span class="comment"># End-to-end integration (431 lines)</span>
+│   ├── test_qa.py            <span class="comment"># All 5 QA gates (388 lines)</span>
+│   ├── test_intelligence_unit.py  <span class="comment"># Intelligence brain unit tests (374 lines)</span>
+│   └── ...                   <span class="comment"># + regression, diagram, integration tests</span>
+├── docker-compose.yaml       <span class="comment"># 6 services with health checks</span>
+├── Dockerfile                <span class="comment"># Python 3.11 + FFmpeg + Node.js + Chromium + Whisper</span>
+└── pyproject.toml            <span class="comment"># Dependencies + project metadata</span></pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 10. METHODOLOGY ═══════════ -->
+<section id="methodology">
+    <div class="container">
+        <div class="section-label">10 — Process</div>
+        <div class="section-title">Engineering Methodology</div>
+        <p class="section-desc">
+            Architecture-first engineering: spec before code. Every feature started as a plan document
+            with alternatives considered, risks assessed, and implementation phased.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>📋 7 Plan Documents</h4>
+                <ul>
+                    <li><strong>PLAN.md</strong> — Core architecture: Temporal, bot, pipeline</li>
+                    <li><strong>PLAN2.md</strong> — Asset DB: SQLite, SHA-256, dedup</li>
+                    <li><strong>PLAN3.md</strong> — AI Playground dashboard tab</li>
+                    <li><strong>PLAN4.md</strong> — Mermaid diagram overlays</li>
+                    <li><strong>PLAN5.md</strong> — Autonomous viral content engine</li>
+                    <li><strong>UPGRADE_PLAN.md</strong> — v2 rendering fixes</li>
+                    <li><strong>QA_PIPELINE_PLAN.md</strong> — 5 QA gates + Command Center</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4>🧪 Testing Strategy</h4>
+                <ul>
+                    <li><strong>8 test modules</strong> covering unit, integration, e2e, regression</li>
+                    <li><strong>pytest-asyncio</strong> with asyncio_mode = "auto"</li>
+                    <li><strong>Shared fixtures</strong>: isolated in-memory SQLite seeded with 10 posts + metrics</li>
+                    <li><strong>Mocked externals</strong>: Mem0, Telegram, AI providers</li>
+                    <li>Tests validate QA gates, intelligence brain, diagram rendering, full pipeline flow</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; margin-top: 24px;">
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Autonomy Modes with Safety Guards</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px;">
+                The system supports three autonomy levels, controllable via Telegram or dashboard:
+            </p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 180px; background: var(--bg-tertiary); border-radius: 8px; padding: 16px; border: 1px solid var(--border-color);">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">MANUAL</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">Human triggers every pipeline run. Full control.</div>
+                </div>
+                <div style="flex: 1; min-width: 180px; background: var(--bg-tertiary); border-radius: 8px; padding: 16px; border: 1px solid var(--accent-blue);">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 6px;">SUGGEST</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">System suggests topics and times. Human approves.</div>
+                </div>
+                <div style="flex: 1; min-width: 180px; background: var(--bg-tertiary); border-radius: 8px; padding: 16px; border: 1px solid var(--accent-green);">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent-green); margin-bottom: 6px;">AUTOPILOT</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">Fully autonomous. Hard-coded rule: Telegram approval ALWAYS required before publish.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Explore Further</div>
+        <p style="color: var(--text-secondary); margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto;">
+            View the source code, read the plan documents, or go back to the project overview.
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+            <a href="https://github.com/AjayaDahal/sma" target="_blank" class="btn btn-primary">View Source on GitHub</a>
+            <a href="sma.html" class="btn btn-outline">← Project Overview</a>
+            <a href="../home.html" class="btn btn-outline">Back to Portfolio</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="page-footer">
+    <div class="container">
+        <p>
+            <a href="../home.html">← Portfolio</a> &nbsp;·&nbsp;
+            <a href="sma.html">SMA Overview</a> &nbsp;·&nbsp;
+            <a href="cognitive-silo.html">Cognitive Silo</a> &nbsp;·&nbsp;
+            <a href="https://github.com/AjayaDahal/sma" target="_blank">GitHub</a> &nbsp;·&nbsp;
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a>
+        </p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p>
+    </div>
+</footer>
+
+</body>
+</html>

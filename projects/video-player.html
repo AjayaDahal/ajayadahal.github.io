@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player Pro for Learners | Ajaya Dahal</title>
+    <meta name="description" content="Android video player application with YouTube API integration designed for educational video playback and learning workflows.">
+    <meta name="keywords" content="Android, video player, YouTube API, educational app, mobile development, Java">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/video-player.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Video Player Pro for Learners | Ajaya Dahal">
+    <meta property="og:description" content="Android app with YouTube API integration for educational video playback.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/video-player.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Video Player Pro for Learners",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Android"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
+            --text-primary: #e6e8eb; --text-secondary: #9ca3af; --text-muted: #6b7280;
+            --accent-1: #673ab7; --accent-2: #9575cd;
+            --accent-cyan: #00d9ff; --accent-green: #00ff9f; --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, sans-serif; --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
+        }
+        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(103, 58, 183, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(149, 117, 205, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
+        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hero .badge-row .badge { background: rgba(103, 58, 183, 0.15); color: var(--accent-1); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
+        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(103, 58, 183, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
+        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
+        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .features-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+        .features-list li { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; font-size: 0.95rem; color: var(--text-secondary); }
+        .features-list li strong { color: var(--text-primary); display: block; margin-bottom: 4px; }
+        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .stat-bar { grid-template-columns: repeat(2, 1fr); } .features-list { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="iot-temp-monitor.html">IoT Monitor</a><a href="wrecks.html">WRECKS</a></div></div></nav>
+
+<header class="hero">
+    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#tier2-sandbox">Sandbox</a> → Video Player</div>
+    <div class="badge-row">
+        <span class="badge">Android</span>
+        <span class="badge">YouTube API</span>
+        <span class="badge">Education</span>
+    </div>
+    <h1>Video Player Pro for Learners</h1>
+    <p class="subtitle">
+        Native <strong>Android application</strong> with <strong>YouTube Data API</strong> integration designed for
+        educational video playback. Features curated playlist management, bookmarking, and a focused learning
+        interface that minimizes distractions for self-paced study.
+    </p>
+    <div class="stat-bar">
+        <div class="stat-card"><div class="number">Android</div><div class="label">Native App</div></div>
+        <div class="stat-card"><div class="number">YouTube</div><div class="label">API Integration</div></div>
+        <div class="stat-card"><div class="number">EDU</div><div class="label">Learning Focus</div></div>
+    </div>
+    <div class="cta-row">
+        <a href="https://www.hackster.io/ajayadahal1000/video-player-pro-for-learners-fa9e1b" target="_blank" class="btn btn-primary">View on Hackster</a>
+        <a href="iot-temp-monitor.html" class="btn btn-outline">Related: IoT Monitor →</a>
+    </div>
+</header>
+
+<section>
+    <div class="container">
+        <div class="section-label">Features</div>
+        <div class="section-title">App Capabilities</div>
+        <ul class="features-list">
+            <li><strong>YouTube API Integration</strong>Fetches and plays educational videos via YouTube Data API v3 with search and playlist support.</li>
+            <li><strong>Playlist Management</strong>Create curated learning playlists organized by topic or course for structured study sessions.</li>
+            <li><strong>Bookmark & Resume</strong>Save playback positions and resume from where you left off across sessions.</li>
+            <li><strong>Focused Interface</strong>Minimal UI that eliminates social media distractions found in the standard YouTube app.</li>
+        </ul>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Stack</div>
+        <div class="section-title">Technology</div>
+        <table class="svc-table">
+            <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td>Platform</td><td><code>Android (Java)</code></td><td>Native mobile application</td></tr>
+                <tr><td>Video</td><td><code>YouTube Data API v3</code></td><td>Video search and playback</td></tr>
+                <tr><td>Player</td><td><code>YouTube Player API</code></td><td>Embedded video player</td></tr>
+                <tr><td>Storage</td><td><code>SQLite / SharedPrefs</code></td><td>Local playlist and bookmark data</td></tr>
+                <tr><td>UI</td><td><code>Material Design</code></td><td>Android UI components</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Related Projects</div>
+        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
+            <a href="iot-temp-monitor.html" class="btn btn-outline">IoT Temperature Monitor →</a>
+            <a href="analog-line-follower.html" class="btn btn-outline">Analog Line Follower →</a>
+        </div>
+    </div>
+</section>
+
+<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="iot-temp-monitor.html">IoT Monitor</a> &nbsp;·&nbsp; <a href="https://www.hackster.io/ajayadahal1000/video-player-pro-for-learners-fa9e1b" target="_blank">Hackster</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
+
+</body>
+</html>

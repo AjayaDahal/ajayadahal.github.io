@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZCU102 Zynq UltraScale+ Ethernet | Ajaya Dahal</title>
+    <meta name="description" content="AMD Zynq UltraScale+ MPSoC Ethernet designs — PS-GEM, PL 1G/10G Ethernet with SGMII, 1000BASE-X, 10GBASE-R on ZCU102 with PetaLinux integration.">
+    <meta name="keywords" content="AMD, Zynq UltraScale+, ZCU102, Ethernet, SGMII, 1000BASE-X, 10GBASE-R, PetaLinux, GTH SerDes, PS-GEM, FPGA">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/zcu102-ethernet.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ZCU102 Zynq UltraScale+ Ethernet | Ajaya Dahal">
+    <meta property="og:description" content="AMD Zynq UltraScale+ MPSoC Ethernet — PS-GEM, SGMII, 1000BASE-X, 10GBASE-R on ZCU102.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/zcu102-ethernet.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "name": "ZCU102 Zynq UltraScale+ Ethernet Designs",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "description": "AMD Zynq UltraScale+ MPSoC Ethernet with PS-GEM and PL-based 1G/10G Ethernet",
+        "proficiencyLevel": "Expert"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
+            --bg-card: #161d27; --text-primary: #e6e8eb; --text-secondary: #9ca3af;
+            --text-muted: #6b7280; --accent-1: #5c6bc0; --accent-2: #7986cb;
+            --accent-cyan: #00d9ff; --accent-green: #00ff9f;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
+        }
+        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(92, 107, 192, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(121, 134, 203, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
+        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hero .badge-row .badge { background: rgba(92, 107, 192, 0.15); color: var(--accent-1); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
+        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(92, 107, 192, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
+        .decisions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
+        .decision-card:hover { border-color: rgba(92, 107, 192, 0.4); }
+        .decision-card .card-icon { font-size: 1.5rem; margin-bottom: 12px; }
+        .decision-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
+        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
+        .arch-diagram { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; overflow-x: auto; margin-bottom: 24px; font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-cyan); line-height: 1.8; white-space: pre; }
+        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
+        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .compare-box { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; margin-top: 24px; }
+        .compare-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--text-primary); }
+        .compare-box .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .compare-box .col { padding: 16px; border-radius: 8px; background: var(--bg-tertiary); }
+        .compare-box .col h4 { font-size: 0.95rem; font-weight: 700; color: var(--accent-1); margin-bottom: 10px; }
+        .compare-box .col ul { list-style: none; padding: 0; } .compare-box .col li { font-size: 0.85rem; color: var(--text-secondary); padding: 4px 0; }
+        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .decisions-grid { grid-template-columns: 1fr; } .stat-bar { grid-template-columns: repeat(2, 1fr); } .compare-box .row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="versal-ethernet.html">Versal Ethernet</a><a href="72ns-gateway.html">72ns Gateway</a><a href="cummings-fifo.html">Cummings FIFO</a></div></div></nav>
+
+<header class="hero">
+    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#page-3">Projects</a> → ZCU102 Ethernet</div>
+    <div class="badge-row">
+        <span class="badge">AMD Professional</span>
+        <span class="badge">Zynq MPSoC</span>
+        <span class="badge">1G/10G Ethernet</span>
+    </div>
+    <h1>Zynq UltraScale+ MPSoC Ethernet</h1>
+    <p class="subtitle">
+        Reference designs for <strong>PS-GEM</strong> and <strong>PL-based Ethernet</strong> on the AMD Zynq UltraScale+ ZCU102 evaluation board.
+        Covers <strong>SGMII</strong>, <strong>1000BASE-X</strong>, and <strong>10GBASE-R</strong> configurations
+        with GTH SerDes transceivers and full PetaLinux BSP integration for production networking.
+    </p>
+    <div class="stat-bar">
+        <div class="stat-card"><div class="number">10G</div><div class="label">10GBASE-R PL</div></div>
+        <div class="stat-card"><div class="number">1G</div><div class="label">PS-GEM / SGMII</div></div>
+        <div class="stat-card"><div class="number">GTH</div><div class="label">SerDes Transceivers</div></div>
+        <div class="stat-card"><div class="number">ZCU102</div><div class="label">Evaluation Board</div></div>
+    </div>
+    <div class="cta-row">
+        <a href="https://github.com/ajayadaha1/ZCU102-Ethernet" target="_blank" class="btn btn-primary">View Repository</a>
+        <a href="versal-ethernet.html" class="btn btn-outline">Related: Versal 100G →</a>
+    </div>
+</header>
+
+<section>
+    <div class="container">
+        <div class="section-label">Architecture</div>
+        <div class="section-title">Zynq MPSoC Ethernet Paths</div>
+        <div class="arch-diagram">
+┌───────────────────────────────────────────────────┐
+│              ZYNQ ULTRASCALE+ MPSoC               │
+│                                                   │
+│  ┌─────────────────────────────────────────────┐  │
+│  │            PROCESSING SYSTEM (PS)            │  │
+│  │                                             │  │
+│  │  ┌─────────┐    ┌─────────┐    ┌────────┐  │  │
+│  │  │ ARM A53 │    │ Linux   │    │PS-GEM  │  │  │
+│  │  │ Cluster │───▶│ Net     │───▶│Ethernet│  │  │
+│  │  └─────────┘    │ Stack   │    │Controller│ │  │
+│  │                 └─────────┘    └────┬───┘  │  │
+│  └──────────────────────────────────────┼──────┘  │
+│                                        │          │
+│  ┌──────────────────────────────────────┼──────┐  │
+│  │          PROGRAMMABLE LOGIC (PL)     │      │  │
+│  │                                      │      │  │
+│  │  ┌──────────┐    ┌──────────────┐    │      │  │
+│  │  │AXI 1G   │    │ AXI 10G      │    │      │  │
+│  │  │Ethernet │    │ Ethernet     │    │      │  │
+│  │  │Subsystem│    │ Subsystem    │    │      │  │
+│  │  └────┬─────┘    └──────┬───────┘    │      │  │
+│  │       │                 │            │      │  │
+│  │  ┌────┴────┐    ┌──────┴────┐  ┌────┴───┐  │  │
+│  │  │  PCS/   │    │  PCS/     │  │  SGMII │  │  │
+│  │  │  PMA    │    │  PMA      │  │  PHY   │  │  │
+│  │  └────┬────┘    └──────┬────┘  └────┬───┘  │  │
+│  └───────┼────────────────┼────────────┼───────┘  │
+│          │                │            │          │
+│  ┌───────┴────┐  ┌───────┴────┐  ┌────┴────┐    │
+│  │GTH SerDes  │  │GTH SerDes  │  │  RGMII  │    │
+│  │1000BASE-X  │  │10GBASE-R   │  │  PHY    │    │
+│  └───────┬────┘  └───────┬────┘  └────┬────┘    │
+│          └───────────────┼────────────┘          │
+│                   SFP+ / RJ45                     │
+└───────────────────────────────────────────────────┘</div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Engineering</div>
+        <div class="section-title">Key Design Decisions</div>
+        <div class="decisions-grid">
+            <div class="decision-card">
+                <div class="card-icon">🔀</div>
+                <h3>PS-GEM vs PL Ethernet</h3>
+                <p>PS-GEM provides hardened 1G Ethernet with minimal FPGA resource usage. PL-based Ethernet enables 10G and custom MAC configurations but consumes logic resources. Reference covers both paths with trade-off analysis.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">📡</div>
+                <h3>SGMII / 1000BASE-X / 10GBASE-R</h3>
+                <p>Three PHY-layer standards for different connectivity needs. SGMII for copper, 1000BASE-X for fiber at 1G, 10GBASE-R for 10G SFP+. Each uses different SerDes line rates and PCS configurations.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">⚡</div>
+                <h3>GTH Transceiver Bring-Up</h3>
+                <p>ZCU102 GTH transceivers require careful reference clock selection, pre-emphasis tuning, and DFE/LPM equalization. Designs include board-specific IBERT configurations for signal integrity validation.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">🐧</div>
+                <h3>Linux Network Integration</h3>
+                <p>PetaLinux device tree configuration for PS-GEM and PL Ethernet subsystems. Includes PHY driver binding, MDIO bus configuration, and interrupt routing for stable Linux networking.</p>
+            </div>
+        </div>
+        <div class="compare-box">
+            <h3>Versal vs Zynq Comparison</h3>
+            <div class="row">
+                <div class="col">
+                    <h4>Versal ACAP (100G)</h4>
+                    <ul>
+                        <li>• DCMAC / MRMAC hardened MACs</li>
+                        <li>• GTM: 112 Gbps PAM4 SerDes</li>
+                        <li>• NoC-based interconnect</li>
+                        <li>• 100G single-lane capable</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h4>Zynq UltraScale+ (1G/10G)</h4>
+                    <ul>
+                        <li>• PS-GEM + PL soft MAC</li>
+                        <li>• GTH: 16.375 Gbps NRZ SerDes</li>
+                        <li>• AXI interconnect</li>
+                        <li>• 10G max per lane</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Stack</div>
+        <div class="section-title">Technology & Tools</div>
+        <table class="svc-table">
+            <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td>FPGA Platform</td><td><code>Zynq UltraScale+ MPSoC</code></td><td>ZCU102 evaluation board</td></tr>
+                <tr><td>PS Ethernet</td><td><code>PS-GEM Controller</code></td><td>Hardened 1G Ethernet in PS</td></tr>
+                <tr><td>PL 1G</td><td><code>AXI 1G Ethernet Subsystem</code></td><td>Soft MAC with SGMII/1000BASE-X</td></tr>
+                <tr><td>PL 10G</td><td><code>AXI 10G Ethernet Subsystem</code></td><td>10GBASE-R via GTH SerDes</td></tr>
+                <tr><td>Transceivers</td><td><code>GTH SerDes</code></td><td>16.375 Gbps NRZ high-speed serial</td></tr>
+                <tr><td>Design Suite</td><td><code>Vivado 2023+</code></td><td>RTL synthesis, P&R, bitstream</td></tr>
+                <tr><td>Embedded OS</td><td><code>PetaLinux 2023+</code></td><td>BSP, device tree, kernel config</td></tr>
+                <tr><td>Validation</td><td><code>IBERT / iperf3</code></td><td>Eye diagram + throughput testing</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Related Projects</div>
+        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
+            <a href="versal-ethernet.html" class="btn btn-outline">Versal 100G Ethernet →</a>
+            <a href="72ns-gateway.html" class="btn btn-outline">72ns Gateway HFT →</a>
+            <a href="cummings-fifo.html" class="btn btn-outline">Cummings FIFO →</a>
+        </div>
+    </div>
+</section>
+
+<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="versal-ethernet.html">Versal Ethernet</a> &nbsp;·&nbsp; <a href="https://github.com/ajayadaha1/ZCU102-Ethernet" target="_blank">GitHub</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Line Follower with LM324N | Ajaya Dahal</title>
+    <meta name="description" content="Pure analog line-following robot using LM324N op-amp comparators with Arduino Nano backup control for edge cases.">
+    <meta name="keywords" content="line follower, LM324N, op-amp, comparator, analog, Arduino Nano, robot">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/analog-line-follower.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Analog Line Follower with LM324N | Ajaya Dahal">
+    <meta property="og:description" content="Pure analog line follower using LM324N comparator with Arduino Nano backup.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/analog-line-follower.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Analog Line Follower with LM324N",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "description": "Pure analog line-following robot using LM324N op-amp comparators with Arduino Nano backup.",
+        "keywords": ["line follower", "LM324N", "op-amp", "analog", "Arduino Nano"]
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
+            --text-primary: #e6e8eb; --text-secondary: #9ca3af; --text-muted: #6b7280;
+            --accent-1: #795548; --accent-2: #a1887f;
+            --accent-cyan: #00d9ff; --accent-green: #00ff9f; --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, sans-serif; --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
+        }
+        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(121, 85, 72, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(161, 136, 127, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
+        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hero .badge-row .badge { background: rgba(121, 85, 72, 0.15); color: var(--accent-2); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
+        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(121, 85, 72, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
+        .arch-block { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; margin-bottom: 36px; }
+        .arch-block pre { font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6; color: var(--accent-2); overflow-x: auto; white-space: pre; }
+        .decision-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
+        .decision-card:hover { border-color: var(--accent-1); }
+        .decision-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
+        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .stat-bar { grid-template-columns: repeat(2, 1fr); } .decision-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="line-follower-pic24.html">PIC24 Follower</a><a href="diy-rth-drone.html">DIY Drone</a></div></div></nav>
+
+<header class="hero">
+    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#tier2-sandbox">Sandbox</a> → Analog Line Follower</div>
+    <div class="badge-row">
+        <span class="badge">Analog</span>
+        <span class="badge">Op-Amp</span>
+        <span class="badge">LM324N</span>
+    </div>
+    <h1>Analog Line Follower — LM324N with Arduino Backup</h1>
+    <p class="subtitle">
+        A purely <strong>analog line-following robot</strong> using the <strong>LM324N quad op-amp</strong> as
+        voltage comparators to process IR sensor input and directly drive motors — zero microcontroller required
+        for the primary control loop. <strong>Arduino Nano</strong> provides backup digital control for edge-case recovery.
+    </p>
+    <div class="stat-bar">
+        <div class="stat-card"><div class="number">LM324N</div><div class="label">Quad Op-Amp</div></div>
+        <div class="stat-card"><div class="number">0 μs</div><div class="label">Analog Latency</div></div>
+        <div class="stat-card"><div class="number">Nano</div><div class="label">Backup MCU</div></div>
+    </div>
+    <div class="cta-row">
+        <a href="https://www.hackster.io/ajayadahal1000/line-follower-using-lm324n-with-backup-arduino-nano-8e886c" target="_blank" class="btn btn-primary">View on Hackster</a>
+        <a href="line-follower-pic24.html" class="btn btn-outline">Compare: PIC24 Digital →</a>
+    </div>
+</header>
+
+<section>
+    <div class="container">
+        <div class="section-label">Architecture</div>
+        <div class="section-title">Analog Control Loop</div>
+        <p class="section-desc">The LM324N comparator outputs directly modulate the H-bridge motor driver — no ADC sampling, no software delays.</p>
+        <div class="arch-block">
+<pre>
+   IR Sensor Array (3 channels)
+   ├──────┬──────┬──────┤
+   │  L   │  C   │  R   │
+   ▼      ▼      ▼
+┌──────────────────────┐
+│      LM324N          │
+│  Quad Comparator     │
+│  Vref ┤ +  - ├ Vin   │
+│       ├──────┤       │
+│  Ch1  │ Ch2  │ Ch3   │
+└──┬────┴──┬───┴──┬────┘
+   │       │      │
+   ▼       ▼      ▼
+┌──────────────────────┐
+│  L293D H-Bridge      │
+│  Motor Driver        │
+│   M_L         M_R    │
+└──────────────────────┘
+
+  ┌─── Arduino Nano ───┐
+  │  Backup Digital     │
+  │  Control (edge      │
+  │  case recovery)     │
+  └─────────────────────┘
+</pre>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Decisions</div>
+        <div class="section-title">Design Choices</div>
+        <div class="decision-grid">
+            <div class="decision-card">
+                <h3>LM324N Comparator</h3>
+                <p>Quad op-amp package provides 4 comparator channels in a single DIP-14 IC. Eliminates ADC quantization delays for near-instantaneous sensor→motor response.</p>
+            </div>
+            <div class="decision-card">
+                <h3>Analog-First Control</h3>
+                <p>Primary control path is pure analog: IR voltage → comparator threshold → motor drive. Zero processor overhead, zero sampling jitter — the fastest possible control loop.</p>
+            </div>
+            <div class="decision-card">
+                <h3>Arduino Nano Backup</h3>
+                <p>Digital MCU monitors the analog path and takes over during edge cases like sharp turns, intersections, or line-loss scenarios where simple threshold comparison fails.</p>
+            </div>
+            <div class="decision-card">
+                <h3>Threshold Tuning</h3>
+                <p>Potentiometer-adjustable Vref on each comparator channel enables field calibration for different surface colors and lighting conditions.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Stack</div>
+        <div class="section-title">Components</div>
+        <table class="svc-table">
+            <thead><tr><th>Component</th><th>Part</th><th>Role</th></tr></thead>
+            <tbody>
+                <tr><td>Comparator</td><td><code>LM324N</code></td><td>Quad op-amp as voltage comparators</td></tr>
+                <tr><td>Backup MCU</td><td><code>Arduino Nano</code></td><td>Edge-case digital control</td></tr>
+                <tr><td>Motor Driver</td><td><code>L293D H-Bridge</code></td><td>Dual DC motor control</td></tr>
+                <tr><td>Sensors</td><td><code>IR Reflectance Array</code></td><td>Line detection (3 channels)</td></tr>
+                <tr><td>Tuning</td><td><code>Trimpots</code></td><td>Vref threshold adjustment</td></tr>
+                <tr><td>Power</td><td><code>7.4V LiPo</code></td><td>Dual-rail supply via regulator</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Related Projects</div>
+        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
+            <a href="line-follower-pic24.html" class="btn btn-outline">PIC24 Digital Line Follower →</a>
+            <a href="diy-rth-drone.html" class="btn btn-outline">DIY RTH Drone →</a>
+        </div>
+    </div>
+</section>
+
+<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="line-follower-pic24.html">PIC24 Follower</a> &nbsp;·&nbsp; <a href="https://www.hackster.io/ajayadahal1000/line-follower-using-lm324n-with-backup-arduino-nano-8e886c" target="_blank">Hackster</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
+
+</body>
+</html>

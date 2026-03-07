@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Silo: Private AI Infrastructure | Ajaya Dahal</title>
+    <meta name="description" content="Self-hosted AI stack: 15 Docker services, 12 models, 48 GB VRAM. LLMs, voice cloning, image gen, video gen, music gen — one docker compose up. $0/month on AMD W7900.">
+    <meta name="keywords" content="self-hosted AI, local LLM, Ollama ROCm, LiteLLM gateway, AMD W7900, private AI cloud, Docker AI stack, GPU inference, VRAM management, ComfyUI, XTTS, MusicGen">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/cognitive-silo.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Cognitive Silo: Private AI Infrastructure | Ajaya Dahal">
+    <meta property="og:description" content="15 Docker services, 12 AI models, 48 GB VRAM — one docker compose up. $0/month self-hosted AI stack on AMD W7900.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/cognitive-silo.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Cognitive Silo — Private AI Infrastructure",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "programmingLanguage": ["Python", "Bash", "YAML"],
+        "codeRepository": "https://github.com/AjayaDahal/cognitive-silo",
+        "description": "Self-hosted AI infrastructure: 15 Docker services, 12 models, LiteLLM gateway, Ollama ROCm, 48 GB VRAM on AMD W7900"
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151b24;
+            --bg-tertiary: #1f2937;
+            --bg-card: #161d27;
+            --text-primary: #e6e8eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-orange: #ff9500;
+            --accent-amber: #ffbd2e;
+            --accent-cyan: #00d9ff;
+            --accent-green: #00ff9f;
+            --accent-blue: #667eea;
+            --accent-purple: #764ba2;
+            --accent-red: #ff4757;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --max-width: 1100px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(255, 149, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 189, 46, 0.04) 0%, transparent 50%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-green); }
+
+        /* ── NAV ── */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color); padding: 14px 0;
+        }
+        .top-nav .inner {
+            max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+        .top-nav .brand span { color: var(--accent-orange); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; }
+        .top-nav .links a { color: var(--text-secondary); font-weight: 500; }
+        .top-nav .links a:hover { color: var(--accent-orange); }
+
+        /* ── LAYOUT ── */
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; }
+        section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+
+        .section-label {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent-orange); margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);
+        }
+        .section-desc {
+            font-size: 1rem; color: var(--text-secondary); max-width: 700px; margin-bottom: 36px; line-height: 1.7;
+        }
+
+        /* ── HERO ── */
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 110px 24px 30px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
+        .hero .breadcrumb a { color: var(--text-muted); }
+        .hero .breadcrumb a:hover { color: var(--accent-orange); }
+        .hero h1 {
+            font-size: clamp(2rem, 4.5vw, 2.8rem); font-weight: 800; line-height: 1.2;
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-amber) 40%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 14px;
+        }
+        .hero .lead { font-size: 1.05rem; color: var(--text-secondary); max-width: 720px; line-height: 1.7; }
+
+        /* ── STAT BAR ── */
+        .stat-bar {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px; margin-top: 28px;
+        }
+        .stat-item {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 16px; text-align: center;
+        }
+        .stat-item .num {
+            font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono);
+        }
+        .stat-item .label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;
+        }
+
+        /* ── CAPABILITY GRID ── */
+        .cap-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px;
+        }
+        .cap-card {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 22px; transition: border-color 0.2s;
+        }
+        .cap-card:hover { border-color: var(--accent-orange); }
+        .cap-card .cap-icon { font-size: 1.6rem; margin-bottom: 10px; }
+        .cap-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: var(--text-primary); }
+        .cap-card p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
+        .cap-card .cap-models {
+            margin-top: 10px; font-family: var(--font-mono); font-size: 0.72rem;
+            color: var(--accent-orange); line-height: 1.8;
+        }
+
+        /* ── DECISION CARDS ── */
+        .decision-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;
+        }
+        .decision-card {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 24px;
+        }
+        .decision-card h4 {
+            font-size: 1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .decision-card .why { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+        .decision-card .alt {
+            margin-top: 10px; font-size: 0.78rem; color: var(--text-muted);
+            padding-top: 10px; border-top: 1px solid rgba(45, 55, 72, 0.5);
+        }
+        .decision-card .alt strong { color: var(--text-secondary); }
+        .decision-card .result {
+            margin-top: 8px; font-size: 0.82rem; color: var(--accent-green); font-weight: 500;
+        }
+
+        /* ── SERVICE MAP ── */
+        .svc-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; overflow: hidden;
+        }
+        .svc-table th {
+            text-align: left; padding: 12px 16px; font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--text-muted); background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .svc-table td {
+            padding: 10px 16px; font-size: 0.82rem; color: var(--text-secondary);
+            border-bottom: 1px solid rgba(45, 55, 72, 0.4);
+        }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table td:first-child {
+            color: var(--accent-orange); font-weight: 600; font-family: var(--font-mono); font-size: 0.78rem;
+        }
+        .svc-table .port { color: var(--accent-cyan); font-family: var(--font-mono); }
+        .svc-table .init { color: var(--text-muted); font-style: italic; }
+
+        /* ── DIAGRAM BOX ── */
+        .diagram-box {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 28px; overflow-x: auto;
+            font-family: var(--font-mono); font-size: 0.82rem;
+            line-height: 1.6; color: var(--text-secondary);
+        }
+        .diagram-box pre { white-space: pre; overflow-x: auto; }
+        .diagram-box .hl-orange { color: var(--accent-orange); font-weight: 600; }
+        .diagram-box .hl-cyan { color: var(--accent-cyan); font-weight: 600; }
+        .diagram-box .hl-green { color: var(--accent-green); font-weight: 600; }
+        .diagram-box .hl-blue { color: var(--accent-blue); font-weight: 600; }
+        .diagram-box .hl-muted { color: var(--text-muted); }
+
+        /* ── COST GRID ── */
+        .cost-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;
+        }
+        .cost-item {
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 20px; text-align: center;
+        }
+        .cost-item .cost-label { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 6px; }
+        .cost-item .cost-val { font-size: 1.4rem; font-weight: 800; font-family: var(--font-mono); }
+
+        /* ── BTN ── */
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+            transition: all 0.2s; border: none; cursor: pointer; text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            color: #0a0e14; box-shadow: 0 4px 16px rgba(255, 149, 0, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(255, 149, 0, 0.4); color: #0a0e14; }
+        .btn-outline {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-outline:hover { border-color: var(--accent-orange); color: var(--accent-orange); }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0; margin-top: 40px; text-align: center;
+        }
+        .page-footer p { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hero { padding-top: 95px; }
+            .hero h1 { font-size: 1.8rem; }
+            .stat-bar { grid-template-columns: repeat(2, 1fr); }
+            .cap-grid, .decision-grid { grid-template-columns: 1fr; }
+            .top-nav .links { gap: 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="top-nav">
+    <div class="inner">
+        <a href="../home.html" class="brand"><span>A</span>jaya</a>
+        <div class="links">
+            <a href="../home.html">Home</a>
+            <a href="cognitive-silo-architecture.html">Architecture</a>
+            <a href="sma.html">SMA Engine</a>
+            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+    <div class="breadcrumb">
+        <a href="../home.html">Home</a> / <a href="../home.html#page-3">Projects</a> / <strong style="color: var(--text-secondary);">Cognitive Silo</strong>
+    </div>
+    <h1>Cognitive Silo: Private AI Infrastructure</h1>
+    <p class="lead">
+        A self-hosted AI stack that deploys LLMs, voice cloning, image generation, video generation, music generation,
+        and persistent memory behind a single OpenAI-compatible gateway. One <code style="font-family: var(--font-mono); background: rgba(255,149,0,0.12); color: var(--accent-orange); padding: 2px 8px; border-radius: 4px;">docker compose up -d</code> launches 15 containers
+        on an AMD Radeon PRO W7900 (48 GB VRAM). This is the infrastructure layer that powers the
+        <a href="sma.html">SMA pipeline</a> and all local AI workloads.
+    </p>
+
+    <div class="stat-bar">
+        <div class="stat-item">
+            <div class="num" style="color: var(--accent-orange);">15</div>
+            <div class="label">Docker Services</div>
+        </div>
+        <div class="stat-item">
+            <div class="num" style="color: var(--accent-cyan);">12</div>
+            <div class="label">AI Models</div>
+        </div>
+        <div class="stat-item">
+            <div class="num" style="color: var(--accent-amber);">48 GB</div>
+            <div class="label">VRAM Managed</div>
+        </div>
+        <div class="stat-item">
+            <div class="num" style="color: var(--accent-green);">$0/mo</div>
+            <div class="label">Recurring Cost</div>
+        </div>
+        <div class="stat-item">
+            <div class="num" style="color: var(--accent-blue);">4,076</div>
+            <div class="label">Lines of Code</div>
+        </div>
+    </div>
+</header>
+
+<!-- ═══════════ CONCEPT ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">The Concept</div>
+        <div class="section-title">Your Own AI Data Center</div>
+        <p class="section-desc">
+            Cloud AI APIs are expensive, rate-limited, and route your data through third-party servers.
+            Cognitive Silo eliminates all three: a single command deploys GPT-4 class reasoning,
+            voice cloning, image synthesis, video generation, music composition, and semantic memory —
+            all running locally on a single GPU. The entire stack speaks the OpenAI API,
+            so any tool that supports OpenAI (VS Code, Python SDK, curl) works without changes.
+        </p>
+
+        <div class="diagram-box">
+            <pre>
+  <span class="hl-muted">Any client that speaks OpenAI API:</span>
+
+  VS Code (Continue.dev)  ─┐
+  SMA Pipeline (Python)   ─┤
+  curl / Postman          ─┤─── <span class="hl-orange">LiteLLM Gateway</span> (:4000) ──┬── <span class="hl-cyan">Ollama</span> (5 LLMs, ROCm GPU)
+  Open WebUI (Browser)    ─┤    <span class="hl-muted">One key. One endpoint.</span>    ├── <span class="hl-green">Speaches</span> (Whisper + Kokoro)
+  Telegram Bot            ─┘                              ├── <span class="hl-blue">GPT-4o</span> (cloud overflow)
+                                                          └── <span class="hl-muted">+ 9 more services below</span></pre>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CAPABILITIES ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">What It Runs</div>
+        <div class="section-title">8 AI Capabilities, 12 Models</div>
+        <p class="section-desc">
+            Five modalities of AI generation — all accessible from a single API endpoint with unified authentication.
+        </p>
+
+        <div class="cap-grid">
+            <div class="cap-card">
+                <div class="cap-icon">💬</div>
+                <h4>Chat & Code Generation</h4>
+                <p>Deep reasoning, code synthesis, refactoring. Pre-warmed in VRAM for sub-second first-token latency.</p>
+                <div class="cap-models">deepseek-r1:32b · deepseek-v2:16b · deepseek-r1:70b · llama3.3 · gpt-4o (fallback)</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">🎙️</div>
+                <h4>Speech-to-Text</h4>
+                <p>Whisper Large v3 Turbo (CTranslate2). Real-time transcription with word-level timestamps.</p>
+                <div class="cap-models">faster-whisper-large-v3-turbo-ct2</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">🔊</div>
+                <h4>Text-to-Speech (3 engines)</h4>
+                <p>Kokoro for fast TTS, Fish Speech for expressive output, XTTS-v2 for voice cloning across 17 languages.</p>
+                <div class="cap-models">Kokoro-82M · OpenAudio S1-Mini · XTTS-v2 (58 speakers)</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">🎨</div>
+                <h4>Image Generation</h4>
+                <p>FLUX.1-schnell FP8 via ComfyUI. High-quality images in ~10 seconds on W7900.</p>
+                <div class="cap-models">FLUX.1-schnell FP8 (~17 GB VRAM)</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">🎬</div>
+                <h4>Video Generation</h4>
+                <p>CogVideoX-2b generates 17-frame videos at 480×320. Two workflows: animated WEBP or individual frames.</p>
+                <div class="cap-models">CogVideoX-2b · T5-XXL-FP8 encoder (~200s/video)</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">🎵</div>
+                <h4>Music Generation</h4>
+                <p>Meta AudioCraft MusicGen 300M. Text-to-music with REST API and Gradio playground UI.</p>
+                <div class="cap-models">facebook/musicgen-small (300M)</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">🧠</div>
+                <h4>Persistent AI Memory</h4>
+                <p>Mem0 + Qdrant vector DB. Per-user memory isolation — each project gets its own context silo.</p>
+                <div class="cap-models">nomic-embed-text (768D) → Qdrant</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">💻</div>
+                <h4>IDE Integration</h4>
+                <p>Continue.dev config with 4 specialized agents, tab autocomplete, and semantic codebase search.</p>
+                <div class="cap-models">4 agent prompts · @codebase · autocomplete</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ ENGINEERING DECISIONS ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Why It's Built This Way</div>
+        <div class="section-title">6 Key Engineering Decisions</div>
+        <p class="section-desc">
+            Each decision explains a deliberate architectural choice, the alternatives considered, and the measurable outcome.
+        </p>
+
+        <div class="decision-grid">
+            <div class="decision-card">
+                <h4>🔀 LiteLLM as Unified Gateway</h4>
+                <div class="why">One endpoint (port 4000), one auth key, one SDK (OpenAI Python) for ALL services — LLMs, STT, TTS, embeddings, cloud fallback. Any tool that speaks OpenAI API works without configuration changes.</div>
+                <div class="alt"><strong>Alt:</strong> Direct service calls with per-service auth, or custom API aggregator</div>
+                <div class="result">→ Zero integration code. VS Code, SMA pipeline, curl, and Open WebUI all connect to the same URL.</div>
+            </div>
+            <div class="decision-card">
+                <h4>📦 Init Container Pattern</h4>
+                <div class="why">3 ephemeral containers (model-downloader, ollama-init, speaches-init) run once on first deploy to download models and pre-warm VRAM, then exit cleanly. Subsequent starts are instant from cached volumes.</div>
+                <div class="alt"><strong>Alt:</strong> Bake models into Docker images, or download on every start</div>
+                <div class="result">→ First run: 30-60 min setup. Every run after: instant. Images stay small.</div>
+            </div>
+            <div class="decision-card">
+                <h4>🧮 VRAM Budget Management</h4>
+                <div class="why">48 GB is finite. OLLAMA_MAX_LOADED_MODELS=2 + KEEP_ALIVE=-1 pre-warms DeepSeek R1 32B (~20 GB) + V2 16B (~10 GB) permanently. Remaining 18 GB reserved for ComfyUI image/video gen. LRU eviction handles overflow.</div>
+                <div class="alt"><strong>Alt:</strong> Load models on demand (cold start), or use multiple GPUs</div>
+                <div class="result">→ Sub-second first-token for primary models. No cold-start penalty for daily use.</div>
+            </div>
+            <div class="decision-card">
+                <h4>☁️ Cloud Overflow Fallback</h4>
+                <div class="why">When the local GPU is saturated (running CogVideoX or third LLM), LiteLLM automatically routes to GPT-4o via GitHub Models. Transparent to clients — they see the same API.</div>
+                <div class="alt"><strong>Alt:</strong> Queue requests until GPU is free, or hard-fail</div>
+                <div class="result">→ Zero downtime. Local-first, cloud-backup. Overflow is invisible to callers.</div>
+            </div>
+            <div class="decision-card">
+                <h4>🌐 Tailscale Mesh Networking</h4>
+                <div class="why">Stable IPs without exposing ports to the internet. Dashboard auto-rewrites URLs to match the current hostname. Full AI stack accessible from any device on the mesh.</div>
+                <div class="alt"><strong>Alt:</strong> Port forwarding + dynamic DNS, or VPN server</div>
+                <div class="result">→ Access from coffee shop laptop. No firewall rules. Zero configuration per-device.</div>
+            </div>
+            <div class="decision-card">
+                <h4>🤖 Agent Prompt Distillation</h4>
+                <div class="why">Local models (DeepSeek 32B) need better system prompts than cloud models to match quality. 4 specialized prompts distilled from Claude Code, Cursor Agent 2.0, v0/Vercel, and Devin AI behavioral patterns.</div>
+                <div class="alt"><strong>Alt:</strong> Use default system prompts, or fine-tune models</div>
+                <div class="result">→ Near-commercial quality from local models. Coding, UI, debugging, and hardware agents.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ SERVICE MAP ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Infrastructure</div>
+        <div class="section-title">15 Services, One Compose File</div>
+        <p class="section-desc">
+            All services orchestrated via a single 453-line Docker Compose file with health checks, dependency ordering, and GPU passthrough (ROCm device mapping).
+        </p>
+
+        <table class="svc-table">
+            <thead>
+                <tr><th>Service</th><th>Port</th><th>Purpose</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ollama</td>
+                    <td class="port">11434</td>
+                    <td>LLM inference engine (ROCm GPU)</td>
+                    <td>5 models, VRAM pre-warming</td>
+                </tr>
+                <tr>
+                    <td>litellm</td>
+                    <td class="port">4000</td>
+                    <td>OpenAI-compatible API gateway</td>
+                    <td>Auth, routing, fallbacks, retries</td>
+                </tr>
+                <tr>
+                    <td>open-webui</td>
+                    <td class="port">3000</td>
+                    <td>ChatGPT-style playground</td>
+                    <td>Web UI for all models</td>
+                </tr>
+                <tr>
+                    <td>speaches</td>
+                    <td class="port">8000</td>
+                    <td>Whisper STT + Kokoro TTS</td>
+                    <td>OpenAI-compatible endpoints</td>
+                </tr>
+                <tr>
+                    <td>fish-speech</td>
+                    <td class="port">8001</td>
+                    <td>Expressive TTS (OpenAudio S1-Mini)</td>
+                    <td>Gradio UI</td>
+                </tr>
+                <tr>
+                    <td>xtts</td>
+                    <td class="port">8002</td>
+                    <td>Voice cloning TTS (XTTS-v2)</td>
+                    <td>58 speakers, 17 languages</td>
+                </tr>
+                <tr>
+                    <td>musicgen</td>
+                    <td class="port">8003</td>
+                    <td>Text-to-music (Meta AudioCraft)</td>
+                    <td>REST API + Gradio UI (:8004)</td>
+                </tr>
+                <tr>
+                    <td>comfyui</td>
+                    <td class="port">8188</td>
+                    <td>Image gen (FLUX) + Video gen (CogVideoX)</td>
+                    <td>Custom ROCm 6.0 build</td>
+                </tr>
+                <tr>
+                    <td>mem0</td>
+                    <td class="port">8080</td>
+                    <td>Persistent AI memory API</td>
+                    <td>Per-user isolation via Qdrant</td>
+                </tr>
+                <tr>
+                    <td>qdrant</td>
+                    <td class="port">6333</td>
+                    <td>Vector database</td>
+                    <td>Embeddings for Mem0</td>
+                </tr>
+                <tr>
+                    <td>db</td>
+                    <td class="port">5432</td>
+                    <td>PostgreSQL 16</td>
+                    <td>LiteLLM persistence/analytics</td>
+                </tr>
+                <tr>
+                    <td>redis</td>
+                    <td class="port">—</td>
+                    <td>Redis 7 (cache + rate limiting)</td>
+                    <td>Internal only</td>
+                </tr>
+                <tr>
+                    <td>dashboard</td>
+                    <td class="port">9000</td>
+                    <td>Service portal + live GPU monitor</td>
+                    <td>nginx:alpine</td>
+                </tr>
+                <tr>
+                    <td class="init">model-downloader</td>
+                    <td>—</td>
+                    <td class="init">Init: download HuggingFace models</td>
+                    <td class="init">Runs once, exits</td>
+                </tr>
+                <tr>
+                    <td class="init">ollama-init</td>
+                    <td>—</td>
+                    <td class="init">Init: pull Ollama models + pre-warm VRAM</td>
+                    <td class="init">Runs once, exits</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ═══════════ COST ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Economics</div>
+        <div class="section-title">$0/Month Production AI Stack</div>
+        <p class="section-desc">
+            Every model, every service, every capability — zero recurring cost. Cloud equivalents priced at standard API rates.
+        </p>
+
+        <div class="cost-grid">
+            <div class="cost-item">
+                <div class="cost-label">LLM Inference</div>
+                <div class="cost-val" style="color: var(--accent-green);">$0</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">vs. ~$200/mo GPT-4o API</div>
+            </div>
+            <div class="cost-item">
+                <div class="cost-label">Speech (STT + TTS)</div>
+                <div class="cost-val" style="color: var(--accent-green);">$0</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">vs. ~$50/mo Whisper + ElevenLabs</div>
+            </div>
+            <div class="cost-item">
+                <div class="cost-label">Image Generation</div>
+                <div class="cost-val" style="color: var(--accent-green);">$0</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">vs. ~$40/mo DALL-E 3 API</div>
+            </div>
+            <div class="cost-item">
+                <div class="cost-label">Video Generation</div>
+                <div class="cost-val" style="color: var(--accent-green);">$0</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">vs. ~$100/mo Runway/Pika</div>
+            </div>
+            <div class="cost-item">
+                <div class="cost-label">Music Generation</div>
+                <div class="cost-val" style="color: var(--accent-green);">$0</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">vs. ~$30/mo Suno/Udio</div>
+            </div>
+            <div class="cost-item">
+                <div class="cost-label">Vector DB + Memory</div>
+                <div class="cost-val" style="color: var(--accent-green);">$0</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">vs. ~$25/mo Pinecone</div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--text-muted);">
+            Equivalent cloud spend: <strong style="color: var(--accent-orange);">~$445/month saved</strong> — using open-source models on owned hardware.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ TECH STACK ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Stack</div>
+        <div class="section-title">Technology Map</div>
+
+        <table class="svc-table">
+            <thead>
+                <tr><th>Layer</th><th>Technology</th><th>Role</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>GPU</td><td>AMD Radeon PRO W7900 (48 GB, RDNA 3)</td><td>All local AI inference</td></tr>
+                <tr><td>Runtime</td><td>ROCm 6.0</td><td>AMD GPU compute (Ollama, ComfyUI)</td></tr>
+                <tr><td>Gateway</td><td>LiteLLM</td><td>OpenAI-compatible proxy + routing + auth</td></tr>
+                <tr><td>LLM Engine</td><td>Ollama (ROCm)</td><td>5 models, VRAM management, pre-warming</td></tr>
+                <tr><td>STT</td><td>Speaches (Whisper)</td><td>Speech-to-text, word timestamps</td></tr>
+                <tr><td>TTS</td><td>Kokoro / Fish Speech / XTTS-v2</td><td>3 TTS engines: fast, expressive, voice cloning</td></tr>
+                <tr><td>Image</td><td>ComfyUI + FLUX.1-schnell FP8</td><td>Image generation (~10s/image)</td></tr>
+                <tr><td>Video</td><td>ComfyUI + CogVideoX-2b</td><td>Video generation (~200s/clip)</td></tr>
+                <tr><td>Music</td><td>HuggingFace Transformers + MusicGen</td><td>Text-to-music (300M)</td></tr>
+                <tr><td>Memory</td><td>Mem0 + Qdrant + nomic-embed-text</td><td>Persistent semantic memory</td></tr>
+                <tr><td>Database</td><td>PostgreSQL 16</td><td>LiteLLM analytics + persistence</td></tr>
+                <tr><td>Cache</td><td>Redis 7</td><td>Rate limiting + response caching</td></tr>
+                <tr><td>Network</td><td>Tailscale</td><td>Mesh VPN for remote access</td></tr>
+                <tr><td>UI</td><td>Open WebUI / Gradio / nginx dashboard</td><td>Chat playground, service portal</td></tr>
+                <tr><td>IDE</td><td>Continue.dev</td><td>VS Code AI coding agent</td></tr>
+                <tr><td>Orchestration</td><td>Docker Compose (15 services)</td><td>Health checks, dependencies, GPU passthrough</td></tr>
+                <tr><td>Cloud Fallback</td><td>GitHub Models (GPT-4o)</td><td>Automatic overflow when GPU is busy</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Go Deeper</div>
+        <p style="color: var(--text-secondary); margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto;">
+            Explore the VRAM management strategy, service dependency DAG, LiteLLM routing config,
+            init container pattern, and Docker Compose internals.
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+            <a href="cognitive-silo-architecture.html" class="btn btn-primary">🏗️ Architecture Deep-Dive</a>
+            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank" class="btn btn-outline">View Source on GitHub</a>
+            <a href="sma.html" class="btn btn-outline">SMA Engine →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="page-footer">
+    <div class="container">
+        <p>
+            <a href="../home.html">← Portfolio</a> &nbsp;·&nbsp;
+            <a href="cognitive-silo-architecture.html">Architecture</a> &nbsp;·&nbsp;
+            <a href="sma.html">SMA Engine</a> &nbsp;·&nbsp;
+            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank">GitHub</a> &nbsp;·&nbsp;
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a>
+        </p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p>
+    </div>
+</footer>
+
+</body>
+</html>

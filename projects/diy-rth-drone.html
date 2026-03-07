@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Return-to-Home Drone (STM32) | Ajaya Dahal</title>
+    <meta name="description" content="Custom quadcopter with STM32 BluePill flight controller, GPS-based return-to-home algorithm, PID control loop, and IMU sensor fusion for autonomous flight.">
+    <meta name="keywords" content="STM32, BluePill, drone, return-to-home, RTH, GPS, PID control, IMU, sensor fusion, flight controller, quadcopter">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/diy-rth-drone.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="DIY Return-to-Home Drone (STM32) | Ajaya Dahal">
+    <meta property="og:description" content="Custom quadcopter with STM32 flight controller and GPS-based return-to-home.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/diy-rth-drone.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "DIY Return-to-Home Drone (STM32 BluePill)",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "description": "Custom quadcopter with GPS RTH and PID control on STM32"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
+            --text-primary: #e6e8eb; --text-secondary: #9ca3af; --text-muted: #6b7280;
+            --accent-1: #4caf50; --accent-2: #66bb6a;
+            --accent-cyan: #00d9ff; --accent-green: #00ff9f; --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, sans-serif; --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
+        }
+        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(76, 175, 80, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(102, 187, 106, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
+        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hero .badge-row .badge { background: rgba(76, 175, 80, 0.15); color: var(--accent-1); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
+        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
+        .decisions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
+        .decision-card:hover { border-color: rgba(76, 175, 80, 0.4); }
+        .decision-card .card-icon { font-size: 1.5rem; margin-bottom: 12px; }
+        .decision-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
+        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
+        .arch-diagram { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; overflow-x: auto; margin-bottom: 24px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); line-height: 1.8; white-space: pre; }
+        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
+        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .decisions-grid { grid-template-columns: 1fr; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="covid-drone.html">COVID Drone</a><a href="wrecks.html">WRECKS</a><a href="rc-plane.html">RC Plane</a></div></div></nav>
+
+<header class="hero">
+    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#tier2-sandbox">Sandbox</a> → DIY RTH Drone</div>
+    <div class="badge-row">
+        <span class="badge">Embedded</span>
+        <span class="badge">STM32</span>
+        <span class="badge">GPS Navigation</span>
+    </div>
+    <h1>DIY Return-to-Home Drone</h1>
+    <p class="subtitle">
+        Custom-built quadcopter with an <strong>STM32 BluePill</strong> flight controller implementing
+        <strong>GPS-based Return-to-Home</strong> (RTH). Features a PID control loop for stable flight,
+        IMU sensor fusion (accelerometer + gyroscope), and autonomous waypoint navigation — all running
+        on a bare-metal ARM Cortex-M3 at 72 MHz.
+    </p>
+    <div class="stat-bar">
+        <div class="stat-card"><div class="number">STM32</div><div class="label">ARM Cortex-M3</div></div>
+        <div class="stat-card"><div class="number">GPS</div><div class="label">Return-to-Home</div></div>
+        <div class="stat-card"><div class="number">PID</div><div class="label">Flight Control</div></div>
+        <div class="stat-card"><div class="number">6-DOF</div><div class="label">IMU Fusion</div></div>
+    </div>
+    <div class="cta-row">
+        <a href="https://www.hackster.io/ajayadahal1000/diy-return-to-home-drone-using-stm32-bluepill-9b1886" target="_blank" class="btn btn-primary">View on Hackster</a>
+        <a href="covid-drone.html" class="btn btn-outline">Related: COVID Drone 🏆 →</a>
+    </div>
+</header>
+
+<section>
+    <div class="container">
+        <div class="section-label">Architecture</div>
+        <div class="section-title">Flight Control System</div>
+        <div class="arch-diagram">
+               ┌────────────┐
+               │  RC Radio   │
+               │  Receiver   │
+               └──────┬──────┘
+                      │ PPM/SBUS
+  ┌───────────┐       │        ┌───────────┐
+  │  GPS      │       │        │  IMU      │
+  │  Module   │       │        │  MPU6050  │
+  │  (UART)   │       │        │  (I2C)    │
+  └─────┬─────┘       │        └─────┬─────┘
+        │              │              │
+        └──────────────┼──────────────┘
+                       │
+              ┌────────┴────────┐
+              │   STM32 BluePill │
+              │   ARM Cortex-M3  │
+              │                  │
+              │  ┌────────────┐  │
+              │  │ Sensor     │  │
+              │  │ Fusion     │  │
+              │  └─────┬──────┘  │
+              │        │         │
+              │  ┌─────┴──────┐  │
+              │  │ PID Control│  │
+              │  │ (Roll/Pitch│  │
+              │  │  /Yaw/Alt) │  │
+              │  └─────┬──────┘  │
+              │        │         │
+              │  ┌─────┴──────┐  │
+              │  │ RTH Logic  │  │
+              │  │ GPS→Home   │  │
+              │  └─────┬──────┘  │
+              └────────┼─────────┘
+                       │ PWM
+          ┌────────────┼────────────┐
+          │            │            │
+     ┌────┴───┐  ┌────┴───┐  ┌────┴───┐
+     │  ESC 1 │  │  ESC 2 │  │ESC 3/4│
+     │  Motor │  │  Motor │  │Motors │
+     └────────┘  └────────┘  └───────┘</div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Engineering</div>
+        <div class="section-title">Key Design Decisions</div>
+        <div class="decisions-grid">
+            <div class="decision-card">
+                <div class="card-icon">🎮</div>
+                <h3>STM32 BluePill as FC</h3>
+                <p>The STM32F103C8T6 (BluePill) provides 72 MHz ARM Cortex-M3, multiple timers for PWM generation, hardware I2C/UART for sensors, and DMA — all at under $2. Enough compute for a 1 kHz PID loop with GPS processing.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">🧭</div>
+                <h3>GPS RTH Algorithm</h3>
+                <p>Stores home coordinates on arm. On signal loss or RTH trigger, calculates bearing and distance to home using Haversine formula, then commands heading and altitude hold until within landing radius.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">🔄</div>
+                <h3>Complementary Filter Fusion</h3>
+                <p>Fuses accelerometer and gyroscope data with a complementary filter — gyro for fast attitude changes, accelerometer for long-term drift correction. Simpler than Kalman with acceptable performance for hobby flight.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">⚙️</div>
+                <h3>Cascaded PID Loops</h3>
+                <p>Separate PID controllers for roll, pitch, yaw rate, and altitude. Rate PIDs run at 1 kHz using gyro data; angle PIDs at 250 Hz using fused attitude. Manual tuning via serial console.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Stack</div>
+        <div class="section-title">Hardware & Software</div>
+        <table class="svc-table">
+            <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td>Flight Controller</td><td><code>STM32F103 (BluePill)</code></td><td>72 MHz ARM Cortex-M3 MCU</td></tr>
+                <tr><td>IMU</td><td><code>MPU6050</code></td><td>6-DOF accel + gyro via I2C</td></tr>
+                <tr><td>GPS</td><td><code>NEO-6M UART Module</code></td><td>Position fix for RTH navigation</td></tr>
+                <tr><td>ESC</td><td><code>SimonK / BLHeli</code></td><td>Brushless motor speed control</td></tr>
+                <tr><td>Motors</td><td><code>2212 920KV Brushless</code></td><td>Quad-rotor propulsion</td></tr>
+                <tr><td>Radio</td><td><code>PPM/SBUS Receiver</code></td><td>Manual control input</td></tr>
+                <tr><td>Framework</td><td><code>Bare-metal C / HAL</code></td><td>Real-time flight firmware</td></tr>
+                <tr><td>Frame</td><td><code>F450 Quadcopter Frame</code></td><td>Airframe structure</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Related Projects</div>
+        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
+            <a href="covid-drone.html" class="btn btn-outline">COVID-19 Drone 🏆 →</a>
+            <a href="rc-plane.html" class="btn btn-outline">RC Plane →</a>
+            <a href="wrecks.html" class="btn btn-outline">WRECKS →</a>
+        </div>
+    </div>
+</section>
+
+<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="covid-drone.html">COVID Drone</a> &nbsp;·&nbsp; <a href="https://www.hackster.io/ajayadahal1000/diy-return-to-home-drone-using-stm32-bluepill-9b1886" target="_blank">Hackster</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Autonomous Drone System | Ajaya Dahal</title>
+    <meta name="description" content="NXP Semiconductor Hackster.io Bonus Prize Winner — Autonomous drone system for contact-free COVID-19 testing service delivery. PX4 flight control, GPS waypoint navigation, sensor fusion.">
+    <meta name="keywords" content="autonomous drone, COVID-19, NXP, PX4, flight control, sensor fusion, GPS navigation, embedded systems, hackster prize">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/covid-drone.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="COVID-19 Autonomous Drone System | Ajaya Dahal">
+    <meta property="og:description" content="NXP Prize Winner — Autonomous drone for contact-free COVID-19 testing delivery with PX4 flight control and GPS navigation.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/covid-drone.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/iconss/project_icons/drone.jpg">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "COVID-19 Autonomous Drone System",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "description": "Autonomous drone system for contact-free COVID-19 testing service delivery",
+        "award": "NXP Semiconductor Hackster.io Bonus Prize"
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
+            --bg-card: #161d27; --text-primary: #e6e8eb; --text-secondary: #9ca3af;
+            --text-muted: #6b7280; --accent-1: #f5576c; --accent-2: #ff6b6b;
+            --accent-cyan: #00d9ff; --accent-green: #00ff9f;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
+        }
+        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(245, 87, 108, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 107, 107, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
+        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hero .badge-row .badge { background: rgba(245, 87, 108, 0.15); color: var(--accent-1); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero .badge-row .badge-award { background: rgba(255, 215, 0, 0.15); color: #ffd700; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
+        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-card .number { font-size: 1.8rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(245, 87, 108, 0.3); } .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 87, 108, 0.4); color: white; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
+        .decisions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
+        .decision-card:hover { border-color: rgba(245, 87, 108, 0.4); }
+        .decision-card .card-icon { font-size: 1.5rem; margin-bottom: 12px; }
+        .decision-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
+        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
+        .arch-diagram { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; overflow-x: auto; margin-bottom: 24px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); line-height: 1.8; white-space: pre; }
+        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
+        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .decisions-grid { grid-template-columns: 1fr; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="top-nav">
+    <div class="inner">
+        <a href="../home.html" class="brand"><span>A</span>jaya</a>
+        <div class="links">
+            <a href="../home.html">Portfolio</a>
+            <a href="sma.html">SMA</a>
+            <a href="cognitive-silo.html">Cognitive Silo</a>
+            <a href="72ns-gateway.html">72ns Gateway</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+    <div class="breadcrumb">
+        <a href="../home.html">Portfolio</a> → <a href="../home.html#page-3">Projects</a> → COVID-19 Drone
+    </div>
+    <div class="badge-row">
+        <span class="badge">Embedded Systems</span>
+        <span class="badge">Autonomous Flight</span>
+        <span class="badge-award">🏆 NXP Hackster.io Prize Winner</span>
+    </div>
+    <h1>COVID-19 Autonomous Drone System</h1>
+    <p class="subtitle">
+        Full-stack autonomous drone platform designed for <strong>contact-free COVID-19 testing kit delivery</strong>
+        to remote and quarantined communities. Integrates flight control, GPS waypoint navigation,
+        mission planning, and payload mechanisms into a single autonomous system.
+        <strong>Won NXP Semiconductor Hackster.io Bonus Prize.</strong>
+    </p>
+    <div class="stat-bar">
+        <div class="stat-card"><div class="number">🏆</div><div class="label">NXP Prize Winner</div></div>
+        <div class="stat-card"><div class="number">GPS</div><div class="label">Waypoint Navigation</div></div>
+        <div class="stat-card"><div class="number">Auto</div><div class="label">Autonomous Flight</div></div>
+        <div class="stat-card"><div class="number">RTH</div><div class="label">Return-to-Home</div></div>
+    </div>
+    <div class="cta-row">
+        <a href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a" target="_blank" class="btn btn-primary">View on Hackster.io</a>
+        <a href="diy-rth-drone.html" class="btn btn-outline">Related: DIY RTH Drone →</a>
+    </div>
+</header>
+
+<!-- ═══════════ PROBLEM / SOLUTION ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Context</div>
+        <div class="section-title">The Problem</div>
+        <p class="section-desc">
+            During the COVID-19 pandemic, testing access in remote and quarantined areas was severely limited.
+            Traditional delivery methods risked human contact. The challenge: deliver testing kits autonomously,
+            with zero human-to-human contact, to GPS-specified locations.
+        </p>
+        <div class="section-title" style="margin-top: 40px;">The Solution</div>
+        <p class="section-desc">
+            An autonomous drone system capable of carrying testing supplies to predefined GPS waypoints,
+            delivering payloads without human interaction, and returning to base — all autonomously.
+            The system integrates flight control firmware, GPS navigation, fail-safe protocols, and a
+            payload release mechanism.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ ARCHITECTURE ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Architecture</div>
+        <div class="section-title">System Overview</div>
+        <div class="arch-diagram">
+┌──────────────────────────────────────────────────────────────┐
+│                    GROUND CONTROL STATION                     │
+│  Mission Planning  │  GPS Waypoints  │  Telemetry Monitor    │
+└────────────┬─────────────────────────────────┬───────────────┘
+             │  MAVLink Protocol               │  Live Telemetry
+             ▼                                 ▲
+┌──────────────────────────────────────────────────────────────┐
+│                    FLIGHT CONTROLLER                          │
+│  ┌─────────┐  ┌──────────┐  ┌───────────┐  ┌─────────────┐ │
+│  │ PX4/Ardu│  │   GPS    │  │   IMU     │  │ Barometer   │ │
+│  │ Pilot   │  │  Module  │  │ Accel+Gyro│  │ Altitude    │ │
+│  └────┬────┘  └────┬─────┘  └─────┬─────┘  └──────┬──────┘ │
+│       │            │              │               │          │
+│       └────────────┴──────────────┴───────────────┘          │
+│                    SENSOR FUSION                              │
+│                         │                                     │
+│              ┌──────────┴──────────┐                         │
+│              │  PID Control Loop   │                         │
+│              └──────────┬──────────┘                         │
+│                         │                                     │
+│         ┌───────────────┼───────────────┐                    │
+│         ▼               ▼               ▼                    │
+│    ┌─────────┐   ┌──────────┐   ┌────────────┐              │
+│    │ Motor 1 │   │ Motor 2  │   │ Motor 3+4  │              │
+│    │  ESC    │   │  ESC     │   │   ESCs     │              │
+│    └─────────┘   └──────────┘   └────────────┘              │
+└──────────────────────────────────────────────────────────────┘
+                         │
+              ┌──────────┴──────────┐
+              │  PAYLOAD MECHANISM  │
+              │  Servo Release Gate │
+              └─────────────────────┘</div>
+    </div>
+</section>
+
+<!-- ═══════════ ENGINEERING DECISIONS ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Engineering</div>
+        <div class="section-title">Key Design Decisions</div>
+        <div class="decisions-grid">
+            <div class="decision-card">
+                <div class="card-icon">🛡️</div>
+                <h3>Fail-Safe First Design</h3>
+                <p>Every autonomous system must handle failure gracefully. The drone implements multi-level fail-safes: GPS loss triggers hover-in-place, low battery triggers immediate RTH, communication loss initiates a timed landing sequence.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">🛰️</div>
+                <h3>GPS Waypoint Navigation</h3>
+                <p>Pre-programmed waypoint missions enable fully autonomous delivery without real-time operator input. The system follows a mission plan: takeoff → cruise to waypoint → hover → payload release → RTH.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">⚖️</div>
+                <h3>Sensor Fusion for Stability</h3>
+                <p>IMU (accelerometer + gyroscope), barometric altitude, and GPS are fused using complementary filtering. This provides stable flight even in wind conditions, critical for safe payload delivery.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">📦</div>
+                <h3>Contact-Free Payload Delivery</h3>
+                <p>Servo-actuated release gate enables payload drop from hover altitude. No physical human contact required — the drone autonomously delivers and returns without landing at the delivery site.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ TECH STACK ═══════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">Stack</div>
+        <div class="section-title">Hardware & Software</div>
+        <table class="svc-table">
+            <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td>Flight Controller</td><td><code>PX4 / ArduPilot</code></td><td>Autonomous flight firmware with MAVLink</td></tr>
+                <tr><td>Processor</td><td><code>NXP i.MX RT</code></td><td>Real-time flight control processing</td></tr>
+                <tr><td>Navigation</td><td><code>u-blox GPS</code></td><td>Waypoint navigation and RTH</td></tr>
+                <tr><td>IMU</td><td><code>MPU6050 / ICM-20689</code></td><td>6-axis motion sensing for stabilization</td></tr>
+                <tr><td>Altitude</td><td><code>BMP280 Barometer</code></td><td>Barometric altitude hold</td></tr>
+                <tr><td>Telemetry</td><td><code>MAVLink + Radio</code></td><td>Bidirectional ground-to-air communication</td></tr>
+                <tr><td>Motors</td><td><code>Brushless + ESC</code></td><td>Quad-motor propulsion with PID control</td></tr>
+                <tr><td>Payload</td><td><code>Servo Release Gate</code></td><td>Contact-free delivery mechanism</td></tr>
+                <tr><td>Power</td><td><code>LiPo 4S</code></td><td>High-density battery with voltage monitoring</td></tr>
+                <tr><td>Ground Station</td><td><code>QGroundControl</code></td><td>Mission planning and telemetry monitoring</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ═══════════ AWARD ═══════════ -->
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">🏆 NXP Semiconductor Hackster.io Bonus Prize</div>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 16px auto;">
+            This project was recognized with the NXP Semiconductor Bonus Prize in the Hackster.io competition
+            for its innovative application of embedded systems to real-world pandemic response challenges.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════ RELATED ═══════════ -->
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Related Projects</div>
+        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
+            <a href="diy-rth-drone.html" class="btn btn-outline">DIY RTH Drone (STM32) →</a>
+            <a href="wrecks.html" class="btn btn-outline">WRECKS Senior Design →</a>
+            <a href="workstation.html" class="btn btn-outline">EDA/ML Workstation →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="page-footer">
+    <div class="container">
+        <p>
+            <a href="../home.html">← Portfolio</a> &nbsp;·&nbsp;
+            <a href="diy-rth-drone.html">DIY RTH Drone</a> &nbsp;·&nbsp;
+            <a href="wrecks.html">WRECKS</a> &nbsp;·&nbsp;
+            <a href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a" target="_blank">Hackster.io</a> &nbsp;·&nbsp;
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a>
+        </p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p>
+    </div>
+</footer>
+
+</body>
+</html>

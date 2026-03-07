@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDA/ML Synthesis Workstation | Ajaya Dahal</title>
+    <meta name="description" content="High-performance hardware infrastructure for FPGA synthesis, PetaLinux builds, and ML model development — AMD Radeon PRO W7900 48GB, multi-core workstation powering engineering workflows.">
+    <meta name="keywords" content="EDA workstation, FPGA synthesis, Vivado, PetaLinux, ML training, AMD Radeon PRO W7900, WSL2, hardware infrastructure">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/workstation.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="EDA/ML Synthesis Workstation | Ajaya Dahal">
+    <meta property="og:description" content="High-performance workstation for FPGA synthesis, PetaLinux builds, and ML development.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/workstation.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "EDA/ML Synthesis Workstation",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "description": "High-performance workstation for FPGA synthesis, PetaLinux, and ML development"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
+            --bg-card: #161d27; --text-primary: #e6e8eb; --text-secondary: #9ca3af;
+            --text-muted: #6b7280; --accent-1: #546e7a; --accent-2: #78909c;
+            --accent-cyan: #00d9ff; --accent-green: #00ff9f;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
+        }
+        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(84, 110, 122, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(120, 144, 156, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
+        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hero .badge-row .badge { background: rgba(84, 110, 122, 0.2); color: var(--accent-2); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
+        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
+        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(84, 110, 122, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-2); margin-bottom: 10px; }
+        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
+        .decisions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
+        .decision-card:hover { border-color: rgba(84, 110, 122, 0.4); }
+        .decision-card .card-icon { font-size: 1.5rem; margin-bottom: 12px; }
+        .decision-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
+        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
+        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
+        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .decisions-grid { grid-template-columns: 1fr; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="sma.html">SMA</a><a href="cognitive-silo.html">Cognitive Silo</a><a href="72ns-gateway.html">72ns Gateway</a></div></div></nav>
+
+<header class="hero">
+    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#page-3">Projects</a> → Workstation</div>
+    <div class="badge-row">
+        <span class="badge">Infrastructure</span>
+        <span class="badge">EDA</span>
+        <span class="badge">Machine Learning</span>
+    </div>
+    <h1>EDA/ML Synthesis Workstation</h1>
+    <p class="subtitle">
+        High-performance hardware infrastructure optimized for <strong>parallel Vivado synthesis</strong>,
+        <strong>PetaLinux embedded builds</strong>, and <strong>ML model development</strong>. This workstation
+        powers the <a href="cognitive-silo.html">Cognitive Silo</a>, <a href="sma.html">SMA Engine</a>,
+        and all FPGA design work with multi-core processing, 48 GB VRAM, and WSL2/Linux dual-boot workflows.
+    </p>
+    <div class="stat-bar">
+        <div class="stat-card"><div class="number">48 GB</div><div class="label">VRAM (W7900)</div></div>
+        <div class="stat-card"><div class="number">Multi</div><div class="label">Core Synthesis</div></div>
+        <div class="stat-card"><div class="number">WSL2</div><div class="label">Linux Dual-Boot</div></div>
+        <div class="stat-card"><div class="number">24/7</div><div class="label">Build Uptime</div></div>
+    </div>
+    <div class="cta-row">
+        <a href="https://www.youtube.com/watch?v=OI0yKwsCSdk" target="_blank" class="btn btn-primary">Watch Build Video</a>
+        <a href="cognitive-silo.html" class="btn btn-outline">Powers: Cognitive Silo →</a>
+    </div>
+</header>
+
+<section>
+    <div class="container">
+        <div class="section-label">Build Video</div>
+        <div class="section-title">Workstation Assembly</div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/OI0yKwsCSdk" title="EDA/ML Workstation Build" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Purpose</div>
+        <div class="section-title">Why This Build Exists</div>
+        <div class="decisions-grid">
+            <div class="decision-card">
+                <div class="card-icon">⚡</div>
+                <h3>FPGA Synthesis Performance</h3>
+                <p>Vivado synthesis and place-and-route for large Versal/Zynq designs can take hours. Multi-core processing with high memory bandwidth cuts synthesis times significantly, enabling faster design iteration cycles.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">🐧</div>
+                <h3>PetaLinux Build Environment</h3>
+                <p>PetaLinux BSP builds require native Linux with specific dependency chains. WSL2 provides near-native performance while maintaining Windows compatibility for other tools and daily workflows.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">🧠</div>
+                <h3>ML Training & Inference</h3>
+                <p>AMD Radeon PRO W7900 with 48 GB VRAM enables large model training and inference for the Cognitive Silo and SMA Engine projects. Sufficient VRAM for running multiple LLMs simultaneously.</p>
+            </div>
+            <div class="decision-card">
+                <div class="card-icon">🔁</div>
+                <h3>Unified Development Hub</h3>
+                <p>Single machine serving as FPGA development station, ML training rig, and home lab server. Eliminates context switching between separate machines and enables end-to-end design flows.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="section-label">Specs</div>
+        <div class="section-title">Hardware & Software Stack</div>
+        <table class="svc-table">
+            <thead><tr><th>Component</th><th>Specification</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td>GPU</td><td><code>AMD Radeon PRO W7900 (48 GB)</code></td><td>ML training, LLM inference, compute</td></tr>
+                <tr><td>CPU</td><td><code>Multi-core Processor</code></td><td>Parallel Vivado synthesis jobs</td></tr>
+                <tr><td>RAM</td><td><code>High-capacity DDR5</code></td><td>Large design P&R, PetaLinux builds</td></tr>
+                <tr><td>Storage</td><td><code>NVMe SSD Array</code></td><td>Fast build I/O, design checkpoints</td></tr>
+                <tr><td>OS</td><td><code>Windows + WSL2 / Linux</code></td><td>Dual-boot for EDA + ML workflows</td></tr>
+                <tr><td>EDA Tools</td><td><code>Vivado 2024, PetaLinux 2024</code></td><td>FPGA design, embedded Linux</td></tr>
+                <tr><td>ML Framework</td><td><code>TensorFlow / PyTorch</code></td><td>Model training and fine-tuning</td></tr>
+                <tr><td>Containers</td><td><code>Docker / Podman</code></td><td>Reproducible build environments</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-title">Powered by This Workstation</div>
+        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
+            <a href="cognitive-silo.html" class="btn btn-outline">Cognitive Silo →</a>
+            <a href="sma.html" class="btn btn-outline">SMA Engine →</a>
+            <a href="versal-ethernet.html" class="btn btn-outline">Versal Ethernet →</a>
+        </div>
+    </div>
+</section>
+
+<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="cognitive-silo.html">Cognitive Silo</a> &nbsp;·&nbsp; <a href="sma.html">SMA Engine</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
+
+</body>
+</html>
