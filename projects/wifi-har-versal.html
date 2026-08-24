@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeing Through Walls: WiFi Human-Activity Recognition on the Versal AI Engine | Ajaya Dahal</title>
+    <meta name="description" content="Streaming WiFi Channel-State-Information from a Raspberry Pi (nexmon) over Ethernet into an AMD Versal VCK190 — parsing UDP/CSI in the PL and running STFT + activity/breathing feature extraction on the AI Engine array. Validated bit-accurate on real silicon.">
+    <meta name="keywords" content="WiFi CSI, Human Activity Recognition, HAR, Versal, AI Engine, AIE, VCK190, nexmon, FPGA, STFT, radar sensing, PetaLinux, edge AI, breathing detection, fall detection">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/wifi-har-versal.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Seeing Through Walls: WiFi HAR on the Versal AI Engine">
+    <meta property="og:description" content="WiFi CSI parsed in FPGA fabric and turned into activity/breathing/fall features on the Versal AI Engine — bit-accurate on real silicon, with an on-board live dashboard.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/wifi-har-versal.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/wifi-har/ila/ila_aie_in.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "name": "Seeing Through Walls: WiFi Human-Activity Recognition on the Versal AI Engine",
+        "author": { "@type": "Person", "name": "Ajaya Dahal" },
+        "description": "Hardware/software co-design that streams WiFi CSI into a Versal VCK190, parses UDP/CSI in the PL, and runs STFT + HAR feature extraction on the AI Engine array.",
+        "keywords": "WiFi CSI, Human Activity Recognition, Versal AI Engine, VCK190, nexmon, FPGA, STFT",
+        "proficiencyLevel": "Expert"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Mermaid (diagrams), KaTeX (equations), Prism (code) — same CDN pattern as other project pages -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
+            --bg-card: #161d27; --text-primary: #e6e8eb; --text-secondary: #9ca3af;
+            --text-muted: #6b7280; --accent-1: #1976d2; --accent-2: #42a5f5;
+            --accent-cyan: #00d9ff; --accent-green: #00ff9f; --accent-amber: #ffb020; --accent-red: #ff5470;
+            --border-color: #2d3748;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
+        }
+        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(25, 118, 210, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(0, 217, 255, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
+        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
+        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
+        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 50px; }
+        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
+        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hero .badge-row .badge { background: rgba(0, 217, 255, 0.1); color: var(--accent-cyan); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid rgba(0,217,255,0.2); }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.12; background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-2) 60%, var(--accent-green) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 780px; margin-bottom: 32px; }
+        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; text-align: center; }
+        .stat-card .number { font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-cyan)); color: white; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.25); } .btn-primary:hover { transform: translateY(-2px); color: white; }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+        section { padding: 56px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
+        .act-num { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
+        .section-title { font-size: 1.9rem; font-weight: 700; margin-bottom: 14px; color: var(--text-primary); }
+        .section-desc, .prose p { font-size: 1rem; color: var(--text-secondary); max-width: 760px; margin-bottom: 18px; }
+        .prose strong { color: var(--text-primary); }
+        .prose .lead { font-size: 1.12rem; color: var(--text-primary); }
+        .pullquote { border-left: 3px solid var(--accent-cyan); padding: 14px 22px; margin: 26px 0; background: rgba(0,217,255,0.04); border-radius: 0 8px 8px 0; font-size: 1.1rem; color: var(--text-primary); font-style: italic; max-width: 780px; }
+        .mermaid { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 22px; margin: 22px 0; text-align: center; overflow-x: auto; }
+        .figure { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin: 22px 0; }
+        .figure img { width: 100%; display: block; border-radius: 8px; }
+        .figure figcaption { color: var(--text-muted); font-size: 0.82rem; margin-top: 10px; text-align: center; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 22px 0; }
+        .gallery figure { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px; transition: border-color .2s, transform .2s; }
+        .gallery figure:hover { border-color: var(--accent-cyan); transform: translateY(-3px); }
+        .gallery img { width: 100%; border-radius: 6px; display: block; }
+        .gallery figcaption { text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 6px; font-family: var(--font-mono); }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; } @media(max-width:820px){ .two-col{ grid-template-columns:1fr; } }
+        .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin: 18px 0; }
+        .card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; transition: border-color .2s; }
+        .card:hover { border-color: rgba(0,217,255,0.4); }
+        .card .card-icon { font-size: 1.5rem; margin-bottom: 10px; }
+        .card h3 { font-size: 1.08rem; font-weight: 700; margin-bottom: 8px; }
+        .card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+        .eq-box { background: var(--bg-secondary); border: 1px solid var(--border-color); border-left: 3px solid var(--accent-green); border-radius: 8px; padding: 16px 20px; margin: 16px 0; overflow-x: auto; }
+        .eq-box .cap { color: var(--text-muted); font-size: 0.82rem; margin-top: 8px; }
+        pre[class*="language-"] { border-radius: 10px; border: 1px solid var(--border-color); font-size: 0.82rem; margin: 16px 0; }
+        .code-cap { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); margin: 16px 0 -8px; }
+        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin: 18px 0; }
+        .svc-table th { text-align: left; padding: 13px 18px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
+        .svc-table td { padding: 13px 18px; font-size: 0.88rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); vertical-align: top; }
+        .svc-table tr:last-child td { border-bottom: none; }
+        .svc-table code { font-family: var(--font-mono); font-size: 0.82rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
+        .card code, .section-desc code, .prose p code { font-family: var(--font-mono); font-size: 0.82rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 1px 5px; border-radius: 4px; }
+        .pass-banner { background: #0d1b17; border: 1px solid var(--accent-green); border-radius: 10px; padding: 16px 20px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary); white-space: pre; overflow-x: auto; margin: 20px 0; }
+        .pass-banner .ok { color: var(--accent-green); font-weight: 700; }
+        .callout { background: rgba(255,176,32,0.06); border: 1px solid rgba(255,176,32,0.3); border-radius: 10px; padding: 18px 22px; margin: 20px 0; }
+        .callout h4 { color: var(--accent-amber); font-size: 0.95rem; margin-bottom: 8px; }
+        .callout p { font-size: 0.9rem; color: var(--text-secondary); }
+        details.war { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; margin: 12px 0; overflow: hidden; }
+        details.war summary { padding: 16px 20px; cursor: pointer; font-weight: 600; color: var(--text-primary); list-style: none; display: flex; align-items: center; gap: 10px; }
+        details.war summary::-webkit-details-marker { display: none; }
+        details.war summary::before { content: '▸'; color: var(--accent-cyan); transition: transform .2s; }
+        details.war[open] summary::before { transform: rotate(90deg); }
+        details.war .body { padding: 0 20px 18px; color: var(--text-secondary); font-size: 0.9rem; }
+        details.war .body code { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-cyan); background: rgba(0,217,255,0.08); padding: 1px 5px; border-radius: 4px; }
+        .video-slot { position: relative; background: var(--bg-secondary); border: 1px dashed var(--border-color); border-radius: 12px; padding: 40px 24px; text-align: center; margin: 22px 0; }
+        .video-slot .soon { display:inline-block; background: rgba(0,217,255,0.1); color: var(--accent-cyan); border:1px solid rgba(0,217,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 12px; }
+        .pubs { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; margin: 20px 0; }
+        .pub-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; transition: border-color .2s, transform .2s; }
+        .pub-card:hover { border-color: var(--accent-cyan); transform: translateY(-3px); }
+        .pub-card .pub-title { font-weight: 700; color: var(--text-primary); font-size: 0.98rem; line-height: 1.4; margin-bottom: 8px; display: block; }
+        .pub-card .pub-authors { color: var(--text-secondary); font-size: 0.82rem; margin-bottom: 6px; }
+        .pub-card .pub-venue { color: var(--text-muted); font-size: 0.8rem; font-style: italic; }
+        .pub-card .pub-tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+        .pub-card .pub-tags span { font-size: 0.68rem; background: rgba(0,217,255,0.08); color: var(--accent-cyan); padding: 2px 8px; border-radius: 10px; }
+        .pub-list { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 8px 20px; margin-top: 16px; }
+        .pub-list .row { padding: 12px 0; border-bottom: 1px solid rgba(45,55,72,0.3); font-size: 0.9rem; }
+        .pub-list .row:last-child { border-bottom: none; }
+        .pub-list .row .yr { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; }
+        .har-widget-shell { margin: 24px 0; }
+        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
+        .disclaimer { color: var(--text-muted); font-size: 0.78rem; font-style: italic; margin-top: 8px; }
+        /* --- custom readable roadmap (replaces low-contrast mermaid timeline) --- */
+        .roadmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px 0; position: relative; }
+        .roadmap::before { content: ''; position: absolute; top: 10px; left: 8%; right: 8%; height: 2px; background: linear-gradient(90deg, var(--accent-1), var(--accent-cyan), var(--accent-amber), var(--accent-green)); opacity: 0.55; }
+        .roadmap-step { position: relative; }
+        .roadmap-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--c, var(--accent-cyan)); box-shadow: 0 0 12px var(--c, var(--accent-cyan)); margin: 0 auto 16px; border: 3px solid var(--bg-primary); position: relative; z-index: 1; }
+        .roadmap-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-top: 3px solid var(--c, var(--accent-cyan)); border-radius: 10px; padding: 16px; height: 100%; }
+        .roadmap-card h4 { color: var(--text-primary); font-size: 1rem; margin-bottom: 10px; }
+        .roadmap-card .when { color: var(--c, var(--accent-cyan)); font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+        .roadmap-card ul { list-style: none; padding: 0; margin: 0; }
+        .roadmap-card li { color: var(--text-secondary); font-size: 0.85rem; padding: 4px 0 4px 16px; position: relative; line-height: 1.5; }
+        .roadmap-card li::before { content: '▸'; color: var(--c, var(--accent-cyan)); position: absolute; left: 0; }
+        @media (max-width: 820px) { .roadmap { grid-template-columns: 1fr; } .roadmap::before { display: none; } }
+        /* --- click-to-zoom lightbox for diagrams & figures --- */
+        .zoomable { position: relative; cursor: zoom-in; }
+        .zoomable::after { content: '⤢ zoom'; position: absolute; top: 10px; right: 12px; font-size: 0.7rem; color: var(--text-secondary); background: rgba(10,14,20,0.82); border: 1px solid var(--border-color); border-radius: 6px; padding: 3px 9px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 3; }
+        .zoomable:hover::after { opacity: 1; }
+        .zoom-overlay { position: fixed; inset: 0; background: rgba(5,9,13,0.97); z-index: 1000; display: none; }
+        .zoom-overlay.open { display: block; }
+        .zoom-stage { position: absolute; inset: 0; overflow: hidden; cursor: grab; touch-action: none; }
+        .zoom-stage.grabbing { cursor: grabbing; }
+        .zoom-content { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; }
+        .zoom-content svg, .zoom-content img { display: block; max-width: none !important; width: 100%; height: 100%; }
+        .zoom-toolbar { position: fixed; top: 16px; right: 16px; display: flex; gap: 8px; z-index: 1002; }
+        .zoom-toolbar button { background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); min-width: 42px; height: 42px; padding: 0 10px; border-radius: 8px; font-size: 1.05rem; font-family: var(--font-mono); cursor: pointer; transition: 0.2s; }
+        .zoom-toolbar button:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .zoom-caption { position: fixed; bottom: 14px; left: 0; right: 0; text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 0 20px; pointer-events: none; z-index: 1001; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .cards, .pubs { grid-template-columns: 1fr; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="versal-ethernet.html">Versal Ethernet</a><a href="#build">Build</a><a href="#live">Live Demo</a></div></div></nav>
+
+<header class="hero">
+    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#page-3">Projects</a> → WiFi HAR on Versal AI Engine</div>
+    <div class="badge-row">
+        <span class="badge">Versal ACAP</span>
+        <span class="badge">AI Engine</span>
+        <span class="badge">WiFi CSI</span>
+        <span class="badge">nexmon</span>
+        <span class="badge">PetaLinux</span>
+        <span class="badge">Edge AI</span>
+    </div>
+    <h1>Seeing Through Walls: WiFi Human-Activity Recognition on the Versal AI Engine</h1>
+    <p class="subtitle">
+        A weekend hardware/software co-design that streams WiFi <strong>Channel-State-Information (CSI)</strong>
+        from a Raspberry Pi into an AMD <strong>Versal VCK190</strong>, parses the UDP/CSI packets in the
+        <strong>Programmable Logic</strong>, and runs the STFT + activity / breathing / fall feature
+        extraction on the <strong>AI Engine array</strong> — turning ordinary WiFi into a device-free room sensor.
+        Validated <strong>bit-accurate on real silicon</strong>.
+    </p>
+    <div class="stat-bar">
+        <div class="stat-card"><div class="number">5.96e-08</div><div class="label">max abs err vs golden</div></div>
+        <div class="stat-card"><div class="number">3-branch</div><div class="label">AIE feature graph</div></div>
+        <div class="stat-card"><div class="number">L = 256</div><div class="label">sample window</div></div>
+        <div class="stat-card"><div class="number">4 ILAs</div><div class="label">on the live datapath</div></div>
+        <div class="stat-card"><div class="number">10+</div><div class="label">related publications</div></div>
+    </div>
+    <div class="cta-row">
+        <a href="#live" class="btn btn-primary">▶ See it live</a>
+        <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL" target="_blank" class="btn btn-outline">GitHub Repository</a>
+        <a href="https://scholarsjunction.msstate.edu/td/6097/" target="_blank" class="btn btn-outline">Read the Thesis →</a>
+    </div>
+</header>
+
+<!-- ========================= ACT 1 — ORIGINS ========================= -->
+<section id="origins">
+    <div class="container prose">
+        <div class="act-num">Act 1 — Origins</div>
+        <div class="section-title">It started as a thesis</div>
+        <p class="lead">
+            My ECE Master's at Mississippi State University was in <strong>software-defined-radio (SDR) based sensing</strong>.
+            One project asked a deceptively simple question: <em>can an ordinary WiFi signal tell what a person is doing in a room?</em>
+        </p>
+        <p>
+            The answer is yes — and it comes from <strong>Channel-State-Information (CSI)</strong>. Every OFDM WiFi
+            receiver estimates how the channel distorted each subcarrier. When a body moves, the multipath
+            reflections change, and those changes carry a signature of the motion. I built a WiFi-CSI human-activity
+            recognition (HAR) pipeline, benchmarked it against a <strong>radar</strong> sensing baseline for accuracy,
+            and published the results across several papers (see <a href="#publications">Publications</a>).
+        </p>
+        <p>
+            The visual heart of that work is the <strong>spectrogram</strong>: take the Short-Time Fourier Transform of
+            the CSI time series and each activity paints a distinct time–frequency fingerprint. These are real CSI
+            spectrograms from the dataset — one per activity class:
+        </p>
+        <div class="gallery">
+            <figure><img src="../images/wifi-har/spectrograms/Walk.png" alt="Walk CSI spectrogram" loading="lazy"><figcaption>Walk</figcaption></figure>
+            <figure><img src="../images/wifi-har/spectrograms/Run.png" alt="Run CSI spectrogram" loading="lazy"><figcaption>Run</figcaption></figure>
+            <figure><img src="../images/wifi-har/spectrograms/Fall.png" alt="Fall CSI spectrogram" loading="lazy"><figcaption>Fall</figcaption></figure>
+            <figure><img src="../images/wifi-har/spectrograms/Sitdown.png" alt="Sit-down CSI spectrogram" loading="lazy"><figcaption>Sit down</figcaption></figure>
+            <figure><img src="../images/wifi-har/spectrograms/Standup.png" alt="Stand-up CSI spectrogram" loading="lazy"><figcaption>Stand up</figcaption></figure>
+            <figure><img src="../images/wifi-har/spectrograms/Pickup.png" alt="Pick-up CSI spectrogram" loading="lazy"><figcaption>Pick up</figcaption></figure>
+            <figure><img src="../images/wifi-har/spectrograms/LieDown.png" alt="Lie-down CSI spectrogram" loading="lazy"><figcaption>Lie down</figcaption></figure>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= ACT 2 — THE CHALLENGE ========================= -->
+<section id="challenge">
+    <div class="container prose">
+        <div class="act-num">Act 2 — A gentle challenge</div>
+        <div class="section-title">"You could try to do this in an FPGA"</div>
+        <p>
+            When I presented that thesis to a former manager, they gently suggested that the whole pipeline could,
+            one day, run <strong>in an FPGA</strong> — the packet parsing in fabric, the heavy DSP and inference on
+            an accelerator. It was said kindly, almost in passing. But it lodged in my head as a personal challenge
+            I promised myself I'd take on someday.
+        </p>
+        <div class="pullquote">
+            "Someday" meant: get the CSI off the CPU entirely — parse the UDP packet in the Programmable Logic,
+            and let a Versal AI Engine do the STFT and the activity inference.
+        </div>
+        <p>The napkin sketch of that idea looked like this:</p>
+        <div class="mermaid">
+flowchart LR
+    PI["WiFi CSI source"] -->|UDP over Ethernet| FPGA
+    subgraph FPGA["FPGA — do it all here"]
+      PL["PL: parse packets"] --> ACC["AI Engine: STFT + inference"]
+    end
+    ACC --> OUT["activity / breathing / fall"]
+        </div>
+    </div>
+</section>
+
+<!-- ========================= ACT 3 — PICKING IT BACK UP ========================= -->
+<section id="timeline">
+    <div class="container prose">
+        <div class="act-num">Act 3 — Picking it back up</div>
+        <div class="section-title">From the shelf to silicon</div>
+        <p>
+            The idea sat on the shelf while life moved on. What finally unblocked it was hardware and time: a
+            <strong>VCK190</strong> on the bench and a run of weekends and evenings. Modern tooling — and, honestly,
+            LLMs for grinding through the deep Versal tool-flow issues — made a solo build of this scope tractable.
+        </p>
+        <div class="roadmap">
+            <div class="roadmap-step" style="--c: var(--accent-1);">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-card">
+                    <span class="when">The origin</span>
+                    <h4>Master's thesis</h4>
+                    <ul>
+                        <li>WiFi-CSI human-activity recognition</li>
+                        <li>benchmarked against radar</li>
+                        <li>published papers</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="roadmap-step" style="--c: var(--accent-cyan);">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-card">
+                    <span class="when">The nudge</span>
+                    <h4>The challenge</h4>
+                    <ul>
+                        <li>a gentle "do it in an FPGA"</li>
+                        <li>filed away as a someday goal</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="roadmap-step" style="--c: var(--accent-amber);">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-card">
+                    <span class="when">The pause</span>
+                    <h4>Shelved</h4>
+                    <ul>
+                        <li>other priorities</li>
+                        <li>idea kept warm</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="roadmap-step" style="--c: var(--accent-green);">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-card">
+                    <span class="when">The rebirth</span>
+                    <h4>VCK190</h4>
+                    <ul>
+                        <li>PL UDP/CSI parser</li>
+                        <li>AIE feature graph</li>
+                        <li>bit-accurate on silicon</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= ACT 4 — REBIRTH ========================= -->
+<section id="rebirth">
+    <div class="container prose">
+        <div class="act-num">Act 4 — The rebirth</div>
+        <div class="section-title">The thesis, now implemented in an FPGA</div>
+        <p>
+            The pipeline now runs on real hardware. A Raspberry Pi running the <strong>nexmon_csi</strong> firmware
+            patch turns its WiFi chip into a CSI sensor and packetizes CSI as UDP over Ethernet. That stream enters
+            the VCK190 over an <strong>SFP</strong> link; the <strong>PL</strong> parses the UDP/CSI packet and streams
+            the I/Q samples straight into the <strong>AI Engine</strong>, which computes the motion, breathing and
+            phase-variance features. Only the compact results cross into Linux on the Arm cores, where an on-board
+            web dashboard renders what's happening in the room.
+        </p>
+        <div class="two-col">
+            <figure class="figure" style="margin:0;">
+                <img src="../images/wifi-har/board/vck190.avif" alt="AMD Versal VCK190 evaluation board">
+                <figcaption>The AMD Versal VCK190 — Arm Cortex-A72 PS, Programmable Logic, and the AI Engine array on one ACAP.</figcaption>
+            </figure>
+            <div>
+                <p style="margin-top:0;">Why this device is the right fit:</p>
+                <ul style="color:var(--text-secondary); font-size:0.92rem; padding-left:20px; line-height:1.8;">
+                    <li><strong>PL</strong> streams and parses the Ethernet/UDP packet at line rate.</li>
+                    <li>The <strong>AI Engine</strong> is a vector-VLIW array built for FFTs and MAC-heavy DSP — exactly the CSI workload.</li>
+                    <li>The <strong>NoC + DDR</strong> and <strong>Arm PS</strong> handle results and visualization.</li>
+                    <li>It's a single-chip <strong>edge</strong> sensor: no PC in the loop.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= ACT 5 — HOW IT WORKS ========================= -->
+<section id="system">
+    <div class="container prose">
+        <div class="act-num">Act 5 — How it actually works</div>
+        <div class="section-title">End-to-end dataflow</div>
+        <p>
+            The full path from WiFi chip to browser. Raw CSI (hundreds of KB/s) never touches the CPU in the target
+            design — only the tiny feature/label vector is DMA'd to Linux. <em style="color:var(--text-muted);">Click any diagram to open it fullscreen and zoom / pan.</em>
+        </p>
+        <div class="mermaid">
+flowchart LR
+  subgraph PI["Raspberry Pi — nexmon_csi"]
+    W["WiFi NIC<br/>bcm43455c0"] --> CAP["CSI extractor"] --> UDP["UDP packetizer"]
+  end
+  UDP -->|"UDP/IP over 1000BASE-X"| SFP["SFP0"]
+  subgraph VCK190["AMD Versal VCK190"]
+    SFP --> GT["GTY + PCS/PMA"] --> MAC["Ethernet MAC"]
+    MAC --> P["PL: csi_udp_parser<br/>strip UDP → I/Q stream"]
+    P --> MUX["csi_mux"] --> AIE
+    subgraph AIE["AI Engine — feature_graph"]
+      FIR["FIR band-pass"] --> ST["stats<br/>mean / var / power"]
+      DFT["windowed-DFT<br/>STFT magnitude"]
+      PH["phase-var<br/>stats"]
+    end
+    AIE --> S2MM["s2mm DMA"] --> DDR[("DDR4 via NoC")]
+    DDR --> A72["Arm A72 · PetaLinux"]
+    A72 --> DASH["live_dashboard.py<br/>SSE web UI"]
+  end
+  DASH --> BROWSER["any browser on the LAN"]
+        </div>
+    </div>
+
+    <!-- 5b PHYSICS -->
+    <div class="container prose" style="margin-top:40px;">
+        <div class="section-label">The Physics</div>
+        <div class="section-title">Why WiFi can see you</div>
+        <p>
+            No camera, no wearable, often through a wall. The trick is that <strong>your body is part of the radio
+            channel</strong>. Here is the intuition, in four steps.
+        </p>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">📡</div>
+                <h3>1. CSI is the channel's fingerprint</h3>
+                <p>An OFDM receiver estimates, per subcarrier <em>k</em>, a complex response — amplitude and phase of how the signal arrived. nexmon_csi exposes this vector every packet.</p>
+                <div class="eq-box" style="margin-top:10px;">$$H[k] = |H[k]|\,e^{\,j\angle H[k]}$$</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">🧍</div>
+                <h3>2. You perturb the multipath</h3>
+                <p>The receiver sums many rays: line-of-sight plus reflections off walls, furniture — and you. Move, and the reflected path length changes, rotating its phase and reshaping the summed <em>H[k]</em> over time.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🌊</div>
+                <h3>3. Motion → Doppler</h3>
+                <p>A body part moving at velocity <em>v</em> imparts a Doppler shift. Different activities have different velocity signatures, so the STFT separates walking from falling from sitting.</p>
+                <div class="eq-box" style="margin-top:10px;">$$f_d = \frac{2v}{\lambda}, \quad \lambda \approx 12.5\,\text{cm at 2.4 GHz}$$</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">🫁</div>
+                <h3>4. Breathing → slow phase tone</h3>
+                <p>The chest wall moves millimeters at ~0.2–0.4 Hz. That appears as a narrow low-frequency tone in the CSI — the basis of the breathing branch.</p>
+            </div>
+        </div>
+        <p style="margin-top:20px;">
+            <strong>Why STFT.</strong> Activities are non-stationary, so we take the Short-Time Fourier Transform of the
+            CSI time series — window, DFT, magnitude — producing the time–frequency spectrograms you saw in Act 1.
+            (This directly builds on my paper <a href="https://doi.org/10.1117/12.2587664" target="_blank"><em>Effect of the Short-Time Fourier Transform on the Classification of Complex-Valued Mobile Signals</em></a>.)
+        </p>
+        <div class="eq-box">
+            $$X[m,\,\omega] = \sum_{n} x[n]\,w[n-mR]\,e^{-j\omega n}$$
+            <div class="cap">The windowed DFT: <span style="font-family:var(--font-mono)">w</span> is the analysis window, <span style="font-family:var(--font-mono)">R</span> the hop. The AI Engine computes the magnitude of this per window.</div>
+        </div>
+        <div class="callout">
+            <h4>WiFi vs. radar — the thesis comparison</h4>
+            <p>Radar is dedicated, high-bandwidth and precise, but it's extra hardware. WiFi CSI <strong>reuses ubiquitous
+            infrastructure</strong>: it's device-free, works in the dark and through walls, and is privacy-preserving (no
+            imagery). My thesis and our <a href="https://doi.org/10.1109/RadarConf2458775.2024.10548515" target="_blank">RadarConf 2024
+            paper comparing Wi-Fi-CSI and radar-based HAR</a> quantified that accuracy trade-off — the motivation for pushing the
+            WiFi pipeline all the way onto an edge accelerator here.</p>
+        </div>
+    </div>
+
+    <!-- 5c PL PARSER + BD -->
+    <div class="container prose" style="margin-top:40px;">
+        <div class="section-label">Programmable Logic</div>
+        <div class="section-title">Parsing UDP/CSI in the fabric</div>
+        <p>
+            In the target architecture the PL owns the packet. RX frames enter as an <strong>AXI4-Stream</strong>; a
+            custom <code style="font-family:var(--font-mono);color:var(--accent-cyan)">csi_udp_parser</code> (Vitis HLS)
+            filters the CSI UDP port, strips the Ethernet/IP/UDP headers, extracts the I/Q payload, and streams samples
+            through a <code style="font-family:var(--font-mono);color:var(--accent-cyan)">csi_mux</code> straight into the
+            AI Engine. This is the real Vivado block design that was built and run on the board:
+        </p>
+        <figure class="figure">
+            <img src="../images/wifi-har/diagrams/vitis_design_bd.png" alt="Vivado block design: Ethernet → csi_udp_parser → csi_mux → AI Engine → DMA → NoC/DDR" onerror="this.closest('figure').style.display='none'">
+            <figcaption>Vivado IP-Integrator block design — Ethernet (GT + PCS/PMA + MAC) → <code>csi_udp_parser</code> → <code>csi_mux</code> → <code>ai_engine</code> → <code>s2mm</code> DMA → NoC → DDR4. Exported with <code>write_bd_layout</code> from the built project.</figcaption>
+        </figure>
+        <p>A simplified view of the same PL datapath, for reference:</p>
+        <div class="mermaid">
+flowchart LR
+  MAC["Ethernet MAC"] --> RXW["rx_dwidth<br/>(width conv.)"]
+  RXW --> PAR["csi_udp_parser<br/>(HLS)"]
+  PAR --> MUX["csi_mux"]
+  MUX --> SHIM["AIE ↔ PL shim<br/>(v++ co-generated)"]
+  SHIM --> AIE["ai_engine_0"]
+  AIE --> S2MM["s2mm"] --> NOC["NoC"] --> DDR[("DDR4")]
+        </div>
+    </div>
+
+    <!-- 5d AIE FEATURE GRAPH -->
+    <div class="container prose" style="margin-top:40px;">
+        <div class="section-label">AI Engine</div>
+        <div class="section-title">The feature graph, kernel by kernel</div>
+        <p>
+            The AI Engine runs a <strong>three-branch feature graph</strong>. Each branch maps directly to a piece of
+            the physics above, and every kernel is a small streaming function connected window-to-window over PLIO:
+        </p>
+        <div class="mermaid">
+flowchart TB
+  IN["PLIO_in<br/>CSI window (BLOCK)"] --> FIR["kfir: FIR band-pass"] --> STA["kstats: mean/var/power"] --> O1["PLIO_out<br/>motion {mean,var,power}"]
+  BIN["PLIO_brt_in<br/>N samples"] --> DFT["kdft: windowed-DFT magnitude"] --> O2["PLIO_brt_out<br/>NB breathing bins"]
+  PIN["PLIO_phase_in<br/>L phase samples"] --> PHA["kphase: stats"] --> O3["PLIO_phase_out<br/>phase-var {mean,var,power}"]
+        </div>
+        <table class="svc-table">
+            <thead><tr><th>Branch</th><th>Kernel chain</th><th>Output</th><th>Physical meaning</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Motion</strong></td><td><code>FIR band-pass → stats</code></td><td><code>{mean, var, power}</code></td><td>band-limit to the human-motion Doppler band, then measure energy → presence / activity intensity</td></tr>
+                <tr><td><strong>Breathing</strong></td><td>windowed-<code>DFT</code> magnitude</td><td><code>NB</code> bins</td><td>STFT bin near 0.2–0.4 Hz → respiration rate</td></tr>
+                <tr><td><strong>Phase-var</strong></td><td><code>stats</code></td><td><code>{mean, var, power}</code></td><td>phase variance → micro-motion / stability, feeds fall detection</td></tr>
+            </tbody>
+        </table>
+        <p>The graph wiring is pure ADF — kernels connected stream-to-stream on the array:</p>
+        <div class="code-cap">aie/src/graph.cpp — the three-branch feature graph</div>
+<pre><code class="language-cpp">// motion branch: FIR band-pass -> stats (kernel-to-kernel)
+connect&lt;&gt;(in.out[0],    kfir.in[0]);
+connect&lt;&gt;(kfir.out[0],  kstats.in[0]);
+connect&lt;&gt;(kstats.out[0], out.in[0]);
+// breathing branch: windowed-DFT magnitude
+connect&lt;&gt;(brt_in.out[0], kdft.in[0]);
+connect&lt;&gt;(kdft.out[0],   brt_out.in[0]);
+// phase-variance branch: stats -> variance is the phase-var feature
+connect&lt;&gt;(phase_in.out[0], kphase.in[0]);
+connect&lt;&gt;(kphase.out[0],   phase_out.in[0]);</code></pre>
+        <div class="code-cap">aie/src/stats_core.h — two-pass mean / variance / power over one window</div>
+<pre><code class="language-c">static inline void stats_core(const float *x, float *out) {
+    float s = 0.0f;
+    for (int i = 0; i &lt; L; i++) s += x[i];
+    float mean = s / (float)L;
+    float sd = 0.0f, s2 = 0.0f;
+    for (int i = 0; i &lt; L; i++) {
+        float d = x[i] - mean;
+        sd += d * d;
+        s2 += x[i] * x[i];
+    }
+    out[0] = mean;          // DC / bias
+    out[1] = sd / (float)L; // variance  == motion-band / phase-var energy
+    out[2] = s2 / (float)L; // power
+}</code></pre>
+        <p>
+            The compact feature vector then feeds a tiny pretrained MLP for the activity label. The design does hand-written
+            AIE kernels here; the vector-VLIW array chews through the FIR taps and DFT butterflies far faster than the scalar
+            A72 could — which is the whole point of the offload.
+        </p>
+        <div class="callout">
+            <h4>The subtle bug that cost the most: the AIE ↔ PL shim</h4>
+            <p>A plain Vivado block design that wires a PL stream into the AI Engine's <code>S00_AXIS</code> <strong>stalls on
+            silicon</strong> — <code>TREADY</code> never asserts. The reason: a hand-built BD does not emit the paired AIE↔PL
+            <em>shim solution</em> that the graph's PLIO placement requires. The binding must be <strong>co-generated by
+            <code>v++ --link</code></strong>. The fix inserts the PL stream on v++'s own post-SysLink block design via an
+            overlay hook, leaving <code>ai_engine_0</code> untouched so the correct shim solution is preserved.</p>
+        </div>
+    </div>
+
+    <!-- 5e ILA PROOF -->
+    <div class="container prose" style="margin-top:40px;">
+        <div class="section-label">Proof on silicon</div>
+        <div class="section-title">Integrated Logic Analyzer captures</div>
+        <p>
+            Talk is cheap — here is the datapath caught in the act on a real VCK190 (board <em>chanterelle10</em>). Four
+            ILA taps were inserted on the live pipeline via the Versal debug automation: <strong>ETH_RX</strong> (nexmon
+            UDP bytes), <strong>CSI_PARSED</strong> (parser output), <strong>AIE_IN</strong> (mux → AI Engine) and
+            <strong>AIE_OUT</strong> (AIE features → DMA).
+        </p>
+        <figure class="figure">
+            <img src="../images/wifi-har/ila/ila_tap_map.png" alt="ILA tap map across the four datapath probes">
+            <figcaption>Where each ILA tap carries valid data during a capture. AIE_IN and AIE_OUT are active; ETH_RX / CSI_PARSED light up on the live-Pi path.</figcaption>
+        </figure>
+        <figure class="figure">
+            <img src="../images/wifi-har/ila/ila_aie_in.png" alt="256-sample WiFi CSI window entering the AI Engine, captured on ILA">
+            <figcaption>The <strong>AIE_IN</strong> tap: 256 real WiFi-CSI samples streaming into the AI Engine, one AXI4-Stream beat each (float32, e.g. <code>0x3f0ec77a</code> = 0.558).</figcaption>
+        </figure>
+        <figure class="figure">
+            <img src="../images/wifi-har/ila/ila_aie_out.png" alt="AI Engine feature output matching the golden model">
+            <figcaption>The <strong>AIE_OUT</strong> tap: the three feature values the AI Engine computed for that window — bit-identical to the software golden model.</figcaption>
+        </figure>
+        <p>The end-to-end numerical check, on hardware:</p>
+        <div class="pass-banner">AIE result: mean=-0.002065 var=0.302189 power=0.302193
+golden:     mean=-0.002065 var=0.302189 power=0.302193
+<span class="ok">max_abs_err=5.96e-08 -> PASS</span></div>
+    </div>
+</section>
+
+<!-- ========================= ACT 6 — LIVE ========================= -->
+<section id="live">
+    <div class="container prose">
+        <div class="act-num">Act 6 — See it live</div>
+        <div class="section-title">A room, sensed in real time</div>
+        <p>
+            The VCK190 serves its own dashboard (pure-Python, standard-library only, no CDN — it runs on a bare
+            PetaLinux rootfs). It consumes the AI Engine feature groups and derives presence, activity, breathing rate
+            and fall alerts — and renders a <strong>live CSI spectrogram</strong> by stacking the streamed
+            <code>brt[33]</code> windowed-DFT magnitude vectors over time (the same STFT view from Act 1, now updating in
+            real time). Below is that dashboard's logic, replaying a representative feature stream right in your
+            browser — <strong>empty room → someone walks in → sits and breathes → a fall → stillness</strong>:
+        </p>
+        <div class="har-widget-shell">
+            <div id="har-dashboard">loading live replay…</div>
+        </div>
+        <p class="disclaimer">
+            The widget above is a representative feature-stream replay running the same metrics and thresholds as the
+            on-board dashboard — it is not a live capture. On the board, these tiles update from live AI-Engine features.
+        </p>
+
+        <div class="section-title" style="margin-top:40px;">Live demo video</div>
+        <div class="video-slot">
+            <span class="soon">COMING SOON</span>
+            <p style="color:var(--text-secondary);">A full live demo — Raspberry Pi streaming CSI into the VCK190, the room being sensed in real time — is being recorded. Until then, the interactive dashboard above is the teaser.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= ENGINEERING WAR-STORIES ========================= -->
+<section id="warstories">
+    <div class="container prose">
+        <div class="section-label">Engineering</div>
+        <div class="section-title">War-stories: the bugs worth remembering</div>
+        <p>The gap between "works in simulation" and "works on silicon" was where the real engineering happened. A few that cost days:</p>
+
+        <details class="war">
+            <summary>The AIE ↔ PL shim must be co-generated by v++</summary>
+            <div class="body">A hand-built Vivado BD wiring a PL stream into <code>S00_AXIS</code> stalls — <code>TREADY</code> never asserts — because it lacks the v++-generated shim solution (<code>aieshim_solution.aiesol</code> / <code>aie_pl_intf.json</code>) the PLIO placement requires. Fix: insert the PL stream on v++'s own post-SysLink BD through an overlay hook, leaving <code>ai_engine_0</code> untouched. The resulting XSA carries the full shim solution and the DDR → mm2s → AIE → s2mm → DDR stream is bit-accurate on silicon.</div>
+        </details>
+
+        <details class="war">
+            <summary>The debug build crashed the placer — an unplaced GT quad</summary>
+            <div class="body">Adding the ILA debug cores crashed <code>place_design</code> in "Phase 5.1 Post Place Optimization". Root cause wasn't the ILAs alone: the co-generated Ethernet GT quad was left <em>unplaced</em> (the external SFP ports aren't top-level accessible under v++, and the OOC <code>gt_quad</code> can't be LOC'd from a top XDC). Fix: an implementation <code>OPT_DESIGN.TCL.POST</code> hook (<code>gtloc_hook.tcl</code>) LOCs the leaf cells after link — <code>quad_inst → GTY_QUAD_X0Y5</code>, <code>IBUFDS_GTE5 → GTY_REFCLK_X0Y10</code>. With both placed, place + route + <code>write_device_image</code> all pass.</div>
+        </details>
+
+        <details class="war">
+            <summary>Three integration fixes to make the AIE actually run under Linux</summary>
+            <div class="body">The SDT/PetaLinux flow doesn't wire everything the AI Engine needs, so three patches were required: (1) add <code>interrupts-extended</code> (the CU IRQs) to the <code>zocl</code> / <code>zyxclmm_drm</code> device-tree node; (2) bake the <code>aie_image</code> graph CDO into <code>BOOT.BIN</code>; (3) drop <code>graph.wait()</code> in the host, because the packaged CDO free-runs the graph — you drain <code>s2mm</code> instead.</div>
+        </details>
+
+        <details class="war">
+            <summary>The Ethernet image boots — it was a timing race, not a dead board</summary>
+            <div class="body">The larger Ethernet PDI appeared to hang PS Linux, but u-boot was actually fine: the failure was a race where u-boot auto-booted before the ~251 MB initramfs finished downloading over JTAG. Deterministic fix: interrupt u-boot autoboot over the console, download <code>Image</code> / <code>boot.scr</code> / dtb / rootfs, then <code>booti</code>. With that, the eth image boots Linux 6.12.40 and its ILAs capture live data end-to-end.</div>
+        </details>
+    </div>
+</section>
+
+<!-- ========================= TECH STACK ========================= -->
+<section id="stack">
+    <div class="container">
+        <div class="section-label">Stack</div>
+        <div class="section-title">Technology &amp; Tools</div>
+        <table class="svc-table">
+            <thead><tr><th>Layer</th><th>Technology</th><th>Role</th></tr></thead>
+            <tbody>
+                <tr><td>CSI source</td><td><code>Raspberry Pi + nexmon_csi</code></td><td>WiFi NIC → per-packet CSI → UDP</td></tr>
+                <tr><td>Link</td><td><code>1000BASE-X SFP</code></td><td>Pi Ethernet → VCK190 GTY</td></tr>
+                <tr><td>Device</td><td><code>AMD Versal VCK190</code></td><td>PS (A72) + PL + AI Engine ACAP</td></tr>
+                <tr><td>Packet parse</td><td><code>Vitis HLS csi_udp_parser</code></td><td>UDP/CSI depacketize in PL</td></tr>
+                <tr><td>DSP + inference</td><td><code>AI Engine (ADF graph)</code></td><td>FIR / DFT / stats feature extraction</td></tr>
+                <tr><td>Data movement</td><td><code>mm2s / s2mm + NoC + DDR4</code></td><td>PLIO ↔ DDR, results to PS</td></tr>
+                <tr><td>Tools</td><td><code>Vivado / Vitis 2025.2</code></td><td>synth, AIE compiler, v++ link</td></tr>
+                <tr><td>Embedded OS</td><td><code>PetaLinux 2025.2 + XRT</code></td><td>A72 Linux, board host app</td></tr>
+                <tr><td>Visualization</td><td><code>Python stdlib SSE dashboard</code></td><td>on-board live web UI</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ========================= PUBLICATIONS ========================= -->
+<section id="publications">
+    <div class="container">
+        <div class="section-label">Prior Work</div>
+        <div class="section-title">Publications</div>
+        <p class="section-desc">The research this build stands on. Full profile on <a href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" target="_blank">Google Scholar</a>.</p>
+        <div class="pubs">
+            <div class="pub-card">
+                <a class="pub-title" href="https://scholarsjunction.msstate.edu/td/6097/" target="_blank">Software Defined Radio (SDR) Based Sensing — Master's Thesis</a>
+                <div class="pub-authors">Ajaya Dahal · Advisor: Ali C. Gurbuz</div>
+                <div class="pub-venue">M.S. Electrical &amp; Computer Engineering, Mississippi State University · 2024</div>
+                <div class="pub-tags"><span>SDR</span><span>WiFi CSI</span><span>Radar</span><span>HAR</span></div>
+            </div>
+            <div class="pub-card">
+                <a class="pub-title" href="https://doi.org/10.1109/RadarConf2458775.2024.10548515" target="_blank">Comparison Between Wi-Fi-CSI and Radar-Based HAR</a>
+                <div class="pub-authors">A. Dahal, S. Biswas, S. Z. Gurbuz, A. C. Gurbuz</div>
+                <div class="pub-venue">IEEE International Radar Conference (RadarConf) · 2024 · doi:10.1109/RadarConf2458775.2024.10548515</div>
+                <div class="pub-tags"><span>WiFi vs Radar</span><span>HAR</span><span>CSI</span></div>
+            </div>
+            <div class="pub-card">
+                <a class="pub-title" href="https://doi.org/10.1117/12.3014010" target="_blank">Robustness Analysis of Wi-Fi-Based Human Activity Recognition</a>
+                <div class="pub-authors">A. Dahal, S. Biswas, S. Z. Gurbuz, A. C. Gurbuz</div>
+                <div class="pub-venue">Proc. SPIE 13036, Defense + Commercial Sensing · 2024 · doi:10.1117/12.3014010</div>
+                <div class="pub-tags"><span>HAR</span><span>WiFi CSI</span><span>Robustness</span></div>
+            </div>
+            <div class="pub-card">
+                <a class="pub-title" href="https://doi.org/10.1117/12.2618717" target="_blank">Wi-Fi Fingerprinting Based Room-Level Classification: Combining STFT and Imbalanced Learning</a>
+                <div class="pub-authors">F. Islam, J. Farmer, A. Dahal, B. Tang, J. E. Ball, M. Young</div>
+                <div class="pub-venue">Proc. SPIE 12122, Defense + Commercial Sensing · 2022 · doi:10.1117/12.2618717</div>
+                <div class="pub-tags"><span>STFT</span><span>Localization</span><span>ML</span></div>
+            </div>
+            <div class="pub-card">
+                <a class="pub-title" href="https://doi.org/10.1117/12.2587664" target="_blank">Effect of the Short-Time Fourier Transform on the Classification of Complex-Valued Mobile Signals</a>
+                <div class="pub-authors">L. Smith, N. Smith, S. Kodipaka, A. Dahal, B. Tang, J. E. Ball, M. Young</div>
+                <div class="pub-venue">Proc. SPIE 11756, Defense + Commercial Sensing · 2021 · doi:10.1117/12.2587664</div>
+                <div class="pub-tags"><span>STFT</span><span>Complex-valued</span></div>
+            </div>
+            <div class="pub-card">
+                <a class="pub-title" href="https://doi.org/10.1117/12.2587679" target="_blank">Real-Time Location Fingerprinting for Mobile Devices in an Indoor Setting</a>
+                <div class="pub-authors">N. Smith, L. Smith, S. Kodipaka, A. Dahal, B. Tang, J. E. Ball, M. Young</div>
+                <div class="pub-venue">Proc. SPIE 11756, Defense + Commercial Sensing · 2021 · doi:10.1117/12.2587679</div>
+                <div class="pub-tags"><span>Localization</span><span>Fingerprinting</span></div>
+            </div>
+        </div>
+        <div class="pub-list">
+            <div class="row"><a href="https://doi.org/10.1109/NAECON61878.2024.10670353" target="_blank">Automatic Waveform Recognition from Complex RF Data with Filter-Based Deep Learning</a> — B. Hicks, S. Biswas, A. Dahal, V. González, A. C. Gurbuz · NAECON <span class="yr">2024</span></div>
+            <div class="row"><a href="https://doi.org/10.1109/DCOSS54816.2022.00078" target="_blank">Software Radio with MATLAB Toolbox for 5G NR Waveform Generation</a> — W. AlQwider, A. Dahal, V. Marojevic · DCOSS <span class="yr">2022</span></div>
+            <div class="row"><a href="https://ieeexplore.ieee.org/document/9681830" target="_blank">Open-Source Software Radio Platform for Research on Cellular Networked UAVs: It Works!</a> — V. Marojevic et al. · IEEE Communications Magazine <span class="yr">2022</span></div>
+            <div class="row"><a href="https://doi.org/10.1117/12.2587652" target="_blank">RGB Pixel-Block Point-Cloud Fusion for Object Detection</a> — J. E. Ball, A. Dahal et al. · Proc. SPIE 11748 <span class="yr">2021</span></div>
+            <div class="row"><a href="https://doi.org/10.1117/12.2587525" target="_blank">Adversarial Indoor Signal Detection</a> — S. Kodipaka, A. Dahal, L. Smith, N. Smith, B. Tang, J. E. Ball, M. Young · Proc. SPIE 11756 <span class="yr">2021</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= BUILD IT YOURSELF ========================= -->
+<section id="build">
+    <div class="container">
+        <div class="section-label">Reproduce it</div>
+        <div class="section-title">Build it yourself</div>
+        <p class="section-desc">
+            The whole project is open source. I've deliberately made it turnkey — a single
+            <code>project_top.tcl</code> rebuilds the Vivado design end-to-end, and the tracked
+            <code>petalinux/</code> project directory has everything you need to build the Linux image for the board.
+        </p>
+        <div class="callout" style="border-color: rgba(0,217,255,0.3); background: rgba(0,217,255,0.05);">
+            <h4 style="color: var(--accent-cyan);">Fully reproducible builds — a standard I hold on every reference design</h4>
+            <p>
+                Reproducibility isn't an afterthought here; it's how I ship. Across all of my reference designs the
+                <strong>entire Vivado project rebuilds from a single tracked TCL script</strong> and the
+                <strong>PetaLinux image from a tracked <code>project-spec</code></strong> — no GUI click-throughs, no
+                undocumented state, so anyone can clone the repo and rebuild it bit-for-bit. You'll find the exact same
+                discipline in my
+                <a href="https://github.com/ajayadaha1/Versal-Ethernet" target="_blank">Versal Ethernet</a> and
+                <a href="https://github.com/ajayadaha1/ZCU102-Ethernet" target="_blank">ZCU102 Ethernet</a>
+                reference designs. It's the same production-grade, source-controlled methodology I apply to the AMD
+                reference designs I author professionally.
+            </p>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">🧩</div>
+                <h3>One-command Vivado build</h3>
+                <p><code>hw/scripts/project_top.tcl</code> conveniently builds the inline Vivado project (Ethernet → <code>csi_udp_parser</code> → AI Engine → DMA) into an XSA end-to-end — no manual block-design wiring.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🐧</div>
+                <h3>Ready-to-build PetaLinux</h3>
+                <p>The <code>petalinux/</code> directory ships the full <code>project-spec/</code> (recipes + configs), the SDT flow, and the boot / rootfs bring-up scripts — everything needed to build and boot this project on the VCK190.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚙️</div>
+                <h3>AIE graph + HLS parser</h3>
+                <p>The AI Engine feature graph (<code>aie/</code>), the Vitis HLS UDP/CSI parser (<code>hls/</code>), the v++ co-generation flow and the on-board dashboard (<code>live/</code>) are all in the repo, with a phase-by-phase build log in <code>docs/</code>.</p>
+            </div>
+        </div>
+        <div class="cta-row" style="margin-top:24px;">
+            <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL" target="_blank" class="btn btn-primary">⭐ Build it — GitHub Repository</a>
+            <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL#build-instructions" target="_blank" class="btn btn-outline">Build Instructions →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= RELATED ========================= -->
+<section id="related">
+    <div class="container" style="text-align:center;">
+        <div class="section-title">Related Projects</div>
+        <div class="cta-row" style="justify-content:center; margin-top:20px;">
+            <a href="versal-ethernet.html" class="btn btn-outline">Versal Ethernet →</a>
+            <a href="zcu102-ethernet.html" class="btn btn-outline">ZCU102 Ethernet →</a>
+            <a href="72ns-gateway.html" class="btn btn-outline">72ns Gateway HFT →</a>
+        </div>
+    </div>
+</section>
+
+<footer class="page-footer"><div class="container">
+    <p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL" target="_blank">GitHub Repo</a> &nbsp;·&nbsp; <a href="https://scholarsjunction.msstate.edu/td/6097/" target="_blank">Thesis</a> &nbsp;·&nbsp; <a href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" target="_blank">Scholar</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p>
+    <p style="margin-top:10px; font-size:0.8rem;">Ajaya Dahal · Sr. FPGA &amp; Network System Engineer · Austin, TX</p>
+</div></footer>
+
+<script>
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+            darkMode: true,
+            background: '#0a0e14',
+            primaryColor: '#00d9ff',
+            primaryTextColor: '#e6e8eb',
+            primaryBorderColor: '#00d9ff',
+            lineColor: '#00ff9f',
+            secondaryColor: '#1f2937',
+            tertiaryColor: '#2d3748',
+            fontSize: '13px',
+            fontFamily: 'JetBrains Mono, monospace'
+        }
+    });
+    window.addEventListener('DOMContentLoaded', function () {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false }
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+<script src="../js/wifi-har-replay.js"></script>
+<script>
+    WifiHarReplay.init('har-dashboard', '../images/wifi-har/replay.json');
+</script>
+<script src="../js/diagram-zoom.js"></script>
+</body>
+</html>
