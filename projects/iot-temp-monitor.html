@@ -68,6 +68,25 @@
         .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
         @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
     </style>
+    <style>
+      /* Mobile responsiveness fix (added during mobile audit):
+         keep wide tables, bare code/pre blocks, math and media from forcing
+         the page wider than the viewport, which caused phones to zoom out.
+         !important is needed so wide data tables become horizontally
+         scrollable instead of being clipped by their rounded-corner
+         "overflow: hidden" card styling. */
+      @media (max-width: 768px) {
+        table { display: block !important; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        pre { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        img, video, canvas, iframe { max-width: 100%; height: auto; }
+        .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+        .top-nav .inner { flex-wrap: wrap; row-gap: 6px; }
+        .top-nav .links { flex-wrap: wrap; }
+        /* Prevent CSS grid/flex items from blowing out to their content's
+           min-content width (which forced horizontal overflow). */
+        .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
+      }
+    </style>
 </head>
 <body>
 
