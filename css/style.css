@@ -8544,7 +8544,7 @@ h1, h2, h3, h4, h5,
     bottom: 0;
     content: '';
     opacity: .1;
-    width: 50%;
+    width: 100%;
     background: #3e64ff; }
   .hero-wrap .text {
     width: 100%; }
@@ -9914,6 +9914,16 @@ textarea.form-control {
   width:100%;
   height:100%;
   object-fit:cover;
+}
+
+/* The 3D gallery rings (#life-section) rotate their images out past the
+   .gallery box by design (translateZ), which pushed the projected images
+   beyond the viewport and caused horizontal page scroll on small screens.
+   Clip the section horizontally so the rotating projection never triggers
+   overflow. overflow-x: clip (vs hidden) does not create a scroll container,
+   so it leaves the sticky navbar and in-page anchor scrolling untouched. */
+#life-section {
+  overflow-x: clip;
 }
 
 .image-container {
@@ -11912,3 +11922,72 @@ border-color: #764ba2;
         transform: translateY(-4px);
     }
 }
+
+/* ===================================================================
+   Mobile navbar fixes (home page)
+   -------------------------------------------------------------------
+   The "enhanced" navbar restyle (white bar) left several mobile bugs:
+   1. The hamburger/"Menu" toggler kept its white text colour, so it was
+      invisible on the white bar until the page was scrolled.
+   2. The desktop scroll-reveal animation (.scrolled -> position:fixed;
+      margin-top:-130px, revealed only once .awake is added past 350px)
+      was still applied on mobile, so the navbar slid off-screen as soon
+      as the user started scrolling and only reappeared further down.
+   3. The brand's decorative circle was clipped at the left edge because
+      the horizontal padding was zeroed out.
+   These rules pin the navbar to the top on small screens, keep the
+   toggler visible in every state and restore the brand padding.
+   =================================================================== */
+@media (max-width: 991.98px) {
+  .ftco_navbar,
+  .ftco-navbar-light,
+  .ftco-navbar-light.scrolled,
+  .ftco-navbar-light.scrolled.awake,
+  .ftco-navbar-light.scrolled.sleep {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    -webkit-box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08) !important; }
+
+  /* Keep the brand's decorative circle from being clipped at the edge */
+  .ftco-navbar-light .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important; }
+  .ftco-navbar-light .navbar-brand {
+    margin-left: 6px; }
+
+  /* Make the hamburger / "Menu" button visible on the white bar in
+     every scroll state (top, .scrolled, .awake, .sleep) */
+  .ftco-navbar-light .navbar-toggler,
+  .ftco-navbar-light.scrolled .navbar-toggler {
+    color: #667eea !important;
+    border-color: #667eea !important; }
+  .ftco-navbar-light .navbar-toggler .oi,
+  .ftco-navbar-light.scrolled .navbar-toggler .oi {
+    color: #667eea !important; }
+}
+
+/* ===================================================================
+   Long unbreakable strings (home page)
+   -------------------------------------------------------------------
+   Email addresses in the "Quick Info" list and the contact cards are
+   single tokens with no break opportunities, so on narrow screens they
+   overflowed their container and forced horizontal page scroll. Let the
+   Quick Info rows wrap and allow the long tokens to break onto a new
+   line. Safe at every width: flex rows only wrap when they don't fit.
+   =================================================================== */
+.about-info li {
+  flex-wrap: wrap; }
+.about-info li > span:last-child,
+.contact-card a,
+.contact-card p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word; }
