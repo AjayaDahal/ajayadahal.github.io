@@ -726,6 +726,28 @@ golden:     mean=-0.002065 var=0.302189 power=0.302193
                 <p>The AI Engine feature graph (<code>aie/</code>), the Vitis HLS UDP/CSI parser (<code>hls/</code>), the v++ co-generation flow and the on-board dashboard (<code>live/</code>) are all in the repo, with a phase-by-phase build log in <code>docs/</code>.</p>
             </div>
         </div>
+        <div class="callout" style="margin-top:24px;">
+            <h4 style="margin:0 0 10px 0;">Build your own — Raspberry Pi Nexmon setup</h4>
+            <p style="margin:0 0 12px 0;">
+                To feed real CSI into this Versal pipeline, set up <code>nexmon_csi</code> on a
+                <strong>Raspberry Pi 4B</strong> and stream UDP CSI frames to the VCK190.
+            </p>
+            <ul style="margin:0; padding-left:20px;">
+                <li>Use the Pi-side setup guide from the project README.</li>
+                <li>Confirm the CSI stream is active on UDP port <code>5500</code>.</li>
+                <li>Then run the VCK190 bring-up flow and switch <code>csi_mux</code> to the live Ethernet path.</li>
+            </ul>
+            <p style="margin:12px 0 0 0;">
+                👉 Start here:
+                <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL#build-instructions" target="_blank">
+                    Build Instructions (Pi + VCK190)
+                </a>
+            </p>
+        </div>
+        <figure class="figure" style="margin-top:24px;">
+            <img src="../images/wifi-har/board/setup_pi4b.jpg" alt="Real WiFi-HAR hardware setup with Raspberry Pi 4B and VCK190">
+            <figcaption>Real hardware setup. The black enclosure is the <strong>Raspberry Pi 4B</strong> running <code>nexmon_csi</code>, streaming CSI over Ethernet to the VCK190.</figcaption>
+        </figure>
         <div class="cta-row" style="margin-top:24px;">
             <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL" target="_blank" class="btn btn-primary">⭐ Build it — GitHub Repository</a>
             <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL#build-instructions" target="_blank" class="btn btn-outline">Build Instructions →</a>
