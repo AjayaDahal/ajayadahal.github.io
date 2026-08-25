@@ -88,6 +88,12 @@
         /* Prevent CSS grid/flex items from blowing out to their content's
            min-content width (which forced horizontal overflow). */
         .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
+        .stat-bar > * { min-width: 0; }
+      }
+      /* On very narrow phones (<360px) two stat columns can't fit a single
+         long word (e.g. "YouTube") plus card padding, so collapse to one. */
+      @media (max-width: 359.98px) {
+        .stat-bar { grid-template-columns: 1fr; }
       }
     </style>
 </head>

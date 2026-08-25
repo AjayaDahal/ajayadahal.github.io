@@ -9916,6 +9916,16 @@ textarea.form-control {
   object-fit:cover;
 }
 
+/* The 3D gallery rings (#life-section) rotate their images out past the
+   .gallery box by design (translateZ), which pushed the projected images
+   beyond the viewport and caused horizontal page scroll on small screens.
+   Clip the section horizontally so the rotating projection never triggers
+   overflow. overflow-x: clip (vs hidden) does not create a scroll container,
+   so it leaves the sticky navbar and in-page anchor scrolling untouched. */
+#life-section {
+  overflow-x: clip;
+}
+
 .image-container {
   background-image: url("https://assets.fta.cirium.com/wp-content/uploads/2023/01/31224905/HHero1440-landgeardark.jpg");
   background-size: cover;
@@ -11963,3 +11973,21 @@ border-color: #764ba2;
   .ftco-navbar-light.scrolled .navbar-toggler .oi {
     color: #667eea !important; }
 }
+
+/* ===================================================================
+   Long unbreakable strings (home page)
+   -------------------------------------------------------------------
+   Email addresses in the "Quick Info" list and the contact cards are
+   single tokens with no break opportunities, so on narrow screens they
+   overflowed their container and forced horizontal page scroll. Let the
+   Quick Info rows wrap and allow the long tokens to break onto a new
+   line. Safe at every width: flex rows only wrap when they don't fit.
+   =================================================================== */
+.about-info li {
+  flex-wrap: wrap; }
+.about-info li > span:last-child,
+.contact-card a,
+.contact-card p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word; }

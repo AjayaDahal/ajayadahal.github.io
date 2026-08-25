@@ -446,6 +446,9 @@
         .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
         .top-nav .inner { flex-wrap: wrap; row-gap: 6px; }
         .top-nav .links { flex-wrap: wrap; }
+        /* Centered metadata row (title chips) overflowed symmetrically on
+           very narrow screens; let it wrap instead. */
+        .metadata { flex-wrap: wrap; }
         /* Prevent CSS grid/flex items from blowing out to their content's
            min-content width (which forced horizontal overflow). */
         .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
