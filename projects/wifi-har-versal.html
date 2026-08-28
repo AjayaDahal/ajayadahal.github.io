@@ -475,6 +475,111 @@ flowchart LR
   SHIM --> AIE["ai_engine_0"]
   AIE --> S2MM["s2mm"] --> NOC["NoC"] --> DDR[("DDR4")]
         </div>
+
+        <p style="margin-top:24px;">
+            Under the hood the parser is a <strong>one-byte-per-cycle state machine</strong> (Vitis HLS,
+            <code>II=1</code>): it walks each Ethernet frame byte by byte, checks a handful of fixed offsets to accept or
+            drop the frame, and reassembles the little-endian <code>int16</code> I/Q payload into 32-bit words. The whole
+            wire contract is just these offsets:
+        </p>
+        <table class="svc-table">
+            <thead><tr><th>Byte(s)</th><th>Field</th><th>Parser action</th></tr></thead>
+            <tbody>
+                <tr><td><code>12–13</code></td><td>EtherType</td><td>keep only <code>0x0800</code> (IPv4)</td></tr>
+                <tr><td><code>23</code></td><td>IP protocol</td><td>keep only <code>17</code> (UDP)</td></tr>
+                <tr><td><code>36–37</code></td><td>UDP dest port</td><td>keep only the CSI port (<code>5500</code>)</td></tr>
+                <tr><td><code>44</code></td><td>nexmon RSSI</td><td><code>int8</code> dBm → metadata</td></tr>
+                <tr><td><code>52–53</code></td><td>sequence no.</td><td>→ metadata (packet-loss tracking)</td></tr>
+                <tr><td><code>54</code></td><td>core / spatial</td><td>→ metadata</td></tr>
+                <tr><td><code>56–57</code></td><td>chanspec</td><td>channel + bandwidth → metadata</td></tr>
+                <tr><td><code>60 →</code></td><td>CSI payload</td><td><code>int16</code> LE real, then imag, per subcarrier (up to 256)</td></tr>
+            </tbody>
+        </table>
+        <p>
+            <strong>The complex pair.</strong> From byte 60 the parser takes four wire bytes at a time — two for the real
+            part, two for the imaginary — sign-extends each <code>int16</code>, and packs them into one 32-bit AXI4-Stream
+            beat. That packed word <em>is</em> the complex CSI sample <span style="font-family:var(--font-mono)">H[k] = I +
+            jQ</span> for a single subcarrier:
+        </p>
+        <div class="code-cap">hls/csi_udp_parser.cpp — reassembling one complex subcarrier from four wire bytes</div>
+<pre><code class="language-cpp">// CSI payload from byte 60: int16 LE real, int16 LE imag.
+ap_int&lt;16&gt; re; re(7,0) = b0; re(15,8) = b1;
+ap_int&lt;16&gt; im; im(7,0) = b2; im(15,8) = b;
+axis_csi o;
+o.data(15,0)  = (ap_uint&lt;16&gt;)re;   // real -> low half
+o.data(31,16) = (ap_uint&lt;16&gt;)im;   // imag -> high half
+o.last = beat.last;                 // TLAST marks end-of-CSI for this frame
+csi_out.write(o);                   // one 32-bit beat per subcarrier
+n_sub++;</code></pre>
+        <p>
+            So the parser emits <strong>two</strong> synchronized AXI4-Streams per WiFi frame: <code>csi_out</code>, the run
+            of complex subcarriers, and <code>meta_out</code>, a single 64-bit record carrying everything the downstream
+            needs to normalize and label the window:
+        </p>
+        <table class="svc-table">
+            <thead><tr><th>Stream</th><th>Width</th><th>Payload</th></tr></thead>
+            <tbody>
+                <tr><td><code>csi_out</code></td><td>32-bit</td><td><code>{ imag[31:16], real[15:0] }</code> × up to 256 subcarriers</td></tr>
+                <tr><td><code>meta_out</code></td><td>64-bit</td><td><code>{ seq, rssi, n_sub, chanspec, core_spatial }</code> — one packed record per frame</td></tr>
+            </tbody>
+        </table>
+        <div class="mermaid">
+flowchart LR
+  RX["RX byte stream<br/>1 B / cycle · TLAST = frame"] --> FILT{"IPv4? · UDP?<br/>port 5500?"}
+  FILT -->|"no"| DROP["discard frame"]
+  FILT -->|"yes"| HDR["latch header bytes<br/>44 · 52 · 54 · 56"]
+  HDR --> ASM["reassemble int16 I/Q<br/>from byte 60"]
+  ASM --> CS["csi_out<br/>32-bit complex<br/>{imag, real}"]
+  HDR --> MT["meta_out<br/>64-bit record<br/>seq·rssi·n_sub·chanspec"]
+        </div>
+        <p style="color:var(--text-muted);">
+            The whole parser costs about <strong>1.3% of the PL LUTs, zero DSPs</strong> and a few BRAMs — line-rate
+            protocol offload is exactly what the fabric is cheapest at, which is why it lives here and not on the Arm.
+        </p>
+    </div>
+
+    <!-- 5c2 I/Q -> FEATURE WINDOWS -->
+    <div class="container prose" style="margin-top:40px;">
+        <div class="section-label">Signal conditioning</div>
+        <div class="section-title">From I/Q pairs to feature windows</div>
+        <p>
+            The parser produces <em>per-packet</em> complex vectors, but the AI Engine branches want <em>real-valued time
+            windows</em> — a stretch of many packets for one subcarrier. Bridging the two is a short conditioning chain,
+            and deciding <strong>where each step runs</strong> — PL, AI Engine, or Arm — is the heart of the
+            hardware/software co-design.
+        </p>
+        <div class="mermaid">
+flowchart LR
+  IQ["complex I/Q<br/>per subcarrier"] --> AP["magnitude / phase<br/>via CORDIC"]
+  AP --> SAN["phase sanitize<br/>linear de-trend"]
+  SAN --> SEL["subcarrier select<br/>variance top-K"]
+  SEL --> WIN["window / ring-buffer<br/>L=256 · N=64"]
+  WIN --> AIE["→ AI Engine branches"]
+        </div>
+        <p>
+            <strong>Magnitude</strong> feeds the motion and breathing branches; <strong>phase</strong> feeds the phase-var
+            branch. Phase first gets a per-packet linear de-trend across subcarriers, which cancels the carrier-frequency
+            offset (the intercept) and the sampling/packet-delay offset (the slope) that otherwise swamp the real motion:
+        </p>
+        <div class="eq-box">
+            $$|H[k]| = \sqrt{I^2 + Q^2}, \qquad \angle H[k] = \operatorname{atan2}(Q,\,I)$$
+            <div class="cap">Magnitude and phase per subcarrier — a CORDIC does both in the PL at line rate.</div>
+        </div>
+        <p>Where each stage of the pipeline lands is a deliberate partitioning decision:</p>
+        <table class="svc-table">
+            <thead><tr><th>Stage</th><th>Runs on</th><th>Why there</th></tr></thead>
+            <tbody>
+                <tr><td>UDP/CSI parse · I/Q depacketize</td><td><strong>PL</strong></td><td>cheap streaming bit-manipulation at line rate</td></tr>
+                <tr><td>|H| / ∠H (CORDIC)</td><td><strong>PL</strong></td><td>CORDIC is a fabric primitive</td></tr>
+                <tr><td>phase sanitize · FFT / STFT · FIR</td><td><strong>AI Engine</strong></td><td>vectorized float MACs and butterflies</td></tr>
+                <tr><td>subcarrier select · windowing</td><td><strong>PL + DDR</strong></td><td>light control logic + data movement</td></tr>
+                <tr><td>thresholds · labels · dashboard</td><td><strong>Arm A72</strong></td><td>control plane and UX</td></tr>
+            </tbody>
+        </table>
+        <p style="color:var(--text-muted);">
+            Rule of thumb across the whole design: <strong>streaming &amp; bit-twiddling → PL; FFT / GEMM / filters → AI
+            Engine; control &amp; UX → the Arm.</strong>
+        </p>
     </div>
 
     <!-- 5d AIE FEATURE GRAPH -->
@@ -482,14 +587,20 @@ flowchart LR
         <div class="section-label">AI Engine</div>
         <div class="section-title">The feature graph, kernel by kernel</div>
         <p>
-            The AI Engine runs a <strong>three-branch feature graph</strong>. Each branch maps directly to a piece of
-            the physics above, and every kernel is a small streaming function connected window-to-window over PLIO:
+            Those three conditioned windows are exactly what the graph waits on — each lands on its own PLIO stream input,
+            and from here the whole pipeline stays on the AI Engine array. It runs a <strong>three-branch feature
+            graph</strong>, <em>one branch per window</em>: the two amplitude windows drive <strong>motion</strong> and
+            <strong>breathing</strong>, while the sanitized-phase window drives <strong>phase-var</strong>.
+        </p>
+        <p>
+            Each branch maps directly to a piece of the physics above, and every kernel is a small streaming function
+            connected window-to-window over PLIO:
         </p>
         <div class="mermaid">
 flowchart TB
-  IN["PLIO_in<br/>CSI window (BLOCK)"] --> FIR["kfir: FIR band-pass"] --> STA["kstats: mean/var/power"] --> O1["PLIO_out<br/>motion {mean,var,power}"]
-  BIN["PLIO_brt_in<br/>N samples"] --> DFT["kdft: windowed-DFT magnitude"] --> O2["PLIO_brt_out<br/>NB breathing bins"]
-  PIN["PLIO_phase_in<br/>L phase samples"] --> PHA["kphase: stats"] --> O3["PLIO_phase_out<br/>phase-var {mean,var,power}"]
+  IN["PLIO_in<br/>amplitude · 256"] --> FIR["kfir: FIR band-pass"] --> STA["kstats: mean/var/power"] --> O1["PLIO_out<br/>motion {mean,var,power}"]
+  BIN["PLIO_brt_in<br/>amplitude · 64"] --> DFT["kdft: windowed-DFT magnitude"] --> O2["PLIO_brt_out<br/>NB breathing bins"]
+  PIN["PLIO_phase_in<br/>phase · 256"] --> PHA["kphase: stats"] --> O3["PLIO_phase_out<br/>phase-var {mean,var,power}"]
         </div>
         <table class="svc-table">
             <thead><tr><th>Branch</th><th>Kernel chain</th><th>Output</th><th>Physical meaning</th></tr></thead>
@@ -499,6 +610,27 @@ flowchart TB
                 <tr><td><strong>Phase-var</strong></td><td><code>stats</code></td><td><code>{mean, var, power}</code></td><td>phase variance → micro-motion / stability, feeds fall detection</td></tr>
             </tbody>
         </table>
+        <p>
+            <strong>Why three?</strong> Human activity shows up in the CSI at three different mechanisms and time-scales at
+            once, so each branch is tuned to one of them and they run in parallel on separate AI Engine tiles:
+        </p>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">🏃</div>
+                <h3>Motion — fast amplitude</h3>
+                <p>A <strong>31-tap band-pass FIR</strong> keeps only the ~1–3 Hz human-Doppler band of a 256-sample amplitude window; <code>stats</code> then reports its variance / power. High energy means someone is moving.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🫁</div>
+                <h3>Breathing — slow periodic</h3>
+                <p>A <strong>64-point Hann-windowed DFT</strong> turns a slow amplitude window into <code>33</code> magnitude bins; the peak in the 0.1–0.5 Hz band is the respiration tone (6–30 breaths/min).</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📶</div>
+                <h3>Phase-var — micro-motion</h3>
+                <p>After sanitization, the <strong>variance of the phase</strong> over a 256-sample window is a scale-immune presence cue — it survives when amplitude is ambiguous, and it feeds fall detection.</p>
+            </div>
+        </div>
         <p>The graph wiring is pure ADF — kernels connected stream-to-stream on the array:</p>
         <div class="code-cap">aie/src/graph.cpp — the three-branch feature graph</div>
 <pre><code class="language-cpp">// motion branch: FIR band-pass -> stats (kernel-to-kernel)
@@ -527,9 +659,36 @@ connect&lt;&gt;(kphase.out[0],   phase_out.in[0]);</code></pre>
     out[2] = s2 / (float)L; // power
 }</code></pre>
         <p>
-            The compact feature vector then feeds a tiny pretrained MLP for the activity label. The design does hand-written
-            AIE kernels here; the vector-VLIW array chews through the FIR taps and DFT butterflies far faster than the scalar
-            A72 could — which is the whole point of the offload.
+            Per window the three branches emit <strong>39 floats</strong> — <code>mot[3]</code>, <code>brt[33]</code>,
+            <code>phs[3]</code>. Together with the RSSI from the parser metadata, those collapse into the compact
+            <strong>8-feature vector</strong> the classifier actually consumes:
+        </p>
+        <table class="svc-table">
+            <thead><tr><th>#</th><th>Feature</th><th>Where it comes from</th></tr></thead>
+            <tbody>
+                <tr><td><code>0</code></td><td>presence</td><td>motion + phase-var vs. threshold</td></tr>
+                <tr><td><code>1</code></td><td>motion</td><td>motion-branch variance / power</td></tr>
+                <tr><td><code>2</code></td><td>breathing (bpm)</td><td>breathing-branch peak DFT bin</td></tr>
+                <tr><td><code>3</code></td><td>heart rate</td><td>reserved (unreliable at 20 Hz CSI)</td></tr>
+                <tr><td><code>4</code></td><td>phase-var</td><td>phase-var-branch variance</td></tr>
+                <tr><td><code>5</code></td><td>persons</td><td>classifier</td></tr>
+                <tr><td><code>6</code></td><td>fall</td><td>motion transient + debounce</td></tr>
+                <tr><td><code>7</code></td><td>RSSI</td><td>parser metadata, <code>(rssi+100)/100</code></td></tr>
+            </tbody>
+        </table>
+        <div class="mermaid">
+flowchart LR
+  M["motion<br/>{mean,var,power}"] --> V["8-feature<br/>vector"]
+  B["breathing<br/>33 DFT bins"] --> V
+  P["phase-var<br/>{mean,var,power}"] --> V
+  R["RSSI (metadata)"] --> V
+  V --> MLP["pretrained MLP<br/>8→64→128 · L2"] --> LBL["activity label<br/>+ presence / vitals"]
+        </div>
+        <p>
+            The classifier is deliberately tiny — a pretrained <strong>8→64→128 MLP</strong> (~9k parameters, GELU +
+            batch-norm, L2-normalized embedding) plus a linear presence head. All the heavy lifting is the DSP feature stage
+            above: the vector-VLIW AI Engine chews through the FIR taps and DFT butterflies far faster than the scalar A72
+            could — which is the whole point of the offload.
         </p>
         <div class="callout">
             <h4>The subtle bug that cost the most: the AIE ↔ PL shim</h4>
@@ -539,6 +698,53 @@ connect&lt;&gt;(kphase.out[0],   phase_out.in[0]);</code></pre>
             <code>v++ --link</code></strong>. The fix inserts the PL stream on v++'s own post-SysLink block design via an
             overlay hook, leaving <code>ai_engine_0</code> untouched so the correct shim solution is preserved.</p>
         </div>
+    </div>
+
+    <!-- 5d2 RESULTS TO THE ARM -->
+    <div class="container prose" style="margin-top:40px;">
+        <div class="section-label">Off the accelerator</div>
+        <div class="section-title">Results to the Arm — NoC, DDR, dashboard</div>
+        <p>
+            The last hop is deliberately thin. Two <code>s2mm</code> data movers — one for the AI Engine features, one for the
+            parser metadata — are PL AXI-MM masters that push their results across the <strong>Versal NoC</strong> into a small
+            reserved region of DDR4. The Arm A72 running PetaLinux reads that region and serves the dashboard. The
+            multi-hundred-KB/s raw CSI stream <strong>never crosses into Linux</strong> — only a few hundred bytes of features
+            and metadata per window do.
+        </p>
+        <div class="mermaid">
+flowchart LR
+  AIEO["AIE features<br/>39 floats / window"] --> S["s2mm"]
+  METAI["parser metadata"] --> SM["s2mm_meta"]
+  S --> NOC["Versal NoC"]
+  SM --> NOC
+  NOC --> DDR[("DDR4<br/>reserved no-map<br/>@ 0x7000_0000")]
+  DDR --> A72["Arm A72<br/>PetaLinux"]
+  A72 --> DASH["live_dashboard.py<br/>SSE web UI"]
+        </div>
+        <p>
+            Because <code>s2mm</code> and <code>s2mm_meta</code> are driverless PL masters with no IOMMU, they write to a 1 MB
+            <code>no-map</code> carve-out that Linux does not own: the packed metadata record sits at the base and the feature
+            results 64 KB in, so the two never share a page. Everything is memory-mapped at fixed addresses that the on-target
+            control tool (<code>sw/csi_ctl.c</code> — <code>mac-init</code>, <code>start</code>, <code>mux</code>,
+            <code>meta</code>) and the reader agree on:
+        </p>
+        <table class="svc-table">
+            <thead><tr><th>Block</th><th>AXI base</th></tr></thead>
+            <tbody>
+                <tr><td><code>mm2s</code> — DDR → AIE (golden path)</td><td><code>0xA400_0000</code></td></tr>
+                <tr><td><code>s2mm</code> — AIE features → DDR</td><td><code>0xA401_0000</code></td></tr>
+                <tr><td><code>csi_udp_parser</code></td><td><code>0xA402_0000</code></td></tr>
+                <tr><td><code>s2mm_meta</code> — metadata → DDR</td><td><code>0xA403_0000</code></td></tr>
+                <tr><td><code>csi_mux</code> — AXIS switch</td><td><code>0xA406_0000</code></td></tr>
+                <tr><td><code>ethernet</code> MAC</td><td><code>0xA408_0000</code></td></tr>
+                <tr><td><code>ai_engine</code></td><td><code>0x20_0000_0000</code></td></tr>
+            </tbody>
+        </table>
+        <p style="color:var(--text-muted);">
+            The <code>csi_mux</code> is what makes both worlds testable: flip it one way and the AI Engine is fed by the live
+            Ethernet parser; flip it the other and it's fed by <code>mm2s</code> replaying a known CSI window from DDR — the
+            bit-exact golden test that anchors every silicon bring-up below.
+        </p>
     </div>
 
     <!-- 5e ILA PROOF -->
@@ -745,23 +951,126 @@ golden:     mean=-0.002065 var=0.302189 power=0.302193
                 <p>The AI Engine feature graph (<code>aie/</code>), the Vitis HLS UDP/CSI parser (<code>hls/</code>), the v++ co-generation flow and the on-board dashboard (<code>live/</code>) are all in the repo, with a phase-by-phase build log in <code>docs/</code>.</p>
             </div>
         </div>
-        <div class="callout" style="margin-top:24px;">
-            <h4 style="margin:0 0 10px 0;">Build your own — Raspberry Pi Nexmon setup</h4>
-            <p style="margin:0 0 12px 0;">
-                To feed real CSI into this Versal pipeline, set up <code>nexmon_csi</code> on a
-                <strong>Raspberry Pi 4B</strong> and stream UDP CSI frames to the VCK190.
+        <!-- ===== CSI source: Raspberry Pi + nexmon_csi ===== -->
+        <div class="prose" style="margin-top:36px;">
+            <div class="section-label">The CSI source</div>
+            <div class="section-title" style="font-size:1.55rem;">Raspberry Pi + nexmon_csi → UDP over Ethernet</div>
+            <p>
+                The Versal pipeline is only as real as the CSI feeding it. The transmitter is a
+                <strong>Raspberry Pi 4B</strong> whose Broadcom <code>bcm43455c0</code> Wi-Fi chip is reflashed with the
+                <a href="https://github.com/seemoo-lab/nexmon_csi" target="_blank">nexmon_csi</a> firmware patch: it turns
+                every received OFDM frame into a per-subcarrier CSI vector and emits it as a
+                <strong>UDP packet on port 5500</strong>. A small boot-time service then relays that stream out the Pi's
+                Ethernet port to the VCK190's SFP.
             </p>
-            <ul style="margin:0; padding-left:20px;">
-                <li>Use the Pi-side setup guide from the project README.</li>
-                <li>Confirm the CSI stream is active on UDP port <code>5500</code>.</li>
-                <li>Then run the VCK190 bring-up flow and switch <code>csi_mux</code> to the live Ethernet path.</li>
-            </ul>
-            <p style="margin:12px 0 0 0;">
-                👉 Start here:
-                <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL#build-instructions" target="_blank">
-                    Build Instructions (Pi + VCK190)
-                </a>
+            <div class="mermaid">
+flowchart LR
+  subgraph PI["Raspberry Pi 4B — nexmon_csi"]
+    W["Wi-Fi bcm43455c0<br/>monitor · ch132/80"] --> FW["CSI firmware<br/>7.45.189 nexmon.org/csi"]
+    FW --> U["UDP :5500 on wlan0<br/>10.10.10.10 → 255.255.255.255"]
+    U --> SVC["csi-forward.service<br/>wlan0 → eth0"]
+  end
+  SVC -->|"UDP/IP · 1000BASE-X SFP"| VCK["VCK190 SFP0 → csi_udp_parser → AI Engine"]
+            </div>
+            <p>
+                This Pi runs Raspberry Pi OS <strong>Trixie</strong> on kernel&nbsp;<strong>6.18</strong> — far newer than
+                nexmon's classic <code>brcmfmac</code>-patch targets — so it uses the maintainer's
+                <strong>recent-kernel path</strong> (<code>Makefile.rpi</code> + nl80211 vendor commands, no modified driver).
             </p>
+
+            <div class="code-cap">1 — dependencies (the 32-bit armhf cross-libs are mandatory on a 64-bit image)</div>
+<pre><code class="language-bash">sudo apt install -y git libgmp3-dev gawk qpdf bison flex make autoconf \
+     libtool texinfo xxd libnl-3-dev libnl-genl-3-dev bc libssl-dev tcpdump
+sudo dpkg --add-architecture armhf &amp;&amp; sudo apt update
+sudo apt install -y libc6:armhf libisl23:armhf libmpfr6:armhf libmpc3:armhf libstdc++6:armhf
+sudo ln -sf /usr/lib/arm-linux-gnueabihf/libisl.so.23 /usr/lib/arm-linux-gnueabihf/libisl.so.10
+sudo ln -sf /usr/lib/arm-linux-gnueabihf/libmpfr.so.6 /usr/lib/arm-linux-gnueabihf/libmpfr.so.4
+# the b43 disassembler also needs python2.7 (from the Debian archive)</code></pre>
+
+            <div class="code-cap">2 — build the firmware toolchain, nexutil, and the CSI patch</div>
+<pre><code class="language-bash">git clone --depth 1 https://github.com/seemoo-lab/nexmon.git &amp;&amp; cd nexmon
+source setup_env.sh
+sed -i '1 s/$/2.7/' $NEXMON_ROOT/buildtools/b43-v3/debug/b43-beautifier
+make                                                          # extract ucode / flashpatches
+cd $NEXMON_ROOT/utilities/nexutil
+sudo -E make install USE_VENDOR_CMD=1                         # REQUIRED on recent kernels
+sudo setcap cap_net_admin+ep /usr/bin/nexutil
+cd $NEXMON_ROOT/patches/bcm43455c0/7_45_189
+git clone --depth 1 https://github.com/seemoo-lab/nexmon_csi.git &amp;&amp; cd nexmon_csi
+make -f Makefile.rpi install-firmware &amp;&amp; sudo reboot         # reboot loads the CSI firmware</code></pre>
+
+            <div class="code-cap">3 — activate CSI and confirm the UDP:5500 stream</div>
+<pre><code class="language-bash">nexutil -Iwlan0 -m1                                           # monitor mode
+PARAMS=$(makecsiparams -c 132/80 -C 1 -N 1)                  # ch132, 80 MHz, core0, ss0
+nexutil -Iwlan0 -s500 -b -l34 -v"$PARAMS"                    # configure the extractor
+sudo tcpdump -i wlan0 -nn dst port 5500                      # → length-1042 UDP frames</code></pre>
+
+            <p>Each frame is exactly what the PL <code>csi_udp_parser</code> reads — an 18-byte nexmon header, then 256
+               <code>int16</code> I/Q pairs (80&nbsp;MHz):</p>
+            <table class="svc-table">
+                <thead><tr><th>Byte</th><th>Field</th><th>Captured</th></tr></thead>
+                <tbody>
+                    <tr><td><code>42</code></td><td>magic <code>0x1111</code></td><td>—</td></tr>
+                    <tr><td><code>44</code></td><td>RSSI (int8)</td><td>−47&nbsp;dBm</td></tr>
+                    <tr><td><code>52</code></td><td>sequence</td><td>per-frame</td></tr>
+                    <tr><td><code>54</code></td><td>core / spatial stream</td><td>0 / 0</td></tr>
+                    <tr><td><code>56</code></td><td>chanspec</td><td><code>0xe08a</code> = 132/80</td></tr>
+                    <tr><td><code>60 …</code></td><td>CSI — <code>int16</code> LE real, <code>int16</code> LE imag ×256</td><td>1024 bytes</td></tr>
+                </tbody>
+            </table>
+            <p style="font-size:0.92rem;">
+                📎 <a href="../images/wifi-har/csi_sample.pcap" download>Download a real 40-frame CSI capture</a>
+                (<code>csi_sample.pcap</code>, ch132/80) — the byte offsets above line up 1:1 with
+                <code>hls/csi_udp_parser.cpp</code>.
+            </p>
+
+            <p style="margin-top:22px;"><strong>The bring-up war-stories</strong> — the ones that actually cost time:</p>
+            <details class="war">
+                <summary>The CSI ioctl returned <code>-EBADE</code> — stock firmware was still loaded</summary>
+                <div class="body">nexmon stages the patched firmware via <code>update-alternatives</code>, but the driver
+                    had already loaded the <em>stock</em> <code>brcmfmac43455-sdio.bin</code> at boot, so
+                    <code>nexutil -s500</code> was rejected with <code>-EBADE</code> (which presents as a hang). A
+                    <strong>reboot</strong> is what makes the driver actually download the CSI firmware
+                    (<code>version 7.45.189 nexmon.org/csi</code>); a plain module reload does not re-flash the chip.</div>
+            </details>
+            <details class="war">
+                <summary><code>nexutil</code> needs <code>-Iwlan0</code>, and must be built with <code>USE_VENDOR_CMD=1</code></summary>
+                <div class="body">On the recent-kernel path the driver only accepts the CSI IOCTLs as nl80211 <em>vendor
+                    commands</em>; without <code>USE_VENDOR_CMD=1</code> they are rejected, and without an explicit
+                    <code>-Iwlan0</code> the SET call blocks. An <code>strace</code> confirmed the sequence: vendor command
+                    sent, driver acks, done.</div>
+            </details>
+            <details class="war">
+                <summary>Skipping the armhf cross-libs silently kills monitor mode</summary>
+                <div class="body">nexmon's bundled compiler is a 32-bit ARM binary; on a 64-bit image it links against the
+                    <code>:armhf</code> <code>libisl</code>/<code>libmpfr</code> under their legacy sonames. Skip the
+                    symlinks and the firmware builds but monitor mode never engages.</div>
+            </details>
+
+            <div class="callout" style="border-color: rgba(0,255,159,0.3); background: rgba(0,255,159,0.05);">
+                <h4 style="color: var(--accent-green);">Boot-time UDP sender (Pi → VCK190)</h4>
+                <p style="margin-bottom:10px;">
+                    nexmon injects the CSI onto <code>wlan0</code> (the monitor interface); it never leaves the Pi on its own.
+                    A stdlib-Python <code>systemd</code> service captures those frames at layer&nbsp;2 and re-emits the nexmon
+                    payload as a fresh UDP datagram on <code>eth0</code> — reproducing the exact
+                    <code>ethertype@12 / proto@23 / dport@36 / nexmon@42 / CSI@60</code> offsets, so the Versal parser gets a
+                    byte-correct frame:
+                </p>
+<pre><code class="language-bash"># csi-forward.service runs csi_forward.py:
+#   raw AF_PACKET capture on wlan0 (udp/5500)  →  UDP sendto on eth0
+sudo systemctl enable --now csi-activate.service csi-forward.service
+# on the receiver:  sudo tcpdump -i eth0 -nn udp dst port 5500  → length-1042 frames</code></pre>
+                <p style="margin:10px 0 0 0; font-size:0.9rem;">Validated live: <code>wlan0 → eth0</code> at ~470 frames/s
+                    with the byte layout intact.</p>
+            </div>
+
+            <div class="callout">
+                <h4>Status — the last mile</h4>
+                <p>The Pi source and the Ethernet forwarder are done and format-verified against the parser. The Versal live
+                   front-end (GT + MAC + <code>csi_udp_parser</code> + <code>csi_mux</code>) is <strong>built</strong> in the
+                   v++ co-generation flow; on-silicon bring-up with the Pi over the SFP link — PCS link plus live
+                   <code>parser → AI Engine</code> — is the remaining step.</p>
+            </div>
         </div>
         <figure class="figure" style="margin-top:24px;">
             <img src="../images/wifi-har/board/setup_pi4b.jpg" alt="Real WiFi-HAR hardware setup with Raspberry Pi 4B and VCK190">
