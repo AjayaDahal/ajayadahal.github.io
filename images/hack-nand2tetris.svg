@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220" width="400" height="220" role="img" aria-label="NAND to Tetris on a Basys3">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0e14"/>
+      <stop offset="1" stop-color="#05070a"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00d9ff"/>
+      <stop offset="1" stop-color="#00ff9f"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="400" height="220" fill="url(#bg)"/>
+  <!-- faint grid -->
+  <g stroke="#12303a" stroke-width="1" opacity="0.5">
+    <line x1="0" y1="55" x2="400" y2="55"/><line x1="0" y1="110" x2="400" y2="110"/><line x1="0" y1="165" x2="400" y2="165"/>
+  </g>
+  <!-- CRT screen with stacked + falling blocks -->
+  <g filter="url(#glow)">
+    <rect x="232" y="26" width="150" height="120" rx="6" fill="#020403" stroke="#0f2a24"/>
+    <!-- stacked blocks (bottom) -->
+    <g fill="#00ff9f">
+      <rect x="242" y="126" width="14" height="14"/><rect x="258" y="126" width="14" height="14"/>
+      <rect x="290" y="126" width="14" height="14"/><rect x="322" y="126" width="14" height="14"/>
+      <rect x="338" y="126" width="14" height="14"/><rect x="354" y="126" width="14" height="14"/>
+      <rect x="322" y="110" width="14" height="14"/><rect x="354" y="110" width="14" height="14"/>
+      <rect x="354" y="94"  width="14" height="14"/>
+    </g>
+    <!-- falling block -->
+    <rect x="298" y="52" width="16" height="16" fill="#00d9ff"/>
+  </g>
+  <!-- title -->
+  <text x="20" y="60" font-family="'JetBrains Mono',monospace" font-size="13" fill="#6b7280" letter-spacing="2">FROM ONE GATE</text>
+  <text x="20" y="98" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="800" fill="url(#acc)">NAND to</text>
+  <text x="20" y="130" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="800" fill="url(#acc)">TETRIS</text>
+  <!-- chain nand -> ... -> cpu -->
+  <g font-family="'JetBrains Mono',monospace" font-size="10" fill="#9ca3af">
+    <text x="20" y="168">NAND</text><text x="66" y="168">&#8594;</text>
+    <text x="82" y="168">ALU</text><text x="112" y="168">&#8594;</text>
+    <text x="128" y="168">CPU</text><text x="160" y="168">&#8594;</text>
+    <text x="176" y="168" fill="#00ff9f">PLAY</text>
+  </g>
+  <text x="20" y="196" font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d9ff">Basys3 &middot; Artix-7 &middot; VGA + keyboard</text>
+</svg>
