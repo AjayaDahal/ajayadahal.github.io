@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- Source for /Dahal_Ajaya_Resume.pdf; _-prefixed folders are not published by GitHub Pages. Rebuild: msedge --headless=new --no-pdf-header-footer --print-to-pdf=Dahal_Ajaya_Resume.pdf <file URL of this page> -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ajaya Dahal - Resume</title>
+<style>
+  @page { size: Letter; margin: 0.34in 0.45in; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; font-size: 9.3pt; line-height: 1.18; color: #1a1a1a; }
+  a { color: inherit; text-decoration: none; }
+  header { text-align: center; }
+  h1 { font-size: 19pt; letter-spacing: 2pt; margin: 0; }
+  .contact { margin-top: 1pt; color: #333; }
+  h2 { font-size: 10pt; letter-spacing: 1pt; text-transform: uppercase; color: #2f4fd6; border-bottom: 1px solid #c9cfdb; margin: 6pt 0 2pt; padding-bottom: 1pt; }
+  .item { margin-top: 3pt; }
+  .row { display: flex; justify-content: space-between; gap: 12pt; }
+  .row > span:last-child { white-space: nowrap; }
+  .title { font-weight: 700; }
+  .org { font-style: italic; color: #333; }
+  ul { margin: 1pt 0 0; padding-left: 13pt; }
+  li { margin: 0.6pt 0; }
+  p { margin: 0; }
+  .list p { margin: 0.8pt 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AJAYA DAHAL</h1>
+  <div class="contact">Austin, TX | <a href="mailto:ajayadahal1000@gmail.com">ajayadahal1000@gmail.com</a> | <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108">linkedin.com/in/ajaya-dahal-137b94108</a> | <a href="https://ajayadahal.github.io">ajayadahal.github.io</a></div>
+</header>
+
+<h2>Summary</h2>
+<p>Sr. Silicon Design Engineer at AMD specializing in post-silicon root-cause analysis of x86 data center CPUs (SDC/MCE), stress-to-fail characterization across PVT corners, and AI-driven failure analysis tooling (RAG/NL2SQL). Background in high-speed Ethernet (10G–800G) and FPGA-based test platforms, with hands-on lab skills in signal integrity (GTY/GTM transceivers up to 58 Gbps), power integrity (di/dt-induced voltage noise), and embedded systems (PetaLinux/Yocto, bare-metal, kernel drivers).</p>
+
+<h2>Professional Experience</h2>
+
+<div class="item">
+  <div class="row"><span><span class="title">Sr. Silicon Design Engineer</span>, <span class="org">AMD (x86 Data Center CPU Post-Silicon Debug)</span></span><span>Austin, TX | Jan 2026 – Present</span></div>
+  <ul>
+    <li>Lead architectural root-cause analysis of Silent Data Corruption (SDC) and Machine Check Exceptions (MCE) on next-gen x86 data center CPUs, identifying failure mechanisms at the microarchitecture level.</li>
+    <li>Characterized FP Physical Register File (FP-PRF) stability by architecting stress-to-fail campaigns using high-entropy binaries (FP_Deluge) to induce maximum di/dt voltage noise and expose power integrity margins.</li>
+    <li>Architected “Silicon Trace,” an AI-driven failure analysis platform using RAG/NL2SQL to automate telemetry correlation, reducing manual debug cycles for complex MCE signatures.</li>
+    <li>Developed and released 6 debug-analysis agents that let the team and partners analyze and document debug data from JIRA tickets and test-program spreadsheets; received the AMD SIP Infinity Spotlight: Innovation award (2026).</li>
+    <li>Reproduced customer-reported failures across PVT (process, voltage, temperature) corners using the AFHC framework; serve as primary bridge between Customer Engineering and Silicon Design (IP) teams.</li>
+  </ul>
+</div>
+
+<div class="item">
+  <div class="row"><span><span class="title">Sr. Embedded Product Application Engineer</span>, <span class="org">AMD (Adaptive &amp; Embedded Computing Group, Xilinx)</span></span><span>Remote | Jan 2023 – Dec 2025</span></div>
+  <ul>
+    <li>Technical lead for 15+ Ethernet reference designs from 10 Mbps TEMAC to 800G DCMAC, integrating DCMAC, MRMAC and CMAC hard IP with DMA subsystems on Versal ACAP and Zynq UltraScale+ MPSoC; built Python automation for test execution, data extraction and reporting.</li>
+    <li>Troubleshot GTM/GTY/GTH/GTYP transceiver issues and optimized eye diagrams via IBERT at 28–58 Gbps/lane; full-stack debug from RTL (Verilog) through PetaLinux/Yocto and bare-metal BSPs (AXI NoC data paths, PS-PL interfaces, Ethernet DMA).</li>
+    <li>Authored AMD Answer Records and tutorials (MRMAC 4x25G tutorial series, DCMAC Survival Guide) resolving customer blockers on Versal (VMK180, VPK120, VCK190) and Zynq UltraScale+ (ZCU102, ZCU106, ZCU111).</li>
+    <li>Recognized with 8 AMD Spotlight Awards (2023–2025), including WTS NA Field Recognition 2025 and PAE Team Player 2024, for customer-critical MRMAC, CMAC, QSGMII, PS GEM TSU and AXI 2.5G work.</li>
+  </ul>
+</div>
+
+<div class="item">
+  <div class="row"><span><span class="title">Graduate Research Assistant</span>, <span class="org">Mississippi State University (ECE, with CAVS)</span></span><span>Starkville, MS | Aug 2019 – Jan 2024</span></div>
+  <ul>
+    <li>Built SDR-based RF sensing systems (contraband detection, spectrum scanning, Wi-Fi HAR with ML) and autonomous vehicle perception (LIDAR-camera fusion, TensorFlow). 12 publications, 45+ citations. FAA Part 107 certified.</li>
+  </ul>
+</div>
+
+<div class="item">
+  <div class="row"><span><span class="title">PCB Design Engineer Co-op</span>, <span class="org">Hunter Engineering Company</span></span><span>Raymond, MS | Jan 2020 – Jan 2022</span></div>
+  <ul>
+    <li>Designed end-to-end mixed-signal PCB functional testers with custom test boards, LabVIEW GUIs, C/C++ backends, and camera-based defect detection (OpenCV), integrated with Aegis Factory Logix MES.</li>
+  </ul>
+</div>
+
+<h2>Selected Projects</h2>
+
+<div class="item">
+  <div class="row"><span class="title">WiFi HAR on the Versal AI Engine — M.S. Thesis on Silicon</span><span>2026</span></div>
+  <ul>
+    <li>Streams WiFi CSI from a Raspberry Pi (nexmon) into a Versal VCK190; the PL parses UDP/CSI packets and the AI Engine runs STFT activity, breathing and fall features, bit-accurate on silicon.</li>
+  </ul>
+</div>
+
+<div class="item">
+  <div class="row"><span class="title">72ns Gateway — Versal ACAP HFT Network Accelerator</span><span>Dec 2025</span></div>
+  <ul>
+    <li>Sub-100ns packet processing on Versal: wire-speed UDP filtering, Gray-code CDC, NASDAQ ITCH 5.0 parsing (9 cycles @ 125 MHz, 1 Gbps).</li>
+  </ul>
+</div>
+
+<h2>Education</h2>
+
+<div class="item">
+  <div class="row"><span><span class="title">M.S. in Electrical &amp; Computer Engineering</span>, Mississippi State University | GPA 4.0/4.0 | Thesis: SDR-Based Sensing</span><span>May 2024</span></div>
+</div>
+
+<div class="item">
+  <div class="row"><span><span class="title">B.S. in Electrical &amp; Computer Engineering</span>, Mississippi State University | GPA 4.0/4.0 | Focus: FPGA, Digital &amp; Embedded Systems</span><span>Dec 2022</span></div>
+</div>
+
+<h2>Technical Skills</h2>
+<div class="list">
+  <p><b>Silicon Validation:</b> Post-silicon debug (SDC/MCE), stress-to-fail characterization, PVT corner testing, AFHC, di/dt voltage noise analysis</p>
+  <p><b>FPGA &amp; RTL:</b> Vivado, Vitis, Verilog, Vitis HLS, ChipScope/IBERT, ModelSim, JTAG, Versal ACAP, Zynq UltraScale+, RFSoC</p>
+  <p><b>Protocols:</b> 800G/400G DCMAC, 100G MRMAC/CMAC, 10G/25G XXV Ethernet, GTY/GTM/GTYP SerDes (28–58 Gbps), DDR, PCIe, AXI, SPI</p>
+  <p><b>Embedded &amp; OS:</b> PetaLinux, Yocto, bare-metal BSP, Linux kernel/driver development, C, C++, Device Tree</p>
+  <p><b>Automation &amp; AI:</b> Python (FastAPI/Streamlit), MATLAB, RAG/NL2SQL, TensorFlow, Docker, Jenkins CI/CD</p>
+  <p><b>Lab &amp; Measurement:</b> Oscilloscopes, Logic Analyzers, BERT, Eye diagrams, Signal Integrity, USRP (x310/N310), VNA</p>
+</div>
+
+<h2>Certifications &amp; Awards</h2>
+<div class="list">
+  <p><b>Certification:</b> FAA Part 107 Remote Pilot | <b>Training:</b> NVIDIA RDMA Programming, Verilog HDL, Linux Device Drivers, Yocto, LPIC-2 prep</p>
+  <p><b>Awards:</b> 9 AMD Spotlight Awards (2023–2026), incl. SIP Infinity Innovation 2026, WTS NA Field Recognition 2025, PAE Team Player 2024 | NXP HoverGames Bonus Prize 2021 | 12 publications (45+ citations)</p>
+</div>
+
+</body>
+</html>
