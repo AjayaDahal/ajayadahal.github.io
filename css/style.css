@@ -8795,6 +8795,35 @@ h1, h2, h3, h4, h5,
           -ms-transform: translateY(-50%);
           transform: translateY(-50%);
           background: var(--accent); }
+  #navi .submenu {
+    display: none;
+    margin: 8px 0 4px;
+    padding: 0;
+    list-style: none;
+    border-left: 2px solid var(--line); }
+    #navi .submenu.open {
+      display: block; }
+    #navi .submenu li {
+      margin: 0;
+      font-weight: 500; }
+    #navi .submenu a {
+      display: block;
+      margin-left: -2px;
+      padding: 4px 0 4px 14px;
+      font-size: .9rem;
+      line-height: 1.4;
+      color: #666;
+      border-left: 2px solid transparent;
+      transition: color .2s ease, border-color .2s ease; }
+      #navi .submenu a:hover {
+        color: var(--accent); }
+      #navi .submenu a.current {
+        margin-left: -2px;
+        font-weight: 600;
+        color: var(--accent);
+        border-left-color: var(--accent); }
+        #navi .submenu a.current:after {
+          display: none; }
 
 .page {
   width: 100%;
