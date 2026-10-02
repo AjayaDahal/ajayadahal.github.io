@@ -7,6 +7,18 @@
     <meta name="keywords" content="Buck Boost Converter, Power Electronics, SMPS, DC-DC Converter, Electronics Dissection">
     <meta name="author" content="Ajaya Dahal">
     <title>DC-DC Buck Boost Converter Analysis | Ajaya Dahal</title>
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/dc-dc-dissection.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="DC-DC Buck Boost Converter Analysis | Ajaya Dahal">
+    <meta property="og:description" content="Tear-down and analysis of a commercial buck-boost converter module, ECE 6723 at Mississippi State University.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/dc-dc-dissection.html">
+    <meta name="twitter:card" content="summary">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <script>document.documentElement.classList.add('js');</script>
     
     <style>
         /* ============================================
@@ -404,22 +416,30 @@
         .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
       }
     </style>
+    <link rel="stylesheet" href="../css/project-legacy.css">
 </head>
 <body>
-<nav class="top-nav">
-    <div class="inner">
-        <a href="../home.html" class="brand"><span>A</span>jaya</a>
-        <div class="links">
-            <a href="../home.html">Portfolio</a>
-            <a href="dc-dc-gallery.html">Gallery</a>
-            <a href="72ns-gateway.html">72ns Gateway</a>
-        </div>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
-</nav>
+</header>
+
+<main id="main">
     <div class="container">
         <!-- ==================== HEADER ==================== -->
         <header>
-            <a href="../home.html" class="back-btn">← Back to Portfolio</a>
+            <a href="dc-dc-gallery.html" class="back-btn">Photo gallery →</a>
             <h1>DC-DC Buck Boost Converter Analysis</h1>
             <p class="subtitle">Power Electronics Teardown: 0.5V-30V @ 4A</p>
             <div class="metadata">
@@ -501,7 +521,7 @@
                     <tr>
                         <td>Voltage Schematics</td>
                         <td>Buck-boost voltage regulation circuit</td>
-                        <td><a href="../dissection/files/Voltage Submodule.pdf">View PDF</a></td>
+                        <td><a href="../dissection/files/Buck-Boost-module_schematic.pdf">View PDF</a></td>
                     </tr>
                     <tr>
                         <td>Bill of Materials</td>
@@ -545,7 +565,7 @@
             </p>
 
             <div class="image-container">
-                <img src="../dissection/static/images/proposal.jpg" alt="Project Proposal Document">
+                <img src="../dissection/static/images/web/proposal.webp" width="1600" height="929" loading="lazy" alt="Project Proposal Document">
                 <p class="image-caption">Figure 1: Original project proposal submitted for ECE 6723</p>
             </div>
         </section>
@@ -626,7 +646,7 @@
             </p>
 
             <div style="margin: calc(var(--spacing-unit) * 4) 0; text-align: center;">
-                <img src="../dissection/static/images/animation.gif" alt="Module operation demonstration" style="max-width: 600px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);">
+                <img src="../dissection/static/images/web/animation.webp" width="640" height="360" loading="lazy" alt="Module operation demonstration" style="max-width: 600px; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color);">
                 <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
                     Module in operation: voltage adjustment demonstration with real-time LED display feedback
                 </p>
@@ -634,27 +654,27 @@
 
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="../dissection/static/images/unbox1.jpg" alt="Unboxing">
+                    <img src="../dissection/static/images/web/unbox1.webp" width="1600" height="1200" loading="lazy" alt="Unboxing">
                     <div class="gallery-item-caption">Initial unboxing and packaging inspection</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="../dissection/static/images/unbox2.jpg" alt="Top View">
+                    <img src="../dissection/static/images/web/unbox2.webp" width="1600" height="1200" loading="lazy" alt="Top View">
                     <div class="gallery-item-caption">Top view: Display module and adjustment pots</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="../dissection/static/images/unbox3.jpg" alt="Bottom View">
+                    <img src="../dissection/static/images/web/unbox3.webp" width="1600" height="1200" loading="lazy" alt="Bottom View">
                     <div class="gallery-item-caption">Bottom view: PCB layout and power traces</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="../dissection/static/images/unbox4.jpg" alt="Component Closeup">
+                    <img src="../dissection/static/images/web/unbox4.webp" width="1600" height="1200" loading="lazy" alt="Component Closeup">
                     <div class="gallery-item-caption">Inductor and switching controller IC</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="../dissection/static/images/unbox5.jpg" alt="Display Module">
+                    <img src="../dissection/static/images/web/unbox5.webp" width="1600" height="1200" loading="lazy" alt="Display Module">
                     <div class="gallery-item-caption">LED display driver circuitry</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="../dissection/static/images/unbox6.jpg" alt="Heatsink">
+                    <img src="../dissection/static/images/web/unbox6.webp" width="1600" height="1200" loading="lazy" alt="Heatsink">
                     <div class="gallery-item-caption">MOSFET heatsinking arrangement</div>
                 </div>
             </div>
@@ -782,10 +802,22 @@
                 ECE 6723 - Electronics Dissection | Mississippi State University<br>
                 Project by Ajaya Dahal • April 2022
             </p>
-            <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem;">
-                <a href="../home.html">← Return to Main Portfolio</a>
-            </p>
         </footer>
     </div>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
+
+<script src="../js/project.js" defer></script>
 </body>
 </html>

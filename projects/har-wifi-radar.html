@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Human Activity Recognition: Wi-Fi CSI vs. Radar | Ajaya Dahal</title>
+    <meta name="description" content="Seven activities, five people, two RF sensors: a 76-80 GHz FMCW radar and Wi-Fi channel state information from a Raspberry Pi with Nexmon. The same CNN on both spectrograms reached 97.78% (radar) and 65.09% (Wi-Fi).">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/har-wifi-radar.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Human Activity Recognition: Wi-Fi CSI vs. Radar | Ajaya Dahal">
+    <meta property="og:description" content="Same people, same activities, same CNN: radar 97.78%, Wi-Fi CSI 65.09%.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/har-wifi-radar.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/projects/har-wifi-radar/og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+    </div>
+</header>
+
+<main id="main">
+<article>
+    <header class="project-hero col">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#tier2-sandbox">Sandbox</a> / <span aria-current="page">Wi-Fi vs. Radar HAR</span></nav>
+        <p class="eyebrow">Fall 2023 · Graduate research</p>
+        <h1>Human Activity Recognition: Wi-Fi CSI vs. Radar</h1>
+        <p class="lede">A side-by-side test of two RF sensors on the same seven everyday activities. I recorded the same people with a 76&ndash;80&nbsp;GHz FMCW radar and with Wi-Fi channel state information (CSI) from a Raspberry Pi, turned both into spectrograms, and trained the same CNN on each.</p>
+        <ul class="tags">
+            <li>Wi-Fi CSI</li>
+            <li>FMCW radar</li>
+            <li>Micro-Doppler</li>
+            <li>CNN</li>
+            <li>Raspberry Pi + Nexmon</li>
+        </ul>
+        <div class="cta-row">
+            <a class="btn btn-primary" href="#results">See the results</a>
+            <a class="btn btn-outline" href="https://www.hackster.io/ajayadahal/human-activity-recognition-har-using-wi-fi-vs-radar-82199b" target="_blank" rel="noopener">Original write-up on Hackster</a>
+        </div>
+    </header>
+
+    <div class="col">
+        <div class="stats">
+            <div class="stat"><b>97.78&nbsp;%</b><span>Radar test accuracy</span></div>
+            <div class="stat"><b>65.09&nbsp;%</b><span>Wi-Fi test accuracy</span></div>
+            <div class="stat"><b>7</b><span>Activities</span></div>
+            <div class="stat"><b>700</b><span>Recordings, 5 people</span></div>
+        </div>
+
+        <figure>
+            <a href="../images/projects/har-wifi-radar/testbed.webp" data-zoom><img src="../images/projects/har-wifi-radar/testbed.webp" width="1280" height="720" alt="Diagram of the testbed: a Raspberry Pi 3B+, the INRAS Radarbook2 and a Kinect camera facing the activity area, each feeding micro-Doppler signatures into CNN-based classification of seven activities"></a>
+            <figcaption>Data-collection testbed: Wi-Fi (Raspberry Pi) and radar record the same activity, with a camera as reference.</figcaption>
+        </figure>
+
+        <section class="section" id="why">
+            <h2>Why compare them</h2>
+            <p>RF sensors can recognise human motion without capturing images of people, and they work regardless of clothing, which makes them attractive where constant camera surveillance is not wanted, such as fall detection in care homes. Wearables need batteries and someone to wear them. Wi-Fi sensing is popular because the hardware is everywhere, but the papers I reviewed rarely compared Wi-Fi and radar directly on the same data. So I collected both at once and compared them on equal terms.</p>
+        </section>
+
+        <section class="section" id="setup">
+            <h2>Setup</h2>
+            <dl class="facts">
+                <dt>Wi-Fi</dt><dd>Raspberry Pi 3B+ running the Nexmon CSI firmware on its Broadcom BCM43455c0; 5&nbsp;GHz channel, 80&nbsp;MHz wide (256 subcarriers)</dd>
+                <dt>Radar</dt><dd>INRAS Radarbook2, FMCW at 76&ndash;80&nbsp;GHz; one transmit&ndash;receive pair of its 2&nbsp;TX / 16&nbsp;RX</dd>
+                <dt>Reference</dt><dd>Azure Kinect camera recording each sample</dd>
+                <dt>Geometry</dt><dd>Radar on a table 1&nbsp;m high, subject 2&nbsp;m in front of it, 10&nbsp;s per recording</dd>
+            </dl>
+            <p>Two practical notes. Nexmon only supported kernel 5.10.92 at the time, while Raspberry Pi OS had moved to 5.15, so I held back the kernel update to build the firmware. And the hardware I first planned to use did not work out: the Infineon BGT60LTR11 Shield2Go cannot stream raw samples (its SPI mode is not supported), and getting CSI out of the Infineon PSoC&nbsp;62S2 Wi-Fi kit needed firmware work I did not have time for.</p>
+        </section>
+
+        <section class="section" id="data">
+            <h2>Dataset and spectrograms</h2>
+            <p>Seven activities: fall, lie down, pick up, run, sit down, stand up and walk. Five people performed each activity 20 times, giving 100 recordings per activity and 700 in total. For each person and activity, the first 16 recordings were used for training and the last 4 for testing (an 80/20 split).</p>
+            <p>A moving body shifts the frequency of the signal it reflects (the Doppler effect). For radar, the micro-Doppler spectrogram is the squared magnitude of the short-time Fourier transform of the received signal. For Wi-Fi, the same shift shows up in the CSI; I built spectrograms from subcarriers 90 to 120. Both were saved as 128&times;128 grayscale images.</p>
+            <figure>
+                <a href="../images/projects/har-wifi-radar/spectrograms.webp" data-zoom><img src="../images/projects/har-wifi-radar/spectrograms.webp" width="1600" height="336" loading="lazy" alt="Grid of spectrograms: radar on the top row and Wi-Fi CSI on the bottom row for fall, lie down, pick up, run, sit down, stand up and walk"></a>
+                <figcaption>Radar (top) and Wi-Fi CSI (bottom) spectrograms for the seven activities. Select to enlarge.</figcaption>
+            </figure>
+        </section>
+
+        <section class="section" id="model">
+            <h2>The classifier</h2>
+            <p>The same small 2D CNN (about 118k parameters) classified both kinds of spectrogram. It has three convolution blocks, each with two 3&times;3 convolution layers (32, 32 and 64 filters), followed by 3&times;3 max pooling, batch normalisation, ReLU and dropout of 0.3. A dense layer of 128 units with dropout 0.3 feeds a softmax over the seven classes.</p>
+            <figure>
+                <a href="../images/projects/har-wifi-radar/cnn.webp" data-zoom><img src="../images/projects/har-wifi-radar/cnn.webp" width="1400" height="525" loading="lazy" alt="CNN architecture: 128 by 128 micro-Doppler input, three convolution blocks, a dense layer and a softmax classifier"></a>
+                <figcaption>CNN architecture.</figcaption>
+            </figure>
+        </section>
+
+        <section class="section" id="results">
+            <h2>Results</h2>
+            <p>Radar beat Wi-Fi by 32.7 percentage points on test accuracy.</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Sensor</th><th class="num">Accuracy</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1 score</th></tr></thead>
+                    <tbody>
+                        <tr><td>Wi-Fi CSI</td><td class="num">65.09</td><td class="num">67.91</td><td class="num">65.09</td><td class="num">65.72</td></tr>
+                        <tr><td>Radar</td><td class="num">97.78</td><td class="num">97.99</td><td class="num">97.68</td><td class="num">97.78</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <figure class="portrait">
+                <a href="../images/projects/har-wifi-radar/confusion.webp" data-zoom><img src="../images/projects/har-wifi-radar/confusion.webp" width="470" height="780" loading="lazy" alt="Two confusion matrices: Wi-Fi on top with many off-diagonal errors, radar below with a nearly clean diagonal"></a>
+                <figcaption>Confusion matrices: (a) Wi-Fi, (b) radar.</figcaption>
+            </figure>
+            <p>Radar is clearly ahead, but 65% from commodity Wi-Fi hardware still shows real potential for indoor monitoring. This was a first study in a controlled lab with a small dataset.</p>
+        </section>
+
+        <section class="section" id="next">
+            <h2>What comes next</h2>
+            <ul>
+                <li>A larger, more varied dataset of typical indoor activities, adding the camera data.</li>
+                <li>Real-time classification, and a real-time notification system for events such as falls.</li>
+                <li>Wi-Fi CSI from the PSoC&nbsp;62S2 kit, fused with radar, and raw-data experiments with the BGT60LTR11 once its SPI mode is supported.</li>
+            </ul>
+            <p>The Wi-Fi side continued in my master's research, and I later rebuilt Wi-Fi activity recognition in hardware: <a href="wifi-har-versal.html">Wi-Fi HAR on the Versal AI Engine</a>.</p>
+        </section>
+
+        <section class="section" id="files">
+            <h2>Files and links</h2>
+            <ul class="links">
+                <li><a href="https://www.hackster.io/ajayadahal/human-activity-recognition-har-using-wi-fi-vs-radar-82199b" target="_blank" rel="noopener"><b>Original write-up</b><span>Hackster.io, with full references</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/Wi-Fi-Radar-Comparison" target="_blank" rel="noopener"><b>Code</b><span>GitHub: dataset split, spectrograms, CNN training</span></a></li>
+            </ul>
+            <p>Dataset and code: A. Dahal, S. Biswas, S. Z. Gurbuz and A. C. Gurbuz, "Wi-Fi radar comparison", GitHub, 2023.</p>
+        </section>
+    </div>
+</article>
+
+<section class="related" aria-labelledby="related-title">
+    <div class="wrap">
+        <h2 id="related-title">Related</h2>
+        <div class="cards">
+            <a class="card" href="wifi-har-versal.html"><img src="../images/wifi-har/board/vck190.avif" alt="" loading="lazy"><div><small>2026 · Versal AI Engine</small><b>Wi-Fi Activity Recognition on Silicon</b></div></a>
+            <a class="card" href="soil-moisture-logger.html"><img src="../images/projects/soil-moisture-logger/kit.webp" alt="" loading="lazy"><div><small>June 2023</small><b>Low-Power Soil-Moisture Logger</b></div></a>
+            <a class="card" href="covid-drone.html"><img src="../images/projects/covid-drone/flight.webp" alt="" loading="lazy"><div><small>February 2021</small><b>COVID-19 Sample-Collection Drone</b></div></a>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
+
+<script src="../js/project.js" defer></script>
+</body>
+</html>

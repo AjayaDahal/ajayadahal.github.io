@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Soil-Moisture Logger for Remote Sensing (Prototype) | Ajaya Dahal</title>
+    <meta name="description" content="Prototype field logger: an ESP32 in deep sleep wakes on a DS3231 RTC alarm, reads a TEROS 12 soil-moisture probe, logs to SD and sends the reading over Zigbee. Mississippi State University, 2023.">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/soil-moisture-logger.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Soil-Moisture Logger for Remote Sensing (Prototype) | Ajaya Dahal">
+    <meta property="og:description" content="An ESP32 that sleeps, wakes on an RTC alarm, logs soil moisture to SD and sends it over Zigbee.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/soil-moisture-logger.html">
+    <meta name="twitter:card" content="summary">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+    </div>
+</header>
+
+<main id="main">
+<article>
+    <header class="project-hero col">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#tier2-sandbox">Sandbox</a> / <span aria-current="page">Soil-Moisture Logger</span></nav>
+        <p class="eyebrow">June 2023 · Mississippi State University · Prototype</p>
+        <h1>Soil-Moisture Logger for Remote Sensing</h1>
+        <p class="lede">A prototype field logger for soil-moisture data. An <strong>ESP32</strong> spends most of its time in deep sleep, wakes on an alarm from a <strong>DS3231</strong> real-time clock, reads a <strong>TEROS 12</strong> soil-moisture probe, saves the reading to an SD card and sends it out over a Zigbee radio.</p>
+        <ul class="tags">
+            <li>ESP32</li>
+            <li>Deep sleep</li>
+            <li>DS3231 RTC</li>
+            <li>Zigbee</li>
+            <li>SD logging</li>
+        </ul>
+        <div class="cta-row">
+            <a class="btn btn-outline" href="https://github.com/AjayaDahal/MSU_Soil_Moisture_Sensor" target="_blank" rel="noopener">Firmware on GitHub</a>
+        </div>
+    </header>
+
+    <div class="col">
+        <figure>
+            <img src="../images/projects/soil-moisture-logger/kit.webp" width="605" height="317" alt="ESP32 IoT kit boards next to a white soil-moisture probe with three metal prongs">
+            <figcaption>The ESP32 kit and the soil-moisture probe.</figcaption>
+        </figure>
+
+        <section class="section" id="overview">
+            <h2>How it works</h2>
+            <dl class="facts">
+                <dt>Controller</dt><dd>ESP32 from the Hackster and DFRobot IoT starter kit</dd>
+                <dt>Wake-up</dt><dd>DS3231 alarm on an interrupt pin wakes the ESP32 from deep sleep</dd>
+                <dt>Sensor</dt><dd>TEROS 12 soil-moisture probe</dd>
+                <dt>Storage</dt><dd>Each reading appended to a file on an SD card</dd>
+                <dt>Uplink</dt><dd>Zigbee radio on a serial port</dd>
+                <dt>Interval</dt><dd>Every 30 minutes</dd>
+            </dl>
+            <p>The point of the design is battery life in the field: the board is awake only long enough to read, store and send one value, then goes back to deep sleep until the clock wakes it again.</p>
+            <p>This is an early prototype. The firmware is a first version and the Hackster write-up is still marked as under construction.</p>
+        </section>
+
+        <section class="section" id="files">
+            <h2>Links</h2>
+            <ul class="links">
+                <li><a href="https://github.com/AjayaDahal/MSU_Soil_Moisture_Sensor" target="_blank" rel="noopener"><b>Firmware</b><span>GitHub, main.ino</span></a></li>
+                <li><a href="https://www.hackster.io/ajayadahal/iot-soil-moisture-data-collection-system-for-remote-sensing-f9c6f4" target="_blank" rel="noopener"><b>Project page</b><span>Hackster.io</span></a></li>
+            </ul>
+        </section>
+    </div>
+</article>
+
+<section class="related" aria-labelledby="related-title">
+    <div class="wrap">
+        <h2 id="related-title">More from the sandbox</h2>
+        <div class="cards">
+            <a class="card" href="har-wifi-radar.html"><img src="../images/projects/har-wifi-radar/cover.webp" alt="" loading="lazy"><div><small>Fall 2023</small><b>Activity Recognition: Wi-Fi vs. Radar</b></div></a>
+            <a class="card" href="iot-temp-monitor.html"><img src="../images/projects/iot-temp-monitor/enclosure.webp" alt="" loading="lazy"><div><small>November 2020</small><b>T.A.A.F.U. Temperature-Adjusting Fan</b></div></a>
+            <a class="card" href="line-follower-pic24.html"><img src="../images/projects/line-follower-pic24/robot.webp" alt="" loading="lazy"><div><small>Spring 2021</small><b>Line Follower Robot on a dsPIC33</b></div></a>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
+
+<script src="../js/project.js" defer></script>
+</body>
+</html>
