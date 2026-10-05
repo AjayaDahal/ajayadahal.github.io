@@ -2,170 +2,127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IoT Temperature Monitor | Ajaya Dahal</title>
-    <meta name="description" content="Real-time IoT temperature monitoring system with Android app, Firebase cloud backend, and embedded sensor hardware for remote environmental data.">
-    <meta name="keywords" content="IoT, temperature monitor, Android, Firebase, real-time, sensor, embedded, cloud">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>T.A.A.F.U.: Temperature-Adjusting Arduino Fan Unit | Ajaya Dahal</title>
+    <meta name="description" content="Team project: a fan unit for server cooling that reads a DHT11, drives a fan, shows status on an LCD and LEDs, and alerts an Android app through Firebase when it cannot cool things down. Arduino UNO, ESP8266, SolidWorks enclosure.">
     <meta name="author" content="Ajaya Dahal">
-    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
     <link rel="canonical" href="https://ajayadahal.github.io/projects/iot-temp-monitor.html">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="IoT Temperature Monitor | Ajaya Dahal">
-    <meta property="og:description" content="Real-time temperature monitoring with Android, Firebase, and embedded sensors.">
+    <meta property="og:title" content="T.A.A.F.U.: Temperature-Adjusting Arduino Fan Unit | Ajaya Dahal">
+    <meta property="og:description" content="A cheap, independent backup for server cooling that alerts your phone when the fan cannot keep up.">
     <meta property="og:url" content="https://ajayadahal.github.io/projects/iot-temp-monitor.html">
-    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "CreativeWork",
-        "name": "IoT Temperature Monitor",
-        "author": { "@type": "Person", "name": "Ajaya Dahal" },
-        "description": "Real-time IoT temperature monitor with Android app and Firebase backend"
-    }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
-            --text-primary: #e6e8eb; --text-secondary: #9ca3af; --text-muted: #6b7280;
-            --accent-1: #e91e63; --accent-2: #f06292;
-            --accent-cyan: #00d9ff; --accent-green: #00ff9f; --border-color: #2d3748;
-            --font-sans: 'Inter', -apple-system, sans-serif; --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
-        }
-        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(233, 30, 99, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(240, 98, 146, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
-        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
-        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
-        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
-        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
-        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
-        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
-        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-        .hero .badge-row .badge { background: rgba(233, 30, 99, 0.15); color: var(--accent-1); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
-        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
-        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
-        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
-        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
-        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(233, 30, 99, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
-        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
-        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
-        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
-        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
-        .arch-diagram { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; overflow-x: auto; margin-bottom: 24px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); line-height: 1.8; white-space: pre; }
-        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
-        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
-        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
-        .svc-table tr:last-child td { border-bottom: none; }
-        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
-        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
-        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
-        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
-    </style>
-    <style>
-      /* Mobile responsiveness fix (added during mobile audit):
-         keep wide tables, bare code/pre blocks, math and media from forcing
-         the page wider than the viewport, which caused phones to zoom out.
-         !important is needed so wide data tables become horizontally
-         scrollable instead of being clipped by their rounded-corner
-         "overflow: hidden" card styling. */
-      @media (max-width: 768px) {
-        table { display: block !important; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-        pre { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        img, video, canvas, iframe { max-width: 100%; height: auto; }
-        .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
-        .top-nav .inner { flex-wrap: wrap; row-gap: 6px; }
-        .top-nav .links { flex-wrap: wrap; }
-        /* Prevent CSS grid/flex items from blowing out to their content's
-           min-content width (which forced horizontal overflow). */
-        .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
-        .stat-bar > * { min-width: 0; }
-      }
-      /* On very narrow phones (<360px) two stat columns can't fit a single
-         long word (e.g. "Firebase") plus card padding, so collapse to one. */
-      @media (max-width: 359.98px) {
-        .stat-bar { grid-template-columns: 1fr; }
-      }
-    </style>
+    <meta property="og:image" content="https://ajayadahal.github.io/images/projects/iot-temp-monitor/og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="wrecks.html">WRECKS</a><a href="video-player.html">Video Player</a></div></div></nav>
-
-<header class="hero">
-    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#tier2-sandbox">Sandbox</a> → IoT Temp Monitor</div>
-    <div class="badge-row">
-        <span class="badge">Android</span>
-        <span class="badge">Firebase</span>
-        <span class="badge">IoT</span>
-    </div>
-    <h1>IoT Temperature Monitor</h1>
-    <p class="subtitle">
-        Real-time temperature monitoring system combining <strong>embedded sensor hardware</strong> with a
-        <strong>Firebase Realtime Database</strong> cloud backend and a native <strong>Android application</strong>
-        for remote data visualization. Demonstrates full-stack IoT architecture from sensor to smartphone.
-    </p>
-    <div class="stat-bar">
-        <div class="stat-card"><div class="number">Real-Time</div><div class="label">Data Streaming</div></div>
-        <div class="stat-card"><div class="number">Firebase</div><div class="label">Cloud Backend</div></div>
-        <div class="stat-card"><div class="number">Android</div><div class="label">Mobile App</div></div>
-    </div>
-    <div class="cta-row">
-        <a href="https://www.hackster.io/ajayadahal1000/realtime-temperature-monitor-53d97c" target="_blank" class="btn btn-primary">View on Hackster</a>
-        <a href="wrecks.html" class="btn btn-outline">Related: WRECKS IoT →</a>
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
 </header>
 
-<section>
-    <div class="container">
-        <div class="section-label">Architecture</div>
-        <div class="section-title">System Overview</div>
-        <div class="arch-diagram">
-┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-│   SENSOR     │      │   FIREBASE   │      │   ANDROID    │
-│   HARDWARE   │─────▶│   REALTIME   │─────▶│   APP        │
-│              │ WiFi │   DATABASE   │ SDK  │              │
-│  Temp Sensor │      │              │      │  Live Graph  │
-│  + MCU       │      │  Cloud Sync  │      │  Alerts      │
-│  + WiFi      │      │  JSON Store  │      │  History     │
-└──────────────┘      └──────────────┘      └──────────────┘</div>
-    </div>
-</section>
+<main id="main">
+<article>
+    <header class="project-hero col">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#tier2-sandbox">Sandbox</a> / <span aria-current="page">T.A.A.F.U.</span></nav>
+        <p class="eyebrow">November 2020 · Team project</p>
+        <h1>T.A.A.F.U.: Temperature-Adjusting Arduino Fan Unit</h1>
+        <p class="lede">A fan unit that watches temperature, runs its fan to bring it down, shows the reading on an LCD and status LEDs, and pushes an alert to an Android app if it cannot keep up. The idea: a cheap, independent backup for server cooling, so a cooling failure does not go unnoticed when nobody is on site.</p>
+        <ul class="tags">
+            <li>Arduino</li>
+            <li>ESP8266</li>
+            <li>Firebase</li>
+            <li>Android</li>
+            <li>SolidWorks</li>
+        </ul>
+        <div class="cta-row">
+            <a class="btn btn-primary" href="#design">How it works</a>
+            <a class="btn btn-outline" href="https://www.hackster.io/ajayadahal/realtime-temperature-monitor-53d97c" target="_blank" rel="noopener">Original write-up on Hackster</a>
+        </div>
+    </header>
 
-<section>
-    <div class="container">
-        <div class="section-label">Stack</div>
-        <div class="section-title">Technology</div>
-        <table class="svc-table">
-            <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
-            <tbody>
-                <tr><td>Sensor</td><td><code>Temperature Sensor</code></td><td>Environmental data capture</td></tr>
-                <tr><td>MCU</td><td><code>ESP8266 / Arduino</code></td><td>Sensor reading + WiFi upload</td></tr>
-                <tr><td>Backend</td><td><code>Firebase Realtime DB</code></td><td>Cloud data storage and sync</td></tr>
-                <tr><td>Mobile</td><td><code>Android (Java)</code></td><td>Data visualization app</td></tr>
-                <tr><td>Protocol</td><td><code>WiFi + Firebase SDK</code></td><td>Wireless data transport</td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
+    <figure class="cover col">
+        <img src="../images/projects/iot-temp-monitor/enclosure.webp" width="1079" height="775" alt="SolidWorks model of the enclosure: grey box with a 16x2 LCD, three status LEDs and a red fan">
+        <figcaption>SolidWorks model of the enclosure: LCD, status LEDs and fan on the front panel.</figcaption>
+    </figure>
 
-<section>
-    <div class="container" style="text-align: center;">
-        <div class="section-title">Related Projects</div>
-        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
-            <a href="wrecks.html" class="btn btn-outline">WRECKS IoT →</a>
-            <a href="video-player.html" class="btn btn-outline">Video Player App →</a>
+    <div class="col">
+        <section class="section" id="overview">
+            <h2>At a glance</h2>
+            <dl class="facts">
+                <dt>Controllers</dt><dd>Arduino UNO, plus an ESP8266 (ESP-12E) for Wi-Fi</dd>
+                <dt>Sensor</dt><dd>DHT11 temperature and humidity sensor</dd>
+                <dt>Outputs</dt><dd>CPU fan switched through a relay, 16x2 I2C LCD, RGB status LEDs</dd>
+                <dt>Cloud and app</dt><dd>Firebase Realtime Database feeding an Android app; NTP time stamps</dd>
+                <dt>Enclosure</dt><dd>Modelled in SolidWorks and 3D printed</dd>
+            </dl>
+        </section>
+
+        <section class="section" id="design">
+            <h2>How it works</h2>
+            <ul>
+                <li>The board reads the DHT11 and shows the temperature on the LCD.</li>
+                <li>A green LED means the temperature is in range; red means it is too high or too low.</li>
+                <li>The fan turns on above a set temperature and off below a lower one. The design plan also called for varying its speed in between.</li>
+                <li>Readings go to Firebase. If the temperature keeps rising, or stays high for too long, the Android app gets a push notification and keeps a log of the fan activity.</li>
+            </ul>
+            <p>We also set a rule for the app: collect no user data beyond what it needs to work.</p>
+        </section>
+
+        <section class="section" id="files">
+            <h2>Files and links</h2>
+            <ul class="links">
+                <li><a href="https://www.hackster.io/ajayadahal/realtime-temperature-monitor-53d97c" target="_blank" rel="noopener"><b>Original write-up</b><span>Hackster.io, November 22, 2020</span></a></li>
+                <li><a href="https://hacksterio.s3.amazonaws.com/uploads/attachments/1222074/taafu_kV8600JqiQ.SLDASM" rel="noopener"><b>SolidWorks assembly</b><span>.SLDASM, 2.6 MB</span></a></li>
+                <li><a href="https://hacksterio.s3.amazonaws.com/uploads/attachments/1222075/casing_RBNr4whloU.SLDPRT" rel="noopener"><b>Enclosure part</b><span>.SLDPRT (box)</span></a></li>
+                <li><a href="https://hacksterio.s3.amazonaws.com/uploads/attachments/1222076/casing_cover_TjqzGqRK9V.SLDPRT" rel="noopener"><b>Cover part</b><span>.SLDPRT (cover)</span></a></li>
+            </ul>
+            <p>The Android app was published on Google Play in 2020 and is no longer listed.</p>
+        </section>
+    </div>
+</article>
+
+<section class="related" aria-labelledby="related-title">
+    <div class="wrap">
+        <h2 id="related-title">More from the sandbox</h2>
+        <div class="cards">
+            <a class="card" href="soil-moisture-logger.html"><img src="../images/projects/soil-moisture-logger/kit.webp" alt="" loading="lazy"><div><small>June 2023</small><b>Low-Power Soil-Moisture Logger</b></div></a>
+            <a class="card" href="video-player.html"><img src="../iconss/project_icons/video.webp" alt="" loading="lazy"><div><small>July 2020</small><b>Video Player Pro for Learners</b></div></a>
+            <a class="card" href="line-follower-pic24.html"><img src="../images/projects/line-follower-pic24/robot.webp" alt="" loading="lazy"><div><small>Spring 2021</small><b>Line Follower Robot on a dsPIC33</b></div></a>
         </div>
     </div>
 </section>
+</main>
 
-<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="wrecks.html">WRECKS</a> &nbsp;·&nbsp; <a href="https://www.hackster.io/ajayadahal1000/realtime-temperature-monitor-53d97c" target="_blank">Hackster</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
 
+<script src="../js/project.js" defer></script>
 </body>
 </html>

@@ -2,217 +2,162 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analog Line Follower with LM324N | Ajaya Dahal</title>
-    <meta name="description" content="Pure analog line-following robot using LM324N op-amp comparators with Arduino Nano backup control for edge cases.">
-    <meta name="keywords" content="line follower, LM324N, op-amp, comparator, analog, Arduino Nano, robot">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Analog Line Follower with an Arduino Backup | Ajaya Dahal</title>
+    <meta name="description" content="A two-sensor line-following robot with two control boards: an LM324N comparator circuit and an Arduino Nano, selected with a jumper and driving an L293D. Board designed in KiCad.">
     <meta name="author" content="Ajaya Dahal">
-    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
     <link rel="canonical" href="https://ajayadahal.github.io/projects/analog-line-follower.html">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Analog Line Follower with LM324N | Ajaya Dahal">
-    <meta property="og:description" content="Pure analog line follower using LM324N comparator with Arduino Nano backup.">
+    <meta property="og:title" content="Analog Line Follower with an Arduino Backup | Ajaya Dahal">
+    <meta property="og:description" content="One robot, two controllers: an LM324N comparator circuit and an Arduino Nano, switched with a jumper.">
     <meta property="og:url" content="https://ajayadahal.github.io/projects/analog-line-follower.html">
-    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "TechArticle",
-        "headline": "Analog Line Follower with LM324N",
-        "author": { "@type": "Person", "name": "Ajaya Dahal" },
-        "description": "Pure analog line-following robot using LM324N op-amp comparators with Arduino Nano backup.",
-        "keywords": ["line follower", "LM324N", "op-amp", "analog", "Arduino Nano"]
-    }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
-            --text-primary: #e6e8eb; --text-secondary: #9ca3af; --text-muted: #6b7280;
-            --accent-1: #795548; --accent-2: #a1887f;
-            --accent-cyan: #00d9ff; --accent-green: #00ff9f; --border-color: #2d3748;
-            --font-sans: 'Inter', -apple-system, sans-serif; --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
-        }
-        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(121, 85, 72, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(161, 136, 127, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
-        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
-        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
-        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
-        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
-        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
-        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
-        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-        .hero .badge-row .badge { background: rgba(121, 85, 72, 0.15); color: var(--accent-2); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
-        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
-        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
-        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
-        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
-        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(121, 85, 72, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
-        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
-        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
-        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
-        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
-        .arch-block { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; margin-bottom: 36px; }
-        .arch-block pre { font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6; color: var(--accent-2); overflow-x: auto; white-space: pre; }
-        .decision-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
-        .decision-card:hover { border-color: var(--accent-1); }
-        .decision-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
-        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
-        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
-        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
-        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
-        .svc-table tr:last-child td { border-bottom: none; }
-        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
-        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
-        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
-        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .stat-bar { grid-template-columns: repeat(2, 1fr); } .decision-grid { grid-template-columns: 1fr; } }
-    </style>
-    <style>
-      /* Mobile responsiveness fix (added during mobile audit):
-         keep wide tables, bare code/pre blocks, math and media from forcing
-         the page wider than the viewport, which caused phones to zoom out.
-         !important is needed so wide data tables become horizontally
-         scrollable instead of being clipped by their rounded-corner
-         "overflow: hidden" card styling. */
-      @media (max-width: 768px) {
-        table { display: block !important; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-        pre { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        img, video, canvas, iframe { max-width: 100%; height: auto; }
-        .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
-        .top-nav .inner { flex-wrap: wrap; row-gap: 6px; }
-        .top-nav .links { flex-wrap: wrap; }
-        /* Prevent CSS grid/flex items from blowing out to their content's
-           min-content width (which forced horizontal overflow). */
-        .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
-      }
-    </style>
+    <meta property="og:image" content="https://ajayadahal.github.io/images/projects/analog-line-follower/og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="line-follower-pic24.html">PIC24 Follower</a><a href="diy-rth-drone.html">DIY Drone</a></div></div></nav>
-
-<header class="hero">
-    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#tier2-sandbox">Sandbox</a> → Analog Line Follower</div>
-    <div class="badge-row">
-        <span class="badge">Analog</span>
-        <span class="badge">Op-Amp</span>
-        <span class="badge">LM324N</span>
-    </div>
-    <h1>Analog Line Follower — LM324N with Arduino Backup</h1>
-    <p class="subtitle">
-        A purely <strong>analog line-following robot</strong> using the <strong>LM324N quad op-amp</strong> as
-        voltage comparators to process IR sensor input and directly drive motors — zero microcontroller required
-        for the primary control loop. <strong>Arduino Nano</strong> provides backup digital control for edge-case recovery.
-    </p>
-    <div class="stat-bar">
-        <div class="stat-card"><div class="number">LM324N</div><div class="label">Quad Op-Amp</div></div>
-        <div class="stat-card"><div class="number">0 μs</div><div class="label">Analog Latency</div></div>
-        <div class="stat-card"><div class="number">Nano</div><div class="label">Backup MCU</div></div>
-    </div>
-    <div class="cta-row">
-        <a href="https://www.hackster.io/ajayadahal1000/line-follower-using-lm324n-with-backup-arduino-nano-8e886c" target="_blank" class="btn btn-primary">View on Hackster</a>
-        <a href="line-follower-pic24.html" class="btn btn-outline">Compare: PIC24 Digital →</a>
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
 </header>
 
-<section>
-    <div class="container">
-        <div class="section-label">Architecture</div>
-        <div class="section-title">Analog Control Loop</div>
-        <p class="section-desc">The LM324N comparator outputs directly modulate the H-bridge motor driver — no ADC sampling, no software delays.</p>
-        <div class="arch-block">
-<pre>
-   IR Sensor Array (3 channels)
-   ├──────┬──────┬──────┤
-   │  L   │  C   │  R   │
-   ▼      ▼      ▼
-┌──────────────────────┐
-│      LM324N          │
-│  Quad Comparator     │
-│  Vref ┤ +  - ├ Vin   │
-│       ├──────┤       │
-│  Ch1  │ Ch2  │ Ch3   │
-└──┬────┴──┬───┴──┬────┘
-   │       │      │
-   ▼       ▼      ▼
-┌──────────────────────┐
-│  L293D H-Bridge      │
-│  Motor Driver        │
-│   M_L         M_R    │
-└──────────────────────┘
+<main id="main">
+<article>
+    <header class="project-hero col">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#tier2-sandbox">Sandbox</a> / <span aria-current="page">Analog Line Follower</span></nav>
+        <p class="eyebrow">Personal project · written up March 2020</p>
+        <h1>Analog Line Follower with an Arduino Backup</h1>
+        <p class="lede">A two-sensor line follower with two controllers on one robot: an <strong>LM324N</strong> comparator circuit and an <strong>Arduino Nano</strong>. A jumper cap picks which one drives the L293D motor driver, so a beginner can learn analog and digital control on the same robot, and a failed board does not end a run.</p>
+        <ul class="tags">
+            <li>LM324N comparators</li>
+            <li>Arduino Nano</li>
+            <li>L293D</li>
+            <li>PCB design (KiCad)</li>
+        </ul>
+        <div class="cta-row">
+            <a class="btn btn-primary" href="#logic">How it steers</a>
+            <a class="btn btn-outline" href="https://www.hackster.io/ajayadahal/line-follower-using-lm324n-with-backup-arduino-nano-8e886c" target="_blank" rel="noopener">Original write-up on Hackster</a>
+        </div>
+    </header>
 
-  ┌─── Arduino Nano ───┐
-  │  Backup Digital     │
-  │  Control (edge      │
-  │  case recovery)     │
-  └─────────────────────┘
-</pre>
+    <figure class="cover col">
+        <img src="../images/projects/analog-line-follower/cover.webp" width="972" height="729" alt="3D model of the line-following robot: chassis, two wheels with yellow gear motors and the control board on top">
+        <figcaption>3D model of the robot with the control board mounted on the chassis.</figcaption>
+    </figure>
+
+    <div class="col">
+        <section class="section" id="overview">
+            <h2>At a glance</h2>
+            <dl class="facts">
+                <dt>Analog control</dt><dd>LM324N quad op-amp used as comparators</dd>
+                <dt>Digital control</dt><dd>Arduino Nano, programmed in the Arduino IDE</dd>
+                <dt>Selector</dt><dd>A jumper cap switches between the two; the board also carries four KEMET EC2-5NU relays</dd>
+                <dt>Motor driver</dt><dd>L293D dual H-bridge, two DC gear motors</dd>
+                <dt>Board</dt><dd>Designed in KiCad; 3D model, schematic and code published</dd>
+            </dl>
+            <p>I have liked line-following robots since high school, and I wanted one that is as simple as possible for someone starting out in robotics. The analog board teaches comparators and needs no code; the Arduino teaches digital I/O and a little programming. Having both also means that if one circuit misbehaves during a run, you can switch to the other and keep going.</p>
+        </section>
+
+        <section class="section" id="logic">
+            <h2>How it steers</h2>
+            <p>Each sensor reports whether it sees the line. On the analog board the LM324N compares each sensor against a reference and sets the motor-driver inputs directly. The Arduino sketch does the same thing in software:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Left sensor</th><th>Right sensor</th><th>Motors</th></tr></thead>
+                    <tbody>
+                        <tr><td>High</td><td>High</td><td>Both forward</td></tr>
+                        <tr><td>Low</td><td>High</td><td>Left off, right forward</td></tr>
+                        <tr><td>High</td><td>Low</td><td>Left forward, right off</td></tr>
+                        <tr><td>Low</td><td>Low</td><td>Both off (stop)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <figure class="code">
+                <figcaption>sketch_mar20a.ino (excerpt)</figcaption>
+<pre><code>void loop() {
+  if (digitalRead(leftSensor) &amp;&amp; digitalRead(rightSensor)) {          // forward
+    digitalWrite(leftMotor, HIGH);  digitalWrite(leftMotor2, LOW);
+    digitalWrite(rightMotor1, HIGH); digitalWrite(rightMotor2, LOW);
+  }
+  if (!digitalRead(leftSensor) &amp;&amp; digitalRead(rightSensor)) {         // left motor off
+    digitalWrite(leftMotor, LOW);   digitalWrite(leftMotor2, LOW);
+    digitalWrite(rightMotor1, HIGH); digitalWrite(rightMotor2, LOW);
+  }
+  if (digitalRead(leftSensor) &amp;&amp; !digitalRead(rightSensor)) {         // right motor off
+    digitalWrite(leftMotor, HIGH);  digitalWrite(leftMotor2, LOW);
+    digitalWrite(rightMotor1, LOW);  digitalWrite(rightMotor2, LOW);
+  }
+  if (!digitalRead(leftSensor) &amp;&amp; !digitalRead(rightSensor)) {        // stop
+    digitalWrite(leftMotor, LOW);   digitalWrite(leftMotor2, LOW);
+    digitalWrite(rightMotor1, LOW);  digitalWrite(rightMotor2, LOW);
+  }
+}</code></pre>
+            </figure>
+        </section>
+
+        <section class="section" id="board">
+            <h2>The board</h2>
+            <p>Both control circuits share one PCB, with the Arduino Nano socketed next to the comparator section. Some of the other 3D models in the assembly came from GrabCAD and other public libraries.</p>
+            <figure>
+                <a href="../images/projects/analog-line-follower/board-3d.webp" data-zoom><img src="../images/projects/analog-line-follower/board-3d.webp" width="1200" height="569" loading="lazy" alt="3D render of the black PCB with four orange relays and the Arduino Nano"></a>
+                <figcaption>3D view of the PCB from KiCad.</figcaption>
+            </figure>
+        </section>
+
+        <section class="section" id="files">
+            <h2>Files and links</h2>
+            <ul class="links">
+                <li><a href="https://www.hackster.io/ajayadahal/line-follower-using-lm324n-with-backup-arduino-nano-8e886c" target="_blank" rel="noopener"><b>Original write-up</b><span>Hackster.io, March 29, 2020</span></a></li>
+                <li><a href="https://hacksterio.s3.amazonaws.com/uploads/attachments/1093276/schematics_lm324n_with_backup_arduino_nano_line_follower_y1dVygPOOJ.pdf" target="_blank" rel="noopener"><b>Schematic</b><span>PDF, 160 KB</span></a></li>
+                <li><a href="https://www.hackster.io/code_files/436367/download" target="_blank" rel="noopener"><b>Arduino sketch</b><span>sketch_mar20a.ino</span></a></li>
+                <li><a href="https://hacksterio.s3.amazonaws.com/uploads/attachments/1093281/lm324n_with_backup_arduino_nano_line_follower_754rBdhI3n.step" rel="noopener"><b>3D model (STEP)</b><span>Full assembly, 43 MB</span></a></li>
+                <li><a href="https://grabcad.com/library/line-follower-12" target="_blank" rel="noopener"><b>All files on GrabCAD</b><span>KiCad project and models</span></a></li>
+            </ul>
+        </section>
+    </div>
+</article>
+
+<section class="related" aria-labelledby="related-title">
+    <div class="wrap">
+        <h2 id="related-title">More from the sandbox</h2>
+        <div class="cards">
+            <a class="card" href="line-follower-pic24.html"><img src="../images/projects/line-follower-pic24/robot.webp" alt="" loading="lazy"><div><small>Spring 2021</small><b>Line Follower Robot on a dsPIC33</b></div></a>
+            <a class="card" href="diy-rth-drone.html"><img src="../iconss/project_icons/drone_rth.webp" alt="" loading="lazy"><div><small>2020</small><b>DIY Return-to-Home Drone</b></div></a>
+            <a class="card" href="iot-temp-monitor.html"><img src="../images/projects/iot-temp-monitor/enclosure.webp" alt="" loading="lazy"><div><small>November 2020</small><b>T.A.A.F.U. Temperature-Adjusting Fan</b></div></a>
         </div>
     </div>
 </section>
+</main>
 
-<section>
-    <div class="container">
-        <div class="section-label">Decisions</div>
-        <div class="section-title">Design Choices</div>
-        <div class="decision-grid">
-            <div class="decision-card">
-                <h3>LM324N Comparator</h3>
-                <p>Quad op-amp package provides 4 comparator channels in a single DIP-14 IC. Eliminates ADC quantization delays for near-instantaneous sensor→motor response.</p>
-            </div>
-            <div class="decision-card">
-                <h3>Analog-First Control</h3>
-                <p>Primary control path is pure analog: IR voltage → comparator threshold → motor drive. Zero processor overhead, zero sampling jitter — the fastest possible control loop.</p>
-            </div>
-            <div class="decision-card">
-                <h3>Arduino Nano Backup</h3>
-                <p>Digital MCU monitors the analog path and takes over during edge cases like sharp turns, intersections, or line-loss scenarios where simple threshold comparison fails.</p>
-            </div>
-            <div class="decision-card">
-                <h3>Threshold Tuning</h3>
-                <p>Potentiometer-adjustable Vref on each comparator channel enables field calibration for different surface colors and lighting conditions.</p>
-            </div>
-        </div>
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
     </div>
-</section>
+</footer>
 
-<section>
-    <div class="container">
-        <div class="section-label">Stack</div>
-        <div class="section-title">Components</div>
-        <table class="svc-table">
-            <thead><tr><th>Component</th><th>Part</th><th>Role</th></tr></thead>
-            <tbody>
-                <tr><td>Comparator</td><td><code>LM324N</code></td><td>Quad op-amp as voltage comparators</td></tr>
-                <tr><td>Backup MCU</td><td><code>Arduino Nano</code></td><td>Edge-case digital control</td></tr>
-                <tr><td>Motor Driver</td><td><code>L293D H-Bridge</code></td><td>Dual DC motor control</td></tr>
-                <tr><td>Sensors</td><td><code>IR Reflectance Array</code></td><td>Line detection (3 channels)</td></tr>
-                <tr><td>Tuning</td><td><code>Trimpots</code></td><td>Vref threshold adjustment</td></tr>
-                <tr><td>Power</td><td><code>7.4V LiPo</code></td><td>Dual-rail supply via regulator</td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<section>
-    <div class="container" style="text-align: center;">
-        <div class="section-title">Related Projects</div>
-        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
-            <a href="line-follower-pic24.html" class="btn btn-outline">PIC24 Digital Line Follower →</a>
-            <a href="diy-rth-drone.html" class="btn btn-outline">DIY RTH Drone →</a>
-        </div>
-    </div>
-</section>
-
-<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="line-follower-pic24.html">PIC24 Follower</a> &nbsp;·&nbsp; <a href="https://www.hackster.io/ajayadahal1000/line-follower-using-lm324n-with-backup-arduino-nano-8e886c" target="_blank">Hackster</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
-
+<script src="../js/project.js" defer></script>
 </body>
 </html>

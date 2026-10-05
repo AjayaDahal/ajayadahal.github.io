@@ -2,271 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cummings Asynchronous FIFO — Clock Domain Crossing | Ajaya Dahal</title>
-    <meta name="description" content="Implementation of Clifford Cummings' asynchronous FIFO design for safe clock domain crossing — Gray code pointers, dual-clock architecture, metastability handling in Verilog.">
-    <meta name="keywords" content="Cummings FIFO, clock domain crossing, CDC, Gray code, metastability, dual-clock FIFO, Verilog, FPGA, ASIC, synchronizers">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asynchronous FIFO for Clock-Domain Crossing | Ajaya Dahal</title>
+    <meta name="description" content="A Verilog asynchronous FIFO following Clifford Cummings' SNUG 2002 design: Gray-code pointers, two-flop synchronizers, and full/empty flags generated in their own clock domains. Simulated in Vivado.">
     <meta name="author" content="Ajaya Dahal">
-    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
     <link rel="canonical" href="https://ajayadahal.github.io/projects/cummings-fifo.html">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Cummings Asynchronous FIFO | Ajaya Dahal">
-    <meta property="og:description" content="Dual-clock asynchronous FIFO with Gray code pointers for safe clock domain crossing.">
+    <meta property="og:title" content="Asynchronous FIFO for Clock-Domain Crossing | Ajaya Dahal">
+    <meta property="og:description" content="Gray-code pointers, two-flop synchronizers and safe full/empty flags, in Verilog.">
     <meta property="og:url" content="https://ajayadahal.github.io/projects/cummings-fifo.html">
-    <meta property="og:image" content="https://ajayadahal.github.io/images/AJ.png">
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "TechArticle",
-        "name": "Cummings Asynchronous FIFO — Clock Domain Crossing",
-        "author": { "@type": "Person", "name": "Ajaya Dahal" },
-        "description": "Implementation of Clifford Cummings' CDC FIFO with Gray code pointers and dual-clock synchronizers",
-        "proficiencyLevel": "Expert"
-    }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
-            --bg-card: #161d27; --text-primary: #e6e8eb; --text-secondary: #9ca3af;
-            --text-muted: #6b7280; --accent-1: #9c27b0; --accent-2: #ba68c8;
-            --accent-cyan: #00d9ff; --accent-green: #00ff9f;
-            --border-color: #2d3748;
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
-        }
-        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(156, 39, 176, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(186, 104, 200, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
-        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
-        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
-        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
-        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
-        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
-        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
-        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-        .hero .badge-row .badge { background: rgba(156, 39, 176, 0.15); color: var(--accent-1); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-        .hero h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
-        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
-        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
-        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
-        .stat-card .number { font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
-        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(156, 39, 176, 0.3); } .btn-primary:hover { transform: translateY(-2px); color: white; }
-        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
-        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
-        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
-        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
-        .decisions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
-        .decision-card:hover { border-color: rgba(156, 39, 176, 0.4); }
-        .decision-card .card-icon { font-size: 1.5rem; margin-bottom: 12px; }
-        .decision-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
-        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
-        .arch-diagram { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; overflow-x: auto; margin-bottom: 24px; font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-cyan); line-height: 1.8; white-space: pre; }
-        .code-block { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; color: #e6e8eb; line-height: 1.6; white-space: pre; margin-bottom: 24px; }
-        .code-block .kw { color: var(--accent-1); } .code-block .cm { color: var(--text-muted); } .code-block .ty { color: var(--accent-2); }
-        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
-        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
-        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
-        .svc-table tr:last-child td { border-bottom: none; }
-        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
-        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
-        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
-        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .decisions-grid { grid-template-columns: 1fr; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
-    </style>
-    <style>
-      /* Mobile responsiveness fix (added during mobile audit):
-         keep wide tables, bare code/pre blocks, math and media from forcing
-         the page wider than the viewport, which caused phones to zoom out.
-         !important is needed so wide data tables become horizontally
-         scrollable instead of being clipped by their rounded-corner
-         "overflow: hidden" card styling. */
-      @media (max-width: 768px) {
-        table { display: block !important; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-        pre { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        img, video, canvas, iframe { max-width: 100%; height: auto; }
-        .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
-        .top-nav .inner { flex-wrap: wrap; row-gap: 6px; }
-        .top-nav .links { flex-wrap: wrap; }
-        /* Prevent CSS grid/flex items from blowing out to their content's
-           min-content width (which forced horizontal overflow). */
-        .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
-      }
-    </style>
+    <meta property="og:image" content="https://ajayadahal.github.io/images/projects/cummings-fifo/og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="versal-ethernet.html">Versal</a><a href="72ns-gateway.html">72ns Gateway</a><a href="sma.html">SMA</a></div></div></nav>
-
-<header class="hero">
-    <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#page-3">Projects</a> → Cummings FIFO</div>
-    <div class="badge-row">
-        <span class="badge">Clock Domain Crossing</span>
-        <span class="badge">Verilog</span>
-        <span class="badge">FPGA / ASIC</span>
-    </div>
-    <h1>Asynchronous FIFO — Cummings CDC Design</h1>
-    <p class="subtitle">
-        Implementation of <strong>Clifford E. Cummings'</strong> seminal asynchronous FIFO architecture for safe
-        <strong>Clock Domain Crossing (CDC)</strong>. Gray code pointer synchronization eliminates metastability hazards
-        while enabling reliable data transfer between unrelated clock domains — a foundational building block
-        used in the <a href="72ns-gateway.html">72ns Gateway HFT Accelerator</a> and production Ethernet designs.
-    </p>
-    <div class="stat-bar">
-        <div class="stat-card"><div class="number">CDC</div><div class="label">Clock Domain Crossing</div></div>
-        <div class="stat-card"><div class="number">Gray</div><div class="label">Code Pointers</div></div>
-        <div class="stat-card"><div class="number">2-FF</div><div class="label">Synchronizer Stage</div></div>
-        <div class="stat-card"><div class="number">0</div><div class="label">Metastability Risk</div></div>
-    </div>
-    <div class="cta-row">
-        <a href="https://github.com/AjayaDahal/Cummings-FIFO" target="_blank" class="btn btn-primary">View Repository</a>
-        <a href="72ns-gateway.html" class="btn btn-outline">Used In: 72ns Gateway →</a>
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
 </header>
 
-<section>
-    <div class="container">
-        <div class="section-label">Problem</div>
-        <div class="section-title">The CDC Challenge</div>
-        <p class="section-desc">
-            When data crosses between two unrelated clock domains, metastability can corrupt signals. A naive binary
-            counter FIFO can produce glitches where multiple bits change simultaneously, causing the receiving
-            domain to read a completely wrong pointer value. Cummings' solution uses Gray code — where only one bit
-            changes per increment — to make pointer synchronization safe.
-        </p>
+<main id="main">
+<article>
+    <header class="project-hero col">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#page-3">Projects</a> / <span aria-current="page">Asynchronous FIFO</span></nav>
+        <p class="eyebrow">December 2025 · Verilog</p>
+        <h1>Asynchronous FIFO for Clock-Domain Crossing</h1>
+        <p class="lede">A Verilog FIFO that moves data safely between two unrelated clocks, following Clifford Cummings' SNUG 2002 design: <strong>Gray-code pointers</strong>, <strong>two-flop synchronizers</strong>, and full and empty flags generated in the clock domain that needs them.</p>
+        <ul class="tags">
+            <li>Verilog</li>
+            <li>Clock-domain crossing</li>
+            <li>Gray code</li>
+            <li>Vivado simulation</li>
+        </ul>
+        <div class="cta-row">
+            <a class="btn btn-primary" href="https://github.com/AjayaDahal/Cummings-FIFO" target="_blank" rel="noopener">Repository on GitHub</a>
+            <a class="btn btn-outline" href="#design">Design notes</a>
+        </div>
+    </header>
+
+    <div class="col">
+        <section class="section" id="modules">
+            <h2>Modules</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Module</th><th>Role</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>fifomem</code></td><td>Dual-port RAM, 2<sup>ADDRSIZE</sup> words of DATAWIDTH bits (8-bit by default)</td></tr>
+                        <tr><td><code>wptr_full</code></td><td>Write pointer and full flag, in the write clock domain</td></tr>
+                        <tr><td><code>rptr_empty</code></td><td>Read pointer and empty flag, in the read clock domain</td></tr>
+                        <tr><td><code>sync_w2r</code>, <code>sync_r2w</code></td><td>Two-flop synchronizers carrying each Gray-code pointer into the other domain</td></tr>
+                        <tr><td><code>bin2gray</code>, <code>gray2bin</code></td><td>Pointer conversions between binary and Gray code</td></tr>
+                        <tr><td><code>async_fifo_wrapper</code></td><td>Top level, also packaged as a Vivado block design</td></tr>
+                        <tr><td><code>tb_fifo</code></td><td>Testbench</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section" id="design">
+            <h2>Design notes</h2>
+            <dl class="facts">
+                <dt>Gray-code pointers</dt><dd>A binary counter can change several bits at once (0111 to 1000 changes four). Sampled mid-transition in the other clock domain, that can read as a completely wrong value. A Gray-code count changes exactly one bit per step, so a synchronized pointer is either the old value or the new one.</dd>
+                <dt>Two-flop synchronizers</dt><dd>The first flop may go metastable; the second gives it a full clock period to settle. That does not make failure impossible, but it pushes the mean time between failures far beyond the life of the product at normal clock rates.</dd>
+                <dt>Empty and full</dt><dd>Pointers carry one extra bit. Empty is when the read pointer equals the synchronized write pointer. Full is when the write pointer equals the synchronized read pointer with its two most significant bits inverted: same address, but the writer has wrapped once more.</dd>
+                <dt>Safe by design</dt><dd>Each flag is computed in the domain that acts on it, from a pointer that is a little stale. Stale pointers can only make the FIFO look fuller or emptier than it is, never cause an overflow or underflow.</dd>
+                <dt>Depth</dt><dd>A power of two, set by ADDRSIZE, so the Gray-code wrap-around works.</dd>
+            </dl>
+        </section>
+
+        <section class="section" id="sim">
+            <h2>Simulation</h2>
+            <figure>
+                <a href="../images/projects/cummings-fifo/waveform.webp" data-zoom><img src="../images/projects/cummings-fifo/waveform.webp" width="1626" height="905" loading="lazy" alt="Vivado simulator waveform of the FIFO testbench showing the write and read clocks, data buses and flags"></a>
+                <figcaption>Testbench waveform in the Vivado simulator. Select to enlarge.</figcaption>
+            </figure>
+        </section>
+
+        <section class="section" id="files">
+            <h2>Links</h2>
+            <ul class="links">
+                <li><a href="https://github.com/AjayaDahal/Cummings-FIFO" target="_blank" rel="noopener"><b>Source and testbench</b><span>GitHub</span></a></li>
+                <li><a href="https://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf" target="_blank" rel="noopener"><b>The reference paper</b><span>C. E. Cummings, "Simulation and Synthesis Techniques for Asynchronous FIFO Design", SNUG San Jose 2002</span></a></li>
+            </ul>
+        </section>
     </div>
-</section>
+</article>
 
-<section>
-    <div class="container">
-        <div class="section-label">Architecture</div>
-        <div class="section-title">Dual-Clock FIFO Structure</div>
-        <div class="arch-diagram">
-  WRITE CLOCK DOMAIN (wclk)          READ CLOCK DOMAIN (rclk)
-  ─────────────────────────          ─────────────────────────
-
-  ┌─────────────────┐                ┌─────────────────┐
-  │   Write Logic   │                │   Read Logic    │
-  │                 │                │                 │
-  │  waddr (binary) │                │  raddr (binary) │
-  │  wptr  (Gray)   │                │  rptr  (Gray)   │
-  └────────┬────────┘                └────────┬────────┘
-           │                                  │
-           │    ┌─────────────────────┐       │
-           │    │   DUAL-PORT SRAM    │       │
-           ├───▶│                     │◀──────┤
-           │    │  waddr → Write Port │       │
-           │    │  raddr → Read Port  │       │
-           │    └─────────────────────┘       │
-           │                                  │
-           │         SYNCHRONIZERS            │
-           │                                  │
-  ┌────────┴───────┐              ┌───────────┴──────┐
-  │ rptr_sync      │◀─── 2-FF ───│ rptr (Gray)      │
-  │ (Gray → rclk)  │     sync    │                   │
-  └────────┬───────┘              └──────────────────┘
-           │
-  ┌────────┴───────┐              ┌──────────────────┐
-  │ wptr (Gray)    │─── 2-FF ───▶│ wptr_sync        │
-  │                │    sync     │ (Gray → wclk)     │
-  └────────────────┘              └───────────┬──────┘
-                                              │
-  ┌─────────────────┐             ┌───────────┴──────┐
-  │   FULL Flag     │             │   EMPTY Flag     │
-  │ wptr == rptr_sync│            │ rptr == wptr_sync│
-  │ (with MSB trick)│             │ (exact match)    │
-  └─────────────────┘             └──────────────────┘</div>
-    </div>
-</section>
-
-<section>
-    <div class="container">
-        <div class="section-label">Theory</div>
-        <div class="section-title">Key Design Decisions</div>
-        <div class="decisions-grid">
-            <div class="decision-card">
-                <div class="card-icon">🔢</div>
-                <h3>Gray Code vs Binary Pointers</h3>
-                <p>Binary counters can have multi-bit transitions (e.g., 0111 → 1000 = 4 bits change). If sampled mid-transition, the synchronized value could be completely wrong. Gray code guarantees only 1 bit changes per increment, making 2-FF synchronization safe.</p>
-            </div>
-            <div class="decision-card">
-                <div class="card-icon">⏱️</div>
-                <h3>2-FF Synchronizer Chain</h3>
-                <p>Two flip-flop stages reduce metastability probability to negligible levels (MTBF > millions of years at typical clock rates). The first FF may go metastable; the second resolves to a valid logic level before being used.</p>
-            </div>
-            <div class="decision-card">
-                <div class="card-icon">🚩</div>
-                <h3>Full/Empty Flag Generation</h3>
-                <p>Empty: read pointer equals synchronized write pointer (exact match). Full: write pointer equals synchronized read pointer with the two MSBs inverted. The extra MSB distinguishes "same address, full" from "same address, empty."</p>
-            </div>
-            <div class="decision-card">
-                <div class="card-icon">📏</div>
-                <h3>Power-of-2 Depth Constraint</h3>
-                <p>FIFO depth must be 2^N for Gray code math to work correctly. The binary-to-Gray and Gray-to-binary conversions exploit XOR properties that only hold for power-of-2 address spaces.</p>
-            </div>
+<section class="related" aria-labelledby="related-title">
+    <div class="wrap">
+        <h2 id="related-title">More projects</h2>
+        <div class="cards">
+            <a class="card" href="72ns-gateway.html"><div><small>Versal · Low latency</small><b>72ns Gateway</b></div></a>
+            <a class="card" href="hack-computer-basys3.html"><img src="../images/hack-nand2tetris.svg" alt="" loading="lazy"><div><small>September 2026</small><b>NAND to Tetris, on Real Silicon</b></div></a>
+            <a class="card" href="versal-ethernet.html"><img src="../images/projects/versal-ethernet/vck190-lab.webp" alt="" loading="lazy"><div><small>AMD · Reference designs</small><b>Versal Ethernet Reference Designs</b></div></a>
         </div>
     </div>
 </section>
+</main>
 
-<section>
-    <div class="container">
-        <div class="section-label">Implementation</div>
-        <div class="section-title">Verilog Snippet — Gray Code Conversion</div>
-        <div class="code-block"><span class="cm">// Binary to Gray code conversion</span>
-<span class="kw">assign</span> gray_ptr = (binary_ptr >> 1) ^ binary_ptr;
-
-<span class="cm">// Gray to Binary conversion (for address generation)</span>
-<span class="kw">assign</span> binary_ptr[N]   = gray_ptr[N];
-<span class="kw">genvar</span> i;
-<span class="kw">generate</span>
-  <span class="kw">for</span> (i = N-1; i >= 0; i = i - 1) <span class="kw">begin</span>
-    <span class="kw">assign</span> binary_ptr[i] = binary_ptr[i+1] ^ gray_ptr[i];
-  <span class="kw">end</span>
-<span class="kw">endgenerate</span>
-
-<span class="cm">// 2-FF Synchronizer</span>
-<span class="kw">always</span> @(<span class="kw">posedge</span> rclk <span class="kw">or</span> <span class="kw">negedge</span> rrst_n) <span class="kw">begin</span>
-  <span class="kw">if</span> (!rrst_n) {wq2_rptr, wq1_rptr} &lt;= 0;
-  <span class="kw">else</span>          {wq2_rptr, wq1_rptr} &lt;= {wq1_rptr, wptr};
-<span class="kw">end</span></div>
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
     </div>
-</section>
+</footer>
 
-<section>
-    <div class="container">
-        <div class="section-label">Stack</div>
-        <div class="section-title">Technology & References</div>
-        <table class="svc-table">
-            <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
-            <tbody>
-                <tr><td>HDL</td><td><code>Verilog / SystemVerilog</code></td><td>RTL implementation</td></tr>
-                <tr><td>Simulation</td><td><code>ModelSim / Vivado Sim</code></td><td>Functional verification</td></tr>
-                <tr><td>Synthesis</td><td><code>Vivado / Synopsys DC</code></td><td>FPGA and ASIC targeting</td></tr>
-                <tr><td>CDC Analysis</td><td><code>CDC Lint Tools</code></td><td>Structural CDC checks</td></tr>
-                <tr><td>Reference Paper</td><td><code>Cummings SNUG 2002</code></td><td>"Simulation and Synthesis Techniques for Asynchronous FIFO Design"</td></tr>
-                <tr><td>Application</td><td><code>72ns Gateway</code></td><td>CDC between market data and order logic clocks</td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<section>
-    <div class="container" style="text-align: center;">
-        <div class="section-title">Related Projects</div>
-        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
-            <a href="72ns-gateway.html" class="btn btn-outline">72ns Gateway HFT →</a>
-            <a href="versal-ethernet.html" class="btn btn-outline">Versal 100G Ethernet →</a>
-            <a href="zcu102-ethernet.html" class="btn btn-outline">ZCU102 Ethernet →</a>
-        </div>
-    </div>
-</section>
-
-<footer class="page-footer"><div class="container"><p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="72ns-gateway.html">72ns Gateway</a> &nbsp;·&nbsp; <a href="https://github.com/AjayaDahal/Cummings-FIFO" target="_blank">GitHub</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p><p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p></div></footer>
-
+<script src="../js/project.js" defer></script>
 </body>
 </html>

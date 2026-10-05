@@ -1,0 +1,118 @@
+/* Light re-skin for the long project pages that keep their own component CSS. Load after the page's <style> block. */
+html:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f8fa;
+  --bg-tertiary: #eef1f5;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --accent-1: #3e64ff;
+  --accent-2: #2f4fd6;
+  --accent-blue: #3e64ff;
+  --accent-cyan: #2f4fd6;
+  --accent-purple: #6d28d9;
+  --accent-green: #0f7b45;
+  --accent-orange: #c2410c;
+  --accent-amber: #a16207;
+  --accent-yellow: #a16207;
+  --accent-red: #c81e3a;
+  --code-bg: #151b24;
+  --shadow: 0 2px 8px rgba(0, 0, 0, .06);
+  --font-sans: "Poppins", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, Menlo, monospace;
+}
+
+body { padding-top: 0; color: var(--text-primary); background: #fff; background-image: none; }
+.hero { padding-top: 48px; }
+main + .site-footer { margin-top: 64px; }
+
+a { color: var(--accent); }
+a:hover { color: var(--accent-dark); }
+
+h1, .hero h1 {
+  color: var(--ink);
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+}
+h2, h3 { color: var(--ink); }
+em { color: inherit; }
+th { color: var(--ink); }
+
+.section-label { color: var(--accent); }
+.section-title { color: var(--ink); }
+
+.stat-card, .stat-item, .spec-card { background: #fff; border: 1px solid var(--line); box-shadow: 0 2px 8px rgba(0, 0, 0, .05); }
+.stat-card .number, .stat-item .num, .spec-value {
+  color: var(--ink);
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+}
+
+.btn-primary, .back-btn { color: #fff; background: var(--accent); border: 2px solid var(--accent); box-shadow: none; }
+.btn-primary:hover, .back-btn:hover { color: #fff; background: var(--accent-dark); border-color: var(--accent-dark); box-shadow: none; }
+.btn-outline { color: var(--accent); background: #fff; border: 2px solid var(--accent); }
+.btn-outline:hover { color: var(--accent-dark); background: var(--accent-tint); border-color: var(--accent-dark); }
+
+.hero .badge-row .badge { color: var(--accent-dark); background: var(--accent-tint); border: 0; }
+
+:not(pre) > code { color: var(--ink); background: var(--surface); border: 1px solid var(--line); }
+
+/* Code stays dark, like the rest of the site; restore bright token colours inside it. */
+pre:not([class*="language-"]), .code-block, .dir-tree {
+  --text-primary: #e6e8eb;
+  --text-secondary: #c9d1d9;
+  --text-muted: #8b949e;
+  --border-color: #2d3748;
+  --bg-tertiary: #1f2937;
+  --accent-1: #93c5fd;
+  --accent-2: #bfdbfe;
+  --accent-blue: #a5b4fc;
+  --accent-cyan: #7dd3fc;
+  --accent-green: #86efac;
+  --accent-orange: #fdba74;
+  --accent-amber: #fcd34d;
+  --accent-yellow: #fde68a;
+  --accent-purple: #d8b4fe;
+  --accent-red: #fda4af;
+  color: #c9d1d9;
+  background: var(--dark);
+  border-color: #2d3748;
+}
+pre[class*="language-"] { background: var(--dark); border: 1px solid #2d3748; }
+
+.mermaid { background: #fff; border: 1px solid var(--line); }
+
+section + section { border-top-color: var(--line); }
+.svc-table td, .data-table td, .stack-table td, .schedule-table td, .answer-records li, .pub-list .row, .wf-step, .decision-card .alt { border-color: var(--line); }
+tbody tr:hover { background: rgba(62, 100, 255, .04); }
+
+.callout { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); }
+.callout h4 { color: var(--ink); }
+.callout.success { border-left-color: #16a34a; }
+.callout.warning { border-left-color: #d97706; }
+.pass-banner { color: var(--ink); background: #ecfdf3; border-color: #16a34a; }
+
+.card:hover, .decision-card:hover, .cap-card:hover, .pub-card:hover, .gallery figure:hover { border-color: var(--accent); }
+.gallery-item:hover, .spec-card:hover { box-shadow: 0 8px 25px rgba(0, 0, 0, .08); }
+.image-container img, .lightbox img { box-shadow: 0 8px 25px rgba(0, 0, 0, .12); }
+
+.roadmap::before { background: var(--line); }
+.roadmap-dot { border-color: #fff; box-shadow: none; }
+.vram-bar .seg, .key-btn:active, .key-btn.down { color: #fff; }
+
+/* These sit on dark overlays. */
+.zoom-caption, .lightbox-caption { color: #e6e8eb; }
+.zoomable::after { color: var(--ink); background: rgba(255, 255, 255, .92); border-color: var(--line); }
+
+.private-note { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; color: var(--muted); }
+
+/* Same phone fix the other long pages carry inline: wide tables scroll instead of widening the page. */
+@media (max-width: 768px) {
+  table { display: block !important; width: 100% !important; overflow-x: auto !important; }
+}

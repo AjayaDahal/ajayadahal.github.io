@@ -25,7 +25,12 @@
         "proficiencyLevel": "Expert"
     }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <script>document.documentElement.classList.add('js');</script>
     <!-- Mermaid (diagrams), KaTeX (equations), Prism (code) — same CDN pattern as other project pages -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -178,10 +183,26 @@
         .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
       }
     </style>
+    <link rel="stylesheet" href="../css/project-legacy.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<nav class="top-nav"><div class="inner"><a href="../home.html" class="brand"><span>A</span>jaya</a><div class="links"><a href="../home.html">Portfolio</a><a href="versal-ethernet.html">Versal Ethernet</a><a href="#build">Build</a><a href="#live">Live Demo</a></div></div></nav>
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+    </div>
+</header>
+
+<main id="main">
 
 <header class="hero">
     <div class="breadcrumb"><a href="../home.html">Portfolio</a> → <a href="../home.html#page-3">Projects</a> → WiFi HAR on Versal AI Engine</div>
@@ -904,7 +925,7 @@ golden:     mean=-0.002065 var=0.302189 power=0.302193
             <div class="row"><a href="https://doi.org/10.1109/NAECON61878.2024.10670353" target="_blank">Automatic Waveform Recognition from Complex RF Data with Filter-Based Deep Learning</a> — B. Hicks, S. Biswas, A. Dahal, V. González, A. C. Gurbuz · NAECON <span class="yr">2024</span></div>
             <div class="row"><a href="https://doi.org/10.1109/DCOSS54816.2022.00078" target="_blank">Software Radio with MATLAB Toolbox for 5G NR Waveform Generation</a> — W. AlQwider, A. Dahal, V. Marojevic · DCOSS <span class="yr">2022</span></div>
             <div class="row"><a href="https://ieeexplore.ieee.org/document/9681830" target="_blank">Open-Source Software Radio Platform for Research on Cellular Networked UAVs: It Works!</a> — V. Marojevic et al. · IEEE Communications Magazine <span class="yr">2022</span></div>
-            <div class="row"><a href="https://doi.org/10.1117/12.2587652" target="_blank">RGB Pixel-Block Point-Cloud Fusion for Object Detection</a> — J. E. Ball, A. Dahal et al. · Proc. SPIE 11748 <span class="yr">2021</span></div>
+            <div class="row"><a href="https://doi.org/10.1117/12.2587510" target="_blank">RGB Pixel-Block Point-Cloud Fusion for Object Detection</a> — T. Foster, A. Dahal, J. E. Ball · Proc. SPIE 11748 <span class="yr">2021</span></div>
             <div class="row"><a href="https://doi.org/10.1117/12.2587525" target="_blank">Adversarial Indoor Signal Detection</a> — S. Kodipaka, A. Dahal, L. Smith, N. Smith, B. Tang, J. E. Ball, M. Young · Proc. SPIE 11756 <span class="yr">2021</span></div>
         </div>
     </div>
@@ -1095,26 +1116,33 @@ sudo systemctl enable --now csi-activate.service csi-forward.service
     </div>
 </section>
 
-<footer class="page-footer"><div class="container">
-    <p><a href="../home.html">← Portfolio</a> &nbsp;·&nbsp; <a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL" target="_blank">GitHub Repo</a> &nbsp;·&nbsp; <a href="https://scholarsjunction.msstate.edu/td/6097/" target="_blank">Thesis</a> &nbsp;·&nbsp; <a href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" target="_blank">Scholar</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a></p>
-    <p style="margin-top:10px; font-size:0.8rem;">Ajaya Dahal · Sr. FPGA &amp; Network System Engineer · Austin, TX</p>
-</div></footer>
+<section>
+    <div class="container" style="text-align: center;">
+        <p><a href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL" target="_blank" rel="noopener">GitHub repository</a> &nbsp;·&nbsp; <a href="https://scholarsjunction.msstate.edu/td/6097/" target="_blank" rel="noopener">Thesis</a> &nbsp;·&nbsp; <a href="https://scholar.google.com/citations?user=86hOknYAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a> &nbsp;·&nbsp; <a href="har-wifi-radar.html">Earlier study: Wi-Fi vs. radar</a></p>
+    </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
 
 <script>
     mermaid.initialize({
         startOnLoad: true,
-        theme: 'dark',
+        theme: 'neutral',
         themeVariables: {
-            darkMode: true,
-            background: '#0a0e14',
-            primaryColor: '#00d9ff',
-            primaryTextColor: '#e6e8eb',
-            primaryBorderColor: '#00d9ff',
-            lineColor: '#00ff9f',
-            secondaryColor: '#1f2937',
-            tertiaryColor: '#2d3748',
             fontSize: '13px',
-            fontFamily: 'JetBrains Mono, monospace'
+            fontFamily: 'ui-monospace, Consolas, monospace'
         }
     });
     window.addEventListener('DOMContentLoaded', function () {
@@ -1134,5 +1162,6 @@ sudo systemctl enable --now csi-activate.service csi-forward.service
     WifiHarReplay.init('har-dashboard', '../images/wifi-har/replay.json');
 </script>
 <script src="../js/diagram-zoom.js"></script>
+<script src="../js/project.js" defer></script>
 </body>
 </html>

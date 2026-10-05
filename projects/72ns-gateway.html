@@ -5,8 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="72ns Gateway: A Versal ACAP HFT Accelerator - Deep dive into nanosecond-latency network processing on FPGA">
     <meta name="keywords" content="FPGA, HFT, Low Latency, Versal, Xilinx, UDP, Network Processing, NASDAQ ITCH, Hardware Acceleration">
-    <meta name="author" content="FPGA Engineer">
-    <title>72ns Gateway: A Versal ACAP HFT Accelerator</title>
+    <meta name="author" content="Ajaya Dahal">
+    <title>72ns Gateway: A Versal ACAP HFT Accelerator | Ajaya Dahal</title>
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/72ns-gateway.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="72ns Gateway: A Versal ACAP HFT Accelerator | Ajaya Dahal">
+    <meta property="og:description" content="Nanosecond-latency network processing on a Versal ACAP FPGA.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/72ns-gateway.html">
+    <meta name="twitter:card" content="summary">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <script>document.documentElement.classList.add('js');</script>
     
     <!-- Mermaid.js for diagrams -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -454,18 +466,26 @@
         .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
       }
     </style>
+    <link rel="stylesheet" href="../css/project-legacy.css">
 </head>
 <body>
-<nav class="top-nav">
-    <div class="inner">
-        <a href="../home.html" class="brand"><span>A</span>jaya</a>
-        <div class="links">
-            <a href="../home.html">Portfolio</a>
-            <a href="sma.html">SMA</a>
-            <a href="cognitive-silo.html">Cognitive Silo</a>
-        </div>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
-</nav>
+</header>
+
+<main id="main">
     <div class="container">
         <!-- ==================== HEADER ==================== -->
         <header>
@@ -698,7 +718,7 @@
             </p>
 
             <div style="text-align: center; margin: calc(var(--spacing-unit) * 4) 0;">
-                <img src="vck190.avif" alt="Xilinx Versal VCK190 Evaluation Board" style="max-width: 600px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);" />
+                <img src="../fpga-portfolio-site/vck190.avif" alt="Xilinx Versal VCK190 Evaluation Board" style="max-width: 600px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);" />
                 <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
                     Xilinx Versal VCK190 Evaluation Board: 1M+ logic cells, 400 AI engines, 4x 100GbE MRMAC
                 </p>
@@ -1537,7 +1557,7 @@ end
             </ul>
 
             <div style="text-align: center; margin: calc(var(--spacing-unit) * 4) 0;">
-                <img src="WireShark.png" alt="Wireshark capture showing UDP packets egressing from PC" style="max-width: 100%; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);" />
+                <img src="../fpga-portfolio-site/WireShark.png" alt="Wireshark capture showing UDP packets egressing from PC" style="max-width: 100%; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);" />
                 <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
                     <strong>Wireshark Capture:</strong> UDP packets successfully transmitted from PC to FPGA over 1000BASE-X SFP+ link
                 </p>
@@ -1555,7 +1575,7 @@ end
             </ul>
 
             <div style="text-align: center; margin: calc(var(--spacing-unit) * 4) 0;">
-                <img src="VivadoIbert.png" alt="Vivado IBERT showing 1.25 Gbps link with clean eye diagram" style="max-width: 100%; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);" />
+                <img src="../fpga-portfolio-site/VivadoIbert.png" alt="Vivado IBERT showing 1.25 Gbps link with clean eye diagram" style="max-width: 100%; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2); border: 1px solid var(--border-color);" />
                 <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
                     <strong>Vivado IBERT:</strong> 1.25 Gbps physical link validated with clean eye diagram and zero bit errors
                 </p>
@@ -1624,25 +1644,31 @@ tready      = 1
             </p>
         </footer>
     </div>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
 
     <!-- Initialize Mermaid.js -->
     <script>
         mermaid.initialize({ 
             startOnLoad: true,
-            theme: 'dark',
+            theme: 'neutral',
             themeVariables: {
-                darkMode: true,
-                background: '#0a0e14',
-                primaryColor: '#00d9ff',
-                primaryTextColor: '#e6e8eb',
-                primaryBorderColor: '#00d9ff',
-                lineColor: '#00ff9f',
-                secondaryColor: '#1f2937',
-                tertiaryColor: '#2d3748',
                 fontSize: '14px',
-                fontFamily: 'JetBrains Mono, monospace'
+                fontFamily: 'ui-monospace, Consolas, monospace'
             }
         });
     </script>
+    <script src="../js/project.js" defer></script>
 </body>
 </html>

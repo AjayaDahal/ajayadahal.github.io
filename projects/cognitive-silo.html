@@ -25,12 +25,16 @@
         "name": "Cognitive Silo — Private AI Infrastructure",
         "author": { "@type": "Person", "name": "Ajaya Dahal" },
         "programmingLanguage": ["Python", "Bash", "YAML"],
-        "codeRepository": "https://github.com/AjayaDahal/cognitive-silo",
         "description": "Self-hosted AI infrastructure: 15 Docker services, 12 models, LiteLLM gateway, Ollama ROCm, 48 GB VRAM on AMD W7900"
     }
     </script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <script>document.documentElement.classList.add('js');</script>
 
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -273,21 +277,26 @@
         .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
       }
     </style>
+    <link rel="stylesheet" href="../css/project-legacy.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ═══════════ NAV ═══════════ -->
-<nav class="top-nav">
-    <div class="inner">
-        <a href="../home.html" class="brand"><span>A</span>jaya</a>
-        <div class="links">
-            <a href="../home.html">Home</a>
-            <a href="cognitive-silo-architecture.html">Architecture</a>
-            <a href="sma.html">SMA Engine</a>
-            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank">GitHub</a>
-        </div>
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
-</nav>
+</header>
+
+<main id="main">
 
 <!-- ═══════════ HERO ═══════════ -->
 <header class="hero">
@@ -664,25 +673,26 @@
         </p>
         <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
             <a href="cognitive-silo-architecture.html" class="btn btn-primary">🏗️ Architecture Deep-Dive</a>
-            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank" class="btn btn-outline">View Source on GitHub</a>
             <a href="sma.html" class="btn btn-outline">SMA Engine →</a>
         </div>
+        <p class="private-note" style="margin-top: 18px;">The source repository is private; I can share it on request.</p>
     </div>
 </section>
 
-<!-- ═══════════ FOOTER ═══════════ -->
-<footer class="page-footer">
-    <div class="container">
-        <p>
-            <a href="../home.html">← Portfolio</a> &nbsp;·&nbsp;
-            <a href="cognitive-silo-architecture.html">Architecture</a> &nbsp;·&nbsp;
-            <a href="sma.html">SMA Engine</a> &nbsp;·&nbsp;
-            <a href="https://github.com/AjayaDahal/cognitive-silo" target="_blank">GitHub</a> &nbsp;·&nbsp;
-            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a>
-        </p>
-        <p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
     </div>
 </footer>
 
+<script src="../js/project.js" defer></script>
 </body>
 </html>

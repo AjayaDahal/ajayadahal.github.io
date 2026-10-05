@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="DC-DC Buck Boost Converter Photo Gallery - Detailed teardown images">
     <meta name="author" content="Ajaya Dahal">
-    <title>Photo Gallery | DC-DC Buck Boost Converter Analysis</title>
+    <title>Photo Gallery | DC-DC Buck Boost Converter Analysis | Ajaya Dahal</title>
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/dc-dc-gallery.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <script>document.documentElement.classList.add('js');</script>
     
     <style>
         /* ============================================
@@ -328,18 +335,26 @@
         .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
       }
     </style>
+    <link rel="stylesheet" href="../css/project-legacy.css">
 </head>
 <body>
-<nav class="top-nav">
-    <div class="inner">
-        <a href="../home.html" class="brand"><span>A</span>jaya</a>
-        <div class="links">
-            <a href="../home.html">Portfolio</a>
-            <a href="dc-dc-dissection.html">Analysis</a>
-            <a href="72ns-gateway.html">72ns Gateway</a>
-        </div>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
-</nav>
+</header>
+
+<main id="main">
     <div class="container">
         <header>
             <a href="dc-dc-dissection.html" class="back-btn">← Back to Analysis</a>
@@ -349,7 +364,7 @@
 
         <div class="gallery-grid">
             <div class="gallery-item" data-index="0">
-                <img src="../dissection/static/images/unbox1.jpg" alt="Unboxing">
+                <img src="../dissection/static/images/web/unbox1.webp" width="1600" height="1200" loading="lazy" alt="Unboxing">
                 <div class="gallery-caption">
                     <div class="gallery-number">IMAGE 01</div>
                     <div class="gallery-title">Initial Unboxing</div>
@@ -358,7 +373,7 @@
             </div>
 
             <div class="gallery-item" data-index="1">
-                <img src="../dissection/static/images/unbox2.jpg" alt="Top View">
+                <img src="../dissection/static/images/web/unbox2.webp" width="1600" height="1200" loading="lazy" alt="Top View">
                 <div class="gallery-caption">
                     <div class="gallery-number">IMAGE 02</div>
                     <div class="gallery-title">Top View - Controls</div>
@@ -367,7 +382,7 @@
             </div>
 
             <div class="gallery-item" data-index="2">
-                <img src="../dissection/static/images/unbox3.jpg" alt="Bottom View">
+                <img src="../dissection/static/images/web/unbox3.webp" width="1600" height="1200" loading="lazy" alt="Bottom View">
                 <div class="gallery-caption">
                     <div class="gallery-number">IMAGE 03</div>
                     <div class="gallery-title">Bottom View - PCB</div>
@@ -376,7 +391,7 @@
             </div>
 
             <div class="gallery-item" data-index="3">
-                <img src="../dissection/static/images/unbox4.jpg" alt="Inductor Closeup">
+                <img src="../dissection/static/images/web/unbox4.webp" width="1600" height="1200" loading="lazy" alt="Inductor Closeup">
                 <div class="gallery-caption">
                     <div class="gallery-number">IMAGE 04</div>
                     <div class="gallery-title">Power Inductor</div>
@@ -385,7 +400,7 @@
             </div>
 
             <div class="gallery-item" data-index="4">
-                <img src="../dissection/static/images/unbox5.jpg" alt="Display Module">
+                <img src="../dissection/static/images/web/unbox5.webp" width="1600" height="1200" loading="lazy" alt="Display Module">
                 <div class="gallery-caption">
                     <div class="gallery-number">IMAGE 05</div>
                     <div class="gallery-title">LED Display Driver</div>
@@ -394,7 +409,7 @@
             </div>
 
             <div class="gallery-item" data-index="5">
-                <img src="../dissection/static/images/unbox6.jpg" alt="Heatsink">
+                <img src="../dissection/static/images/web/unbox6.webp" width="1600" height="1200" loading="lazy" alt="Heatsink">
                 <div class="gallery-caption">
                     <div class="gallery-number">IMAGE 06</div>
                     <div class="gallery-title">MOSFET Heatsinking</div>
@@ -416,24 +431,33 @@
 
         <footer>
             <p>
-                <a href="dc-dc-dissection.html">← Return to Analysis</a> | 
-                <a href="../home.html">Main Portfolio</a>
-            </p>
-            <p style="margin-top: calc(var(--spacing-unit) * 2); color: var(--text-muted); font-size: 0.85rem;">
                 ECE 6723 - Electronics Dissection | Mississippi State University | April 2022
             </p>
         </footer>
     </div>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
 
     <script>
         // Gallery data
         const images = [
-            { src: 'static/images/unbox1.jpg', title: 'Initial Unboxing', desc: 'Module arrives in anti-static packaging' },
-            { src: 'static/images/unbox2.jpg', title: 'Top View - Controls', desc: 'Voltage and current adjustment potentiometers' },
-            { src: 'static/images/unbox3.jpg', title: 'Bottom View - PCB', desc: 'Power trace routing and copper pours' },
-            { src: 'static/images/unbox4.jpg', title: 'Power Inductor', desc: 'Toroidal inductor with ferrite core' },
-            { src: 'static/images/unbox5.jpg', title: 'LED Display Driver', desc: '3-digit 7-segment multiplexed display' },
-            { src: 'static/images/unbox6.jpg', title: 'MOSFET Heatsinking', desc: 'Aluminum heatsink for thermal management' }
+            { src: '../dissection/static/images/web/unbox1.webp', title: 'Initial Unboxing', desc: 'Module arrives in anti-static packaging' },
+            { src: '../dissection/static/images/web/unbox2.webp', title: 'Top View - Controls', desc: 'Voltage and current adjustment potentiometers' },
+            { src: '../dissection/static/images/web/unbox3.webp', title: 'Bottom View - PCB', desc: 'Power trace routing and copper pours' },
+            { src: '../dissection/static/images/web/unbox4.webp', title: 'Power Inductor', desc: 'Toroidal inductor with ferrite core' },
+            { src: '../dissection/static/images/web/unbox5.webp', title: 'LED Display Driver', desc: '3-digit 7-segment multiplexed display' },
+            { src: '../dissection/static/images/web/unbox6.webp', title: 'MOSFET Heatsinking', desc: 'Aluminum heatsink for thermal management' }
         ];
 
         let currentIndex = 0;
@@ -494,5 +518,6 @@
             lightboxCaption.textContent = `${img.title} - ${img.desc}`;
         }
     </script>
+    <script src="../js/project.js" defer></script>
 </body>
 </html>

@@ -2,301 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COVID-19 Autonomous Drone System | Ajaya Dahal</title>
-    <meta name="description" content="NXP Semiconductor Hackster.io Bonus Prize Winner — Autonomous drone system for contact-free COVID-19 testing service delivery. PX4 flight control, GPS waypoint navigation, sensor fusion.">
-    <meta name="keywords" content="autonomous drone, COVID-19, NXP, PX4, flight control, sensor fusion, GPS navigation, embedded systems, hackster prize">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>COVID-19 Sample-Collection Drone (NXP HoverGames 2) | Ajaya Dahal</title>
+    <meta name="description" content="Bonus-prize entry to NXP HoverGames Challenge 2: an Android app requests a drone that brings a COVID-19 test kit to the patient. Built on the NXP HoverGames kit (RDDRONE-FMUK66, NavQ) with PX4 obstacle avoidance tested in Gazebo.">
     <meta name="author" content="Ajaya Dahal">
-    <link rel="icon" type="image/x-icon" href="../iconss/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
     <link rel="canonical" href="https://ajayadahal.github.io/projects/covid-drone.html">
-
-    <!-- Open Graph -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="COVID-19 Autonomous Drone System | Ajaya Dahal">
-    <meta property="og:description" content="NXP Prize Winner — Autonomous drone for contact-free COVID-19 testing delivery with PX4 flight control and GPS navigation.">
+    <meta property="og:title" content="COVID-19 Sample-Collection Drone (NXP HoverGames 2) | Ajaya Dahal">
+    <meta property="og:description" content="Request a drone from an Android app and it brings the test kit to you. Bonus prize, NXP HoverGames Challenge 2.">
     <meta property="og:url" content="https://ajayadahal.github.io/projects/covid-drone.html">
-    <meta property="og:image" content="https://ajayadahal.github.io/iconss/project_icons/drone.jpg">
-
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "CreativeWork",
-        "name": "COVID-19 Autonomous Drone System",
-        "author": { "@type": "Person", "name": "Ajaya Dahal" },
-        "description": "Autonomous drone system for contact-free COVID-19 testing service delivery",
-        "award": "NXP Semiconductor Hackster.io Bonus Prize"
-    }
-    </script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #0a0e14; --bg-secondary: #151b24; --bg-tertiary: #1f2937;
-            --bg-card: #161d27; --text-primary: #e6e8eb; --text-secondary: #9ca3af;
-            --text-muted: #6b7280; --accent-1: #f5576c; --accent-2: #ff6b6b;
-            --accent-cyan: #00d9ff; --accent-green: #00ff9f;
-            --border-color: #2d3748;
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace; --max-width: 1100px;
-        }
-        body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); background-image: radial-gradient(circle at 20% 30%, rgba(245, 87, 108, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 107, 107, 0.04) 0%, transparent 50%); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
-        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; } a:hover { color: var(--accent-green); }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 14, 20, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 14px 0; }
-        .top-nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
-        .top-nav .brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); } .top-nav .brand span { color: var(--accent-cyan); }
-        .top-nav .links { display: flex; gap: 20px; font-size: 0.9rem; } .top-nav .links a { color: var(--text-secondary); font-weight: 500; } .top-nav .links a:hover { color: var(--accent-cyan); }
-        .hero { max-width: var(--max-width); margin: 0 auto; padding: 120px 24px 60px; }
-        .hero .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; } .hero .breadcrumb a { color: var(--text-muted); } .hero .breadcrumb a:hover { color: var(--accent-cyan); }
-        .hero .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-        .hero .badge-row .badge { background: rgba(245, 87, 108, 0.15); color: var(--accent-1); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-        .hero .badge-row .badge-award { background: rgba(255, 215, 0, 0.15); color: #ffd700; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
-        .hero .subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 750px; margin-bottom: 32px; }
-        .stat-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 36px; }
-        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; }
-        .stat-card .number { font-size: 1.8rem; font-weight: 800; font-family: var(--font-mono); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
-        .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; border: none; cursor: pointer; text-decoration: none; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 16px rgba(245, 87, 108, 0.3); } .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 87, 108, 0.4); color: white; }
-        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); } .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
-        section { padding: 60px 0; } section + section { border-top: 1px solid rgba(45, 55, 72, 0.5); }
-        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-1); margin-bottom: 10px; }
-        .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-        .section-desc { font-size: 1rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 36px; }
-        .decisions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .decision-card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
-        .decision-card:hover { border-color: rgba(245, 87, 108, 0.4); }
-        .decision-card .card-icon { font-size: 1.5rem; margin-bottom: 12px; }
-        .decision-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
-        .decision-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
-        .arch-diagram { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; overflow-x: auto; margin-bottom: 24px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); line-height: 1.8; white-space: pre; }
-        .svc-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
-        .svc-table th { text-align: left; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); }
-        .svc-table td { padding: 14px 20px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid rgba(45, 55, 72, 0.3); }
-        .svc-table tr:last-child td { border-bottom: none; }
-        .svc-table code { font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 217, 255, 0.08); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; }
-        .page-footer { padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
-        .page-footer a { color: var(--text-secondary); } .page-footer a:hover { color: var(--accent-cyan); }
-        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .decisions-grid { grid-template-columns: 1fr; } .stat-bar { grid-template-columns: repeat(2, 1fr); } }
-    </style>
-    <style>
-      /* Mobile responsiveness fix (added during mobile audit):
-         keep wide tables, bare code/pre blocks, math and media from forcing
-         the page wider than the viewport, which caused phones to zoom out.
-         !important is needed so wide data tables become horizontally
-         scrollable instead of being clipped by their rounded-corner
-         "overflow: hidden" card styling. */
-      @media (max-width: 768px) {
-        table { display: block !important; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-        pre { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        img, video, canvas, iframe { max-width: 100%; height: auto; }
-        .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
-        .top-nav .inner { flex-wrap: wrap; row-gap: 6px; }
-        .top-nav .links { flex-wrap: wrap; }
-        /* Prevent CSS grid/flex items from blowing out to their content's
-           min-content width (which forced horizontal overflow). */
-        .cards > *, .pubs > *, .grid > *, .card, .pub-card { min-width: 0; }
-      }
-    </style>
+    <meta property="og:image" content="https://ajayadahal.github.io/images/projects/covid-drone/og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ═══════════ NAV ═══════════ -->
-<nav class="top-nav">
-    <div class="inner">
-        <a href="../home.html" class="brand"><span>A</span>jaya</a>
-        <div class="links">
-            <a href="../home.html">Portfolio</a>
-            <a href="sma.html">SMA</a>
-            <a href="cognitive-silo.html">Cognitive Silo</a>
-            <a href="72ns-gateway.html">72ns Gateway</a>
-        </div>
-    </div>
-</nav>
-
-<!-- ═══════════ HERO ═══════════ -->
-<header class="hero">
-    <div class="breadcrumb">
-        <a href="../home.html">Portfolio</a> → <a href="../home.html#page-3">Projects</a> → COVID-19 Drone
-    </div>
-    <div class="badge-row">
-        <span class="badge">Embedded Systems</span>
-        <span class="badge">Autonomous Flight</span>
-        <span class="badge-award">🏆 NXP Hackster.io Prize Winner</span>
-    </div>
-    <h1>COVID-19 Autonomous Drone System</h1>
-    <p class="subtitle">
-        Full-stack autonomous drone platform designed for <strong>contact-free COVID-19 testing kit delivery</strong>
-        to remote and quarantined communities. Integrates flight control, GPS waypoint navigation,
-        mission planning, and payload mechanisms into a single autonomous system.
-        <strong>Won NXP Semiconductor Hackster.io Bonus Prize.</strong>
-    </p>
-    <div class="stat-bar">
-        <div class="stat-card"><div class="number">🏆</div><div class="label">NXP Prize Winner</div></div>
-        <div class="stat-card"><div class="number">GPS</div><div class="label">Waypoint Navigation</div></div>
-        <div class="stat-card"><div class="number">Auto</div><div class="label">Autonomous Flight</div></div>
-        <div class="stat-card"><div class="number">RTH</div><div class="label">Return-to-Home</div></div>
-    </div>
-    <div class="cta-row">
-        <a href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a" target="_blank" class="btn btn-primary">View on Hackster.io</a>
-        <a href="diy-rth-drone.html" class="btn btn-outline">Related: DIY RTH Drone →</a>
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
     </div>
 </header>
 
-<!-- ═══════════ PROBLEM / SOLUTION ═══════════ -->
-<section>
-    <div class="container">
-        <div class="section-label">Context</div>
-        <div class="section-title">The Problem</div>
-        <p class="section-desc">
-            During the COVID-19 pandemic, testing access in remote and quarantined areas was severely limited.
-            Traditional delivery methods risked human contact. The challenge: deliver testing kits autonomously,
-            with zero human-to-human contact, to GPS-specified locations.
-        </p>
-        <div class="section-title" style="margin-top: 40px;">The Solution</div>
-        <p class="section-desc">
-            An autonomous drone system capable of carrying testing supplies to predefined GPS waypoints,
-            delivering payloads without human interaction, and returning to base — all autonomously.
-            The system integrates flight control firmware, GPS navigation, fail-safe protocols, and a
-            payload release mechanism.
-        </p>
-    </div>
-</section>
+<main id="main">
+<article>
+    <header class="project-hero col">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#page-3">Projects</a> / <span aria-current="page">COVID-19 Drone</span></nav>
+        <p class="eyebrow">February 2021 · NXP HoverGames Challenge 2 · Bonus prize</p>
+        <h1>A Drone That Brings the COVID-19 Test to You</h1>
+        <p class="lede">My entry to NXP's HoverGames Challenge 2: a patient requests a drone from an Android app, the drone flies a sample-collection kit to them, and nobody who may be infected has to queue at a crowded test site. I built the app, flew the NXP HoverGames drone, and tested PX4 obstacle avoidance in Gazebo. Autonomous flight to the app's GPS location was the next step when I submitted.</p>
+        <ul class="tags">
+            <li>NXP HoverGames</li>
+            <li>PX4</li>
+            <li>Android</li>
+            <li>Google Maps API</li>
+            <li>Firebase</li>
+            <li>Gazebo</li>
+        </ul>
+        <div class="cta-row">
+            <a class="btn btn-primary" href="#demo">Watch the video</a>
+            <a class="btn btn-outline" href="https://www.hackster.io/ajayadahal/covid-19-testing-service-via-drone-65c52a" target="_blank" rel="noopener">Original write-up on Hackster</a>
+        </div>
+    </header>
 
-<!-- ═══════════ ARCHITECTURE ═══════════ -->
-<section>
-    <div class="container">
-        <div class="section-label">Architecture</div>
-        <div class="section-title">System Overview</div>
-        <div class="arch-diagram">
-┌──────────────────────────────────────────────────────────────┐
-│                    GROUND CONTROL STATION                     │
-│  Mission Planning  │  GPS Waypoints  │  Telemetry Monitor    │
-└────────────┬─────────────────────────────────┬───────────────┘
-             │  MAVLink Protocol               │  Live Telemetry
-             ▼                                 ▲
-┌──────────────────────────────────────────────────────────────┐
-│                    FLIGHT CONTROLLER                          │
-│  ┌─────────┐  ┌──────────┐  ┌───────────┐  ┌─────────────┐ │
-│  │ PX4/Ardu│  │   GPS    │  │   IMU     │  │ Barometer   │ │
-│  │ Pilot   │  │  Module  │  │ Accel+Gyro│  │ Altitude    │ │
-│  └────┬────┘  └────┬─────┘  └─────┬─────┘  └──────┬──────┘ │
-│       │            │              │               │          │
-│       └────────────┴──────────────┴───────────────┘          │
-│                    SENSOR FUSION                              │
-│                         │                                     │
-│              ┌──────────┴──────────┐                         │
-│              │  PID Control Loop   │                         │
-│              └──────────┬──────────┘                         │
-│                         │                                     │
-│         ┌───────────────┼───────────────┐                    │
-│         ▼               ▼               ▼                    │
-│    ┌─────────┐   ┌──────────┐   ┌────────────┐              │
-│    │ Motor 1 │   │ Motor 2  │   │ Motor 3+4  │              │
-│    │  ESC    │   │  ESC     │   │   ESCs     │              │
-│    └─────────┘   └──────────┘   └────────────┘              │
-└──────────────────────────────────────────────────────────────┘
-                         │
-              ┌──────────┴──────────┐
-              │  PAYLOAD MECHANISM  │
-              │  Servo Release Gate │
-              └─────────────────────┘</div>
-    </div>
-</section>
+    <div class="col">
+        <section class="section" id="demo">
+            <h2>Competition video</h2>
+            <figure>
+                <div class="video">
+                    <a class="yt" href="https://www.youtube.com/watch?v=gxKfjFzo7fg" data-yt="gxKfjFzo7fg" data-title="NXP HoverGames Challenge 2 video" target="_blank" rel="noopener">
+                        <img src="https://i.ytimg.com/vi/gxKfjFzo7fg/hqdefault.jpg" width="480" height="360" loading="lazy" alt="">
+                        <span class="yt-play" aria-hidden="true"></span>
+                        <span class="sr-only">Play the HoverGames Challenge 2 video (YouTube)</span>
+                    </a>
+                </div>
+                <figcaption>Final video for NXP HoverGames Challenge 2 (5 min). The YouTube player loads only when you press play.</figcaption>
+            </figure>
+        </section>
 
-<!-- ═══════════ ENGINEERING DECISIONS ═══════════ -->
-<section>
-    <div class="container">
-        <div class="section-label">Engineering</div>
-        <div class="section-title">Key Design Decisions</div>
-        <div class="decisions-grid">
-            <div class="decision-card">
-                <div class="card-icon">🛡️</div>
-                <h3>Fail-Safe First Design</h3>
-                <p>Every autonomous system must handle failure gracefully. The drone implements multi-level fail-safes: GPS loss triggers hover-in-place, low battery triggers immediate RTH, communication loss initiates a timed landing sequence.</p>
+        <section class="section" id="overview">
+            <h2>At a glance</h2>
+            <dl class="facts">
+                <dt>Flight controller</dt><dd>NXP RDDRONE-FMUK66 from the HoverGames drone kit, running PX4</dd>
+                <dt>Companion computer</dt><dd>NXP NavQ (i.MX 8M Mini) for the camera and image processing</dd>
+                <dt>Sensors</dt><dd>NEO-M8N GPS from the kit, camera, ultrasonic sensor</dd>
+                <dt>Link to base</dt><dd>SIM800L GSM/GPRS module with a Hologram SIM, location update every 30 seconds</dd>
+                <dt>App</dt><dd>Android app built in Android Studio: Google Maps API for the pickup location, Firebase for the request queue</dd>
+                <dt>Avoidance</dt><dd>Fork of PX4-Avoidance (ROS node) for obstacle detection, tested in Gazebo</dd>
+            </dl>
+        </section>
+
+        <section class="section" id="flow">
+            <h2>The service, as designed</h2>
+            <p>Safety for the user and for bystanders drove most of the design:</p>
+            <ol>
+                <li>Before the first order, the user watches a short safety video: what happens after the request, after dispatch, on arrival and when the drone leaves.</li>
+                <li>The user shares their location in the app and requests the drone. Requests go into the Firebase database and are served first come, first served.</li>
+                <li>The drone takes off with a sample-collection kit (a PCR nasal swab). The app shows order received, dispatched and arrival time, with live tracking, push notifications and SMS updates.</li>
+                <li>On arrival it uses the camera and the ultrasonic sensor to find a safe place to land. The user drops the sample in the collection box and confirms in the app, and the drone flies back to base.</li>
+                <li>If nobody confirms within a set time, it texts the user and returns anyway. Before arming to leave, it checks that nobody is standing too close and sounds a buzzer if someone is.</li>
+            </ol>
+        </section>
+
+        <section class="section" id="build">
+            <h2>What I built and tested</h2>
+            <p>At submission the app worked end to end, the HoverGames drone flew under manual control (the photo Hackster shows is captioned "Level 0, without autonomy"), and PX4 obstacle avoidance ran in Gazebo simulation. The open item in the repository was autonomous flight to the GPS coordinates that the app sends.</p>
+            <div class="grid-2">
+                <figure>
+                    <a href="../images/projects/covid-drone/flight.webp" data-zoom><img src="../images/projects/covid-drone/flight.webp" width="900" height="1200" loading="lazy" alt="Ajaya standing in a grass field with a radio controller while the HoverGames drone flies overhead"></a>
+                    <figcaption>Flying the HoverGames drone.</figcaption>
+                </figure>
+                <figure>
+                    <a href="../images/projects/covid-drone/app.webp" data-zoom><img src="../images/projects/covid-drone/app.webp" width="427" height="856" loading="lazy" alt="Android app welcome screen titled COVID-19 Test with a drone image"></a>
+                    <figcaption>The Android app's welcome screen.</figcaption>
+                </figure>
             </div>
-            <div class="decision-card">
-                <div class="card-icon">🛰️</div>
-                <h3>GPS Waypoint Navigation</h3>
-                <p>Pre-programmed waypoint missions enable fully autonomous delivery without real-time operator input. The system follows a mission plan: takeoff → cruise to waypoint → hover → payload release → RTH.</p>
-            </div>
-            <div class="decision-card">
-                <div class="card-icon">⚖️</div>
-                <h3>Sensor Fusion for Stability</h3>
-                <p>IMU (accelerometer + gyroscope), barometric altitude, and GPS are fused using complementary filtering. This provides stable flight even in wind conditions, critical for safe payload delivery.</p>
-            </div>
-            <div class="decision-card">
-                <div class="card-icon">📦</div>
-                <h3>Contact-Free Payload Delivery</h3>
-                <p>Servo-actuated release gate enables payload drop from hover altitude. No physical human contact required — the drone autonomously delivers and returns without landing at the delivery site.</p>
-            </div>
+            <figure>
+                <a href="../images/projects/covid-drone/gazebo.webp" data-zoom><img src="../images/projects/covid-drone/gazebo.webp" width="804" height="609" loading="lazy" alt="Gazebo simulation and QGroundControl running on an Ubuntu desktop"></a>
+                <figcaption>Simulation in Gazebo with QGroundControl.</figcaption>
+            </figure>
+        </section>
+
+        <section class="section" id="files">
+            <h2>Files and links</h2>
+            <ul class="links">
+                <li><a href="https://www.hackster.io/ajayadahal/covid-19-testing-service-via-drone-65c52a" target="_blank" rel="noopener"><b>Original write-up</b><span>Hackster.io, February 4, 2021</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/Hovergames-Challenge2" target="_blank" rel="noopener"><b>Documentation and app</b><span>GitHub, includes the Android APK</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/PX4-Avoidance" target="_blank" rel="noopener"><b>PX4-Avoidance fork</b><span>GitHub, obstacle detection node</span></a></li>
+                <li><a href="https://www.youtube.com/watch?v=gxKfjFzo7fg" target="_blank" rel="noopener"><b>Video</b><span>YouTube</span></a></li>
+            </ul>
+        </section>
+    </div>
+</article>
+
+<section class="related" aria-labelledby="related-title">
+    <div class="wrap">
+        <h2 id="related-title">More projects</h2>
+        <div class="cards">
+            <a class="card" href="diy-rth-drone.html"><img src="../iconss/project_icons/drone_rth.webp" alt="" loading="lazy"><div><small>2020</small><b>DIY Return-to-Home Drone</b></div></a>
+            <a class="card" href="rc-plane.html"><img src="../images/projects/rc-plane/plane.webp" alt="" loading="lazy"><div><small>December 2023</small><b>Shark Aero RC Plane Build</b></div></a>
+            <a class="card" href="har-wifi-radar.html"><img src="../images/projects/har-wifi-radar/cover.webp" alt="" loading="lazy"><div><small>Fall 2023</small><b>Activity Recognition: Wi-Fi vs. Radar</b></div></a>
         </div>
     </div>
 </section>
+</main>
 
-<!-- ═══════════ TECH STACK ═══════════ -->
-<section>
-    <div class="container">
-        <div class="section-label">Stack</div>
-        <div class="section-title">Hardware & Software</div>
-        <table class="svc-table">
-            <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
-            <tbody>
-                <tr><td>Flight Controller</td><td><code>PX4 / ArduPilot</code></td><td>Autonomous flight firmware with MAVLink</td></tr>
-                <tr><td>Processor</td><td><code>NXP i.MX RT</code></td><td>Real-time flight control processing</td></tr>
-                <tr><td>Navigation</td><td><code>u-blox GPS</code></td><td>Waypoint navigation and RTH</td></tr>
-                <tr><td>IMU</td><td><code>MPU6050 / ICM-20689</code></td><td>6-axis motion sensing for stabilization</td></tr>
-                <tr><td>Altitude</td><td><code>BMP280 Barometer</code></td><td>Barometric altitude hold</td></tr>
-                <tr><td>Telemetry</td><td><code>MAVLink + Radio</code></td><td>Bidirectional ground-to-air communication</td></tr>
-                <tr><td>Motors</td><td><code>Brushless + ESC</code></td><td>Quad-motor propulsion with PID control</td></tr>
-                <tr><td>Payload</td><td><code>Servo Release Gate</code></td><td>Contact-free delivery mechanism</td></tr>
-                <tr><td>Power</td><td><code>LiPo 4S</code></td><td>High-density battery with voltage monitoring</td></tr>
-                <tr><td>Ground Station</td><td><code>QGroundControl</code></td><td>Mission planning and telemetry monitoring</td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<!-- ═══════════ AWARD ═══════════ -->
-<section>
-    <div class="container" style="text-align: center;">
-        <div class="section-title">🏆 NXP Semiconductor Hackster.io Bonus Prize</div>
-        <p style="color: var(--text-secondary); max-width: 600px; margin: 16px auto;">
-            This project was recognized with the NXP Semiconductor Bonus Prize in the Hackster.io competition
-            for its innovative application of embedded systems to real-world pandemic response challenges.
-        </p>
-    </div>
-</section>
-
-<!-- ═══════════ RELATED ═══════════ -->
-<section>
-    <div class="container" style="text-align: center;">
-        <div class="section-title">Related Projects</div>
-        <div class="cta-row" style="justify-content: center; margin-top: 20px;">
-            <a href="diy-rth-drone.html" class="btn btn-outline">DIY RTH Drone (STM32) →</a>
-            <a href="wrecks.html" class="btn btn-outline">WRECKS Senior Design →</a>
-            <a href="workstation.html" class="btn btn-outline">EDA/ML Workstation →</a>
-        </div>
-    </div>
-</section>
-
-<!-- ═══════════ FOOTER ═══════════ -->
-<footer class="page-footer">
-    <div class="container">
-        <p>
-            <a href="../home.html">← Portfolio</a> &nbsp;·&nbsp;
-            <a href="diy-rth-drone.html">DIY RTH Drone</a> &nbsp;·&nbsp;
-            <a href="wrecks.html">WRECKS</a> &nbsp;·&nbsp;
-            <a href="https://www.hackster.io/ajayadahal1000/covid-19-testing-service-via-drone-65c52a" target="_blank">Hackster.io</a> &nbsp;·&nbsp;
-            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank">LinkedIn</a>
-        </p>
-        <p style="margin-top: 10px; font-size: 0.8rem;">Ajaya Dahal · Sr. FPGA & Network System Engineer · Austin, TX</p>
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
     </div>
 </footer>
 
+<script src="../js/project.js" defer></script>
 </body>
 </html>
