@@ -12233,3 +12233,32 @@ border-color: var(--accent-dark);
   .rtl-card:hover,
   .fw-card:hover .fw-media img {
     transform: none; } }
+
+/* Global Visitors (home.html, #flag-section): blockers that use EasyPrivacy block flagcounter.com, so
+   .is-blocked swaps the live counter for the saved copy. */
+.visitor-live {
+  display: block; }
+
+.visitor-card img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px; }
+
+.visitor-snapshot {
+  display: none;
+  margin: 0; }
+
+.visitor-card.is-blocked .visitor-live {
+  display: none; }
+
+.visitor-card.is-blocked .visitor-snapshot {
+  display: block; }
+
+.visitor-snapshot figcaption {
+  max-width: 220px;
+  margin: 14px auto 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #777; }

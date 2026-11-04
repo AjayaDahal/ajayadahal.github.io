@@ -1301,15 +1301,15 @@
                                 <!-- 72ns Gateway (in progress) -->
                                 <article class="rtl-card ftco-animate">
                                     <div class="rtl-body">
-                                        <p class="rtl-meta">December 2025 <span class="rtl-status">In progress</span></p>
-                                        <h4><a href="projects/72ns-gateway.html">72ns Gateway: Market-Data Path on Versal</a></h4>
-                                        <p>A build toward a sub-100&nbsp;ns market-data path on the VCK190. The 1000BASE-X link is up and the UDP packet parser is validated on the board, with a Cummings asynchronous FIFO for the clock crossing. 72&nbsp;ns (9 cycles at 125&nbsp;MHz) is the target for the full path; it has not been measured end to end yet.</p>
+                                        <p class="rtl-meta">Dec 2025 &ndash; Jan 2026 <span class="rtl-status">In progress</span></p>
+                                        <h4><a href="projects/72ns-gateway.html">72ns Gateway: Low-Latency Market Data on Versal</a></h4>
+                                        <p>UDP market data to a best-bid/offer update in RTL on a VCK190. The 1000BASE-X link is up and the parser sees live frames on the board; the whole pipeline passes a self-checking testbench. It takes about 19 cycles today, counted from the RTL rather than measured; the 72&nbsp;ns in the name (9 cycles at 125&nbsp;MHz) is the target.</p>
                                         <ul class="fw-tags" aria-label="Technologies">
                                             <li>Versal VCK190</li>
                                             <li>Verilog</li>
                                             <li>1000BASE-X</li>
                                             <li>CDC</li>
-                                            <li>NASDAQ ITCH 5.0</li>
+                                            <li>ILA / IBERT</li>
                                         </ul>
                                         <p class="rtl-links"><a href="projects/72ns-gateway.html">View project <span aria-hidden="true">&rarr;</span></a><a href="https://github.com/AjayaDahal/fpga-72ns-gateway" target="_blank" rel="noopener">GitHub</a></p>
                                     </div>
@@ -1419,26 +1419,12 @@
                                 <a href="projects/cognitive-silo.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
                                     <img src="images/projects/cognitive-silo/cover.svg" style="width: 100%; height: 140px; object-fit: cover;" alt="Cognitive Silo: a self-hosted AI stack on one GPU" loading="lazy" />
                                     <div style="padding: 16px;">
-                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">2024&ndash;2025 &middot; HOME LAB</span>
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">FEBRUARY 2026 &middot; HOME LAB</span>
                                         <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Cognitive Silo: Self-Hosted AI Stack</h4>
                                         <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                                             <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Docker Compose</span>
                                             <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">ROCm</span>
                                             <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Radeon PRO W7900</span>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- Sandbox Item: Social Media Automation Engine -->
-                                <a href="projects/sma.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                                    <img src="images/projects/sma/cover.svg" style="width: 100%; height: 140px; object-fit: cover;" alt="Content pipeline on Temporal workflows" loading="lazy" />
-                                    <div style="padding: 16px;">
-                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">2024&ndash;2025 &middot; HOME LAB</span>
-                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Social Media Automation Engine</h4>
-                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Python</span>
-                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Temporal</span>
-                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">FFmpeg</span>
                                         </div>
                                     </div>
                                 </a>
@@ -2391,11 +2377,20 @@
             </div>
             <div class="row justify-content-center mb-5 pb-3">
                 <div class="col-md-8 heading-section text-center ftco-animate">
-                    <div style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #f0f0f0; display: inline-block;">
-                        <a target="_blank" href="https://info.flagcounter.com/WPje" style="display: block;">
+                    <!-- Flag Counter WPje. Keep the live image: Flag Counter deletes a free counter that logs no new
+                         visitor for 30 days. Blockers that use EasyPrivacy block flagcounter.com, so the saved copy
+                         stands in for them; tools/backup_flag_counter.py backs up the stats and refreshes the copy. -->
+                    <div class="visitor-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #f0f0f0; display: inline-block;">
+                        <a class="visitor-live" target="_blank" rel="noopener" href="https://info.flagcounter.com/WPje">
                             <img src="https://s01.flagcounter.com/countxl/WPje/bg_FFFFFF/txt_3e64ff/border_CCCCCC/columns_2/maxflags_20/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
-                                alt="Flag Counter" border="0" style="max-width: 100%; height: auto; border-radius: 8px;">
+                                width="193" height="299" alt="Visitors to this site by country (Flag Counter)"
+                                onload="if (this.naturalWidth < 20 || !this.getClientRects().length) this.closest('.visitor-card').classList.add('is-blocked')"
+                                onerror="this.closest('.visitor-card').classList.add('is-blocked')">
                         </a>
+                        <figure class="visitor-snapshot">
+                            <img src="images/flag-counter/snapshot.png" width="193" height="299" loading="lazy" alt="Visitors to this site by country (saved copy)">
+                            <figcaption>Saved copy from <time class="flag-snapshot-date" datetime="2026-11-04">November 4, 2026</time>. The live counter did not load in this browser; <a target="_blank" rel="noopener" href="https://info.flagcounter.com/WPje">see the live stats</a>.</figcaption>
+                        </figure>
                     </div>
                 </div>
             </div>
