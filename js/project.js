@@ -28,7 +28,6 @@
     ]],
     ['Sandbox', [
       ['cognitive-silo.html', 'Cognitive Silo (home-lab AI)'],
-      ['sma.html', 'Social media automation'],
       ['workstation.html', 'Workstation build'],
       ['rc-plane.html', 'Shark Aero RC plane'],
       ['har-wifi-radar.html', 'Wi-Fi vs. radar HAR'],
@@ -42,7 +41,6 @@
   ];
   const PARENT_PAGE = {
     'sma-architecture.html': 'sma.html',
-    'cognitive-silo-architecture.html': 'cognitive-silo.html',
     'dc-dc-gallery.html': 'dc-dc-dissection.html',
   };
 

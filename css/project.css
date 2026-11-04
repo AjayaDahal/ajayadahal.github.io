@@ -74,7 +74,7 @@ code {
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 15px; margin: 28px 0 0; }
 .stat { padding: 14px 12px; text-align: center; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, .05); }
 .stat b { display: block; font-size: 1.35rem; line-height: 1.3; color: var(--ink); }
-.stat span { font-size: .78rem; font-weight: 600; color: #666; }
+.stat span { display: block; margin-top: 3px; font-size: .78rem; font-weight: 600; line-height: 1.45; color: #666; }
 
 /* Article body */
 .section { margin-top: 56px; }
@@ -178,11 +178,29 @@ tbody tr:last-child td { border-bottom: 0; }
 tfoot td { font-weight: 600; color: var(--ink); background: var(--surface); border-top: 1px solid var(--line); border-bottom: 0; }
 .num { text-align: right; white-space: nowrap; }
 
+/* table.stack: on phones each row becomes a small card; the first cell is its title, td.num sits
+   beside it and data-label names a cell, since the header row is hidden. */
+@media (max-width: 640px) {
+  table.stack, table.stack tbody, table.stack tfoot { display: block; }
+  table.stack thead { display: none; }
+  table.stack tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: baseline; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+  table.stack tbody tr:last-child { border-bottom: 0; }
+  table.stack td { padding: 0; line-height: 1.6; border: 0; }
+  table.stack td:first-child { font-weight: 600; color: var(--ink); }
+  table.stack td.num { grid-area: 1 / 2; }
+  table.stack td:not(:first-child):not(.num) { grid-column: 1 / -1; }
+  table.stack td[data-label]::before { content: attr(data-label) " "; font-size: .7rem; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); }
+  table.stack tfoot tr { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 0; }
+  table.stack tfoot td { background: none; }
+}
+
 .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); gap: 12px; margin: 20px 0 0; padding: 0; list-style: none; }
 .links a { display: block; height: 100%; padding: 14px 16px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 10px; transition: border-color .2s ease, transform .2s ease; }
 .links a:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-2px); }
-.links b { display: block; font-weight: 600; }
+.links b { display: block; font-weight: 600; line-height: 1.45; }
 .links span { display: block; font-size: .85rem; line-height: 1.5; color: var(--muted); }
+.section .links { padding-left: 0; }
+.section .links li { margin: 0; }
 
 /* Related projects: same card style as the home page sandbox grid. */
 .related { margin-top: 72px; padding: 48px 0 64px; background: var(--surface); border-top: 1px solid var(--line); }
