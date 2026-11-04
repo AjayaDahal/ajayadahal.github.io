@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="730" viewBox="0 0 900 730" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="12">
+<rect width="900" height="100%" rx="8" fill="#f6f8fa"/>
+<text x="24" y="28" font-size="16" font-weight="600" fill="#1f2328">Print queue, both printers running at once</text>
+<text x="24" y="46" fill="#59636e">Sliced times (Anycubic Slicer Next). Test prints first: check them before the rest (tracker.md).</text>
+<line x1="190.0" y1="76" x2="190.0" y2="682" stroke="#d1d9e0"/>
+<text x="190.0" y="72" text-anchor="middle" fill="#59636e">0 h</text>
+<line x1="236.2" y1="76" x2="236.2" y2="682" stroke="#d1d9e0"/>
+<text x="236.2" y="72" text-anchor="middle" fill="#59636e">4 h</text>
+<line x1="282.3" y1="76" x2="282.3" y2="682" stroke="#d1d9e0"/>
+<text x="282.3" y="72" text-anchor="middle" fill="#59636e">8 h</text>
+<line x1="328.5" y1="76" x2="328.5" y2="682" stroke="#d1d9e0"/>
+<text x="328.5" y="72" text-anchor="middle" fill="#59636e">12 h</text>
+<line x1="374.6" y1="76" x2="374.6" y2="682" stroke="#d1d9e0"/>
+<text x="374.6" y="72" text-anchor="middle" fill="#59636e">16 h</text>
+<line x1="420.8" y1="76" x2="420.8" y2="682" stroke="#d1d9e0"/>
+<text x="420.8" y="72" text-anchor="middle" fill="#59636e">20 h</text>
+<line x1="466.9" y1="76" x2="466.9" y2="682" stroke="#d1d9e0"/>
+<text x="466.9" y="72" text-anchor="middle" fill="#59636e">24 h</text>
+<line x1="513.1" y1="76" x2="513.1" y2="682" stroke="#d1d9e0"/>
+<text x="513.1" y="72" text-anchor="middle" fill="#59636e">28 h</text>
+<line x1="559.2" y1="76" x2="559.2" y2="682" stroke="#d1d9e0"/>
+<text x="559.2" y="72" text-anchor="middle" fill="#59636e">32 h</text>
+<line x1="605.4" y1="76" x2="605.4" y2="682" stroke="#d1d9e0"/>
+<text x="605.4" y="72" text-anchor="middle" fill="#59636e">36 h</text>
+<line x1="651.5" y1="76" x2="651.5" y2="682" stroke="#d1d9e0"/>
+<text x="651.5" y="72" text-anchor="middle" fill="#59636e">40 h</text>
+<line x1="697.7" y1="76" x2="697.7" y2="682" stroke="#d1d9e0"/>
+<text x="697.7" y="72" text-anchor="middle" fill="#59636e">44 h</text>
+<line x1="743.8" y1="76" x2="743.8" y2="682" stroke="#d1d9e0"/>
+<text x="743.8" y="72" text-anchor="middle" fill="#59636e">48 h</text>
+<line x1="790.0" y1="76" x2="790.0" y2="682" stroke="#d1d9e0"/>
+<text x="790.0" y="72" text-anchor="middle" fill="#59636e">52 h</text>
+<text x="24" y="100" font-weight="600" fill="#1f2328">Kobra S1</text>
+<text x="190" y="100" fill="#59636e">7 jobs, 16.0 h</text>
+<text x="40" y="123" fill="#bc4c00">petg_1_fit_tests</text>
+<rect x="190.0" y="113" width="4.7" height="13" rx="2" fill="#2f6db5" stroke="#e36209" stroke-width="2"/>
+<text x="199.7" y="123" fill="#59636e">25 min</text>
+<text x="40" y="142" fill="#1f2328">petg_2_wing</text>
+<rect x="194.7" y="132" width="46.1" height="13" rx="2" fill="#2f6db5" stroke="#1f4f8a" stroke-width="1"/>
+<text x="245.8" y="142" fill="#59636e">4h 00m</text>
+<text x="40" y="161" fill="#1f2328">petg_3_boom_vtail_ribs</text>
+<rect x="240.8" y="151" width="24.7" height="13" rx="2" fill="#2f6db5" stroke="#1f4f8a" stroke-width="1"/>
+<text x="270.5" y="161" fill="#59636e">2h 08m</text>
+<text x="40" y="180" fill="#1f2328">petg_4_fuselage_rings</text>
+<rect x="265.5" y="170" width="12.1" height="13" rx="2" fill="#2f6db5" stroke="#1f4f8a" stroke-width="1"/>
+<text x="282.5" y="180" fill="#59636e">1h 03m</text>
+<text x="40" y="199" fill="#1f2328">petg_5_fuselage_frames</text>
+<rect x="277.5" y="189" width="21.8" height="13" rx="2" fill="#2f6db5" stroke="#1f4f8a" stroke-width="1"/>
+<text x="304.4" y="199" fill="#59636e">1h 54m</text>
+<text x="40" y="218" fill="#1f2328">petg_6_fuselage_tail</text>
+<rect x="299.4" y="208" width="41.9" height="13" rx="2" fill="#2f6db5" stroke="#1f4f8a" stroke-width="1"/>
+<text x="346.3" y="218" fill="#59636e">3h 38m</text>
+<text x="40" y="237" fill="#1f2328">petg_7_pods_yokes</text>
+<rect x="341.3" y="227" width="33.0" height="13" rx="2" fill="#2f6db5" stroke="#1f4f8a" stroke-width="1"/>
+<text x="379.3" y="237" fill="#59636e">2h 51m</text>
+<text x="24" y="263" font-weight="600" fill="#1f2328">Kobra X</text>
+<text x="190" y="263" fill="#59636e">22 jobs, 49.4 h</text>
+<text x="40" y="286" fill="#bc4c00">wing_tip_r</text>
+<rect x="190.0" y="276" width="30.3" height="13" rx="2" fill="#e6dfcc" stroke="#e36209" stroke-width="2"/>
+<text x="225.3" y="286" fill="#59636e">2h 37m</text>
+<text x="40" y="305" fill="#bc4c00">tip_fairing_r</text>
+<rect x="220.3" y="295" width="5.0" height="13" rx="2" fill="#e6dfcc" stroke="#e36209" stroke-width="2"/>
+<text x="230.3" y="305" fill="#59636e">26 min</text>
+<text x="40" y="324" fill="#bc4c00">wing_mid_r</text>
+<rect x="225.3" y="314" width="43.0" height="13" rx="2" fill="#e6dfcc" stroke="#e36209" stroke-width="2"/>
+<text x="273.3" y="324" fill="#59636e">3h 44m</text>
+<text x="40" y="343" fill="#1f2328">aileron_mid_l</text>
+<rect x="268.3" y="333" width="12.9" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="286.2" y="343" fill="#59636e">1h 07m</text>
+<text x="40" y="362" fill="#1f2328">aileron_mid_r</text>
+<rect x="281.2" y="352" width="12.9" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="299.2" y="362" fill="#59636e">1h 07m</text>
+<text x="40" y="381" fill="#1f2328">aileron_tip_l</text>
+<rect x="294.2" y="371" width="13.8" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="313.0" y="381" fill="#59636e">1h 12m</text>
+<text x="40" y="400" fill="#1f2328">aileron_tip_r</text>
+<rect x="308.0" y="390" width="13.8" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="326.8" y="400" fill="#59636e">1h 12m</text>
+<text x="40" y="419" fill="#1f2328">fuse_1</text>
+<rect x="321.8" y="409" width="38.0" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="364.8" y="419" fill="#59636e">3h 18m</text>
+<text x="40" y="438" fill="#1f2328">fuse_2</text>
+<rect x="359.8" y="428" width="28.5" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="393.4" y="438" fill="#59636e">2h 28m</text>
+<text x="40" y="457" fill="#1f2328">fuse_3</text>
+<rect x="388.4" y="447" width="46.2" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="439.6" y="457" fill="#59636e">4h 00m</text>
+<text x="40" y="476" fill="#1f2328">fuse_4</text>
+<rect x="434.6" y="466" width="16.5" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="456.1" y="476" fill="#59636e">1h 26m</text>
+<text x="40" y="495" fill="#1f2328">ruddervator_l</text>
+<rect x="451.1" y="485" width="15.1" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="471.2" y="495" fill="#59636e">1h 19m</text>
+<text x="40" y="514" fill="#1f2328">ruddervator_r</text>
+<rect x="466.2" y="504" width="15.1" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="486.3" y="514" fill="#59636e">1h 19m</text>
+<text x="40" y="533" fill="#1f2328">tip_fairing_l</text>
+<rect x="481.3" y="523" width="5.0" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="491.4" y="533" fill="#59636e">26 min</text>
+<text x="40" y="552" fill="#1f2328">vtail_l</text>
+<rect x="486.4" y="542" width="28.2" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="519.6" y="552" fill="#59636e">2h 27m</text>
+<text x="40" y="571" fill="#1f2328">vtail_r</text>
+<rect x="514.6" y="561" width="28.2" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="547.8" y="571" fill="#59636e">2h 27m</text>
+<text x="40" y="590" fill="#1f2328">vtail_tip_fairing ×2</text>
+<rect x="542.8" y="580" width="4.8" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="552.6" y="590" fill="#59636e">25 min</text>
+<text x="40" y="609" fill="#1f2328">wing_mid_l</text>
+<rect x="547.6" y="599" width="43.0" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="595.6" y="609" fill="#59636e">3h 44m</text>
+<text x="40" y="628" fill="#1f2328">wing_root_l</text>
+<rect x="590.6" y="618" width="69.7" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="665.3" y="628" fill="#59636e">6h 02m</text>
+<text x="40" y="647" fill="#1f2328">wing_root_r</text>
+<rect x="660.3" y="637" width="69.7" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="735.0" y="647" fill="#59636e">6h 02m</text>
+<text x="40" y="666" fill="#1f2328">wing_tip_l</text>
+<rect x="730.0" y="656" width="30.3" height="13" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="765.2" y="666" fill="#59636e">2h 37m</text>
+<rect x="24" y="684" width="22" height="12" rx="2" fill="#e6dfcc" stroke="#a59c84" stroke-width="1"/>
+<text x="54" y="694" fill="#1f2328">LW-PLA, vase mode, one part per job</text>
+<rect x="314" y="684" width="22" height="12" rx="2" fill="#2f6db5" stroke="#1f4f8a" stroke-width="1"/>
+<text x="344" y="694" fill="#1f2328">PETG plate</text>
+<rect x="604" y="684" width="22" height="12" rx="2" fill="#ffffff" stroke="#e36209" stroke-width="2"/>
+<text x="634" y="694" fill="#1f2328">test print: check it first</text>
+</svg>

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ajayadahal.github.io/home.html</loc>
-    <lastmod>2025-06-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -10,31 +10,31 @@
     <loc>https://ajayadahal.github.io/projects/sma.html</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://ajayadahal.github.io/projects/sma-architecture.html</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://ajayadahal.github.io/projects/cognitive-silo.html</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://ajayadahal.github.io/projects/cognitive-silo-architecture.html</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://ajayadahal.github.io/projects/72ns-gateway.html</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://ajayadahal.github.io/projects/dc-dc-dissection.html</loc>
@@ -67,6 +67,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://ajayadahal.github.io/projects/vtol-plane.html</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://ajayadahal.github.io/projects/wifi-har-versal.html</loc>
     <lastmod>2026-08-24</lastmod>
     <changefreq>monthly</changefreq>
@@ -76,7 +82,7 @@
     <loc>https://ajayadahal.github.io/projects/versal-ethernet.html</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://ajayadahal.github.io/projects/zcu102-ethernet.html</loc>

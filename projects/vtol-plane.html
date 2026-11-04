@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tilt-Rotor VTOL, 3-D Printed and Verified in Code | Ajaya Dahal</title>
+    <meta name="description" content="A 3-D printed tilt-rotor VTOL plane. Every part is generated in Python from one parameter file, sliced from the command line and signed off by a 121-check verification gate before printing. Explore the interactive 3-D model.">
+    <meta name="author" content="Ajaya Dahal">
+    <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
+    <link rel="canonical" href="https://ajayadahal.github.io/projects/vtol-plane.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="A 3-D Printed Tilt-Rotor VTOL, Generated and Verified in Code | Ajaya Dahal">
+    <meta property="og:description" content="Takes off like a drone, flies like a plane. Every part generated in Python, 121 automated checks before printing, and an interactive 3-D model.">
+    <meta property="og:url" content="https://ajayadahal.github.io/projects/vtol-plane.html">
+    <meta property="og:image" content="https://ajayadahal.github.io/images/projects/vtol-plane/og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "A 3-D Printed Tilt-Rotor VTOL, Generated and Verified in Code",
+        "author": { "@type": "Person", "name": "Ajaya Dahal", "url": "https://ajayadahal.github.io/" },
+        "datePublished": "2026-11-04",
+        "image": "https://ajayadahal.github.io/images/projects/vtol-plane/og.jpg",
+        "url": "https://ajayadahal.github.io/projects/vtol-plane.html"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/project-base.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <style>
+        /* ---- hero ---- */
+        .vt-hero { position: relative; isolation: isolate; }
+        .vt-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 30% 0;
+            z-index: -1;
+            background:
+                radial-gradient(60% 70% at 50% 0%, rgba(62, 100, 255, .13), transparent 70%),
+                linear-gradient(rgba(62, 100, 255, .07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(62, 100, 255, .07) 1px, transparent 1px);
+            background-position: center top;
+            background-size: auto, 32px 32px, 32px 32px;
+            -webkit-mask-image: linear-gradient(#000 50%, transparent);
+            mask-image: linear-gradient(#000 50%, transparent);
+        }
+        .vt-grad { color: var(--accent); background: linear-gradient(95deg, var(--accent) 15%, #1d9bf0 95%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .vt-nw { white-space: nowrap; }
+
+        /* ---- 3-D stage ---- */
+        .vt-stage {
+            position: relative;
+            margin: 36px 0 0;
+            overflow: hidden;
+            background: radial-gradient(130% 100% at 50% 30%, #fff 0%, #f2f5f9 55%, #e3e9f1 100%);
+            border: 1px solid #dfe5ee;
+            border-radius: 18px;
+            box-shadow: 0 40px 80px -40px rgba(21, 27, 36, .45), 0 14px 30px -18px rgba(21, 27, 36, .18);
+        }
+        .vt-view { position: relative; aspect-ratio: 16 / 9; }
+        .vt-view > canvas, .vt-stage .vt-poster { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .vt-view > canvas { display: block; opacity: 0; cursor: grab; outline: 0; transition: opacity .9s ease; }
+        .vt-view > canvas:active { cursor: grabbing; }
+        .vt-stage .vt-poster { margin: 0; object-fit: cover; background: none; border: 0; border-radius: 0; transition: opacity .9s ease, visibility 0s .9s; }
+        .vt-stage.is-ready .vt-view > canvas { opacity: 1; }
+        .vt-stage.is-ready .vt-poster { visibility: hidden; opacity: 0; }
+
+        .vt-chip { padding: 5px 11px; font-size: 12px; font-weight: 500; line-height: 1.4; color: #3a4250; background: rgba(255, 255, 255, .78); border: 1px solid rgba(255, 255, 255, .95); border-radius: 999px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+        .vt-hint { position: absolute; top: 14px; left: 14px; z-index: 2; margin: 0; opacity: 0; transition: opacity .6s ease; pointer-events: none; }
+        .vt-stage.is-ready .vt-hint { opacity: 1; }
+        .vt-stage.is-ready.has-interacted .vt-hint { opacity: 0; }
+        .vt-touch { display: none; }
+        @media (hover: none) {
+            .vt-mouse { display: none; }
+            .vt-touch { display: inline; }
+        }
+        .vt-legend { position: absolute; top: 14px; right: 14px; z-index: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 58%; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+        .vt-legend li { display: inline-flex; align-items: center; gap: 7px; margin: 0; }
+        .vt-legend i { width: 10px; height: 10px; background: var(--c); border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15); }
+
+        .vt-loading { position: absolute; top: 50%; left: 50%; z-index: 4; display: none; justify-items: center; gap: 10px; width: min(300px, 80%); padding: 16px 20px; font-size: 13px; font-weight: 500; text-align: center; color: var(--ink); background: rgba(255, 255, 255, .88); border-radius: 14px; box-shadow: 0 10px 30px -10px rgba(21, 27, 36, .3); transform: translate(-50%, -50%); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+        .vt-stage.is-loading .vt-loading, .vt-stage.is-failed .vt-loading { display: grid; }
+        .vt-bar { width: 100%; height: 4px; overflow: hidden; background: #e3e8f0; border-radius: 4px; }
+        .vt-bar i { display: block; width: 0; height: 100%; background: linear-gradient(90deg, var(--accent), #1d9bf0); border-radius: 4px; transition: width .2s ease; }
+        .vt-stage.is-failed .vt-bar { display: none; }
+        .vt-load { position: absolute; top: 50%; left: 50%; z-index: 4; transform: translate(-50%, -50%); cursor: pointer; }
+        .vt-load[hidden] { display: none; }
+
+        .vt-tip { position: absolute; top: 0; left: 0; z-index: 5; max-width: 300px; padding: 10px 12px; font-size: 12.5px; line-height: 1.45; color: #dfe5ee; background: rgba(21, 27, 36, .94); border-radius: 10px; box-shadow: 0 12px 30px rgba(0, 0, 0, .25); pointer-events: none; }
+        .vt-tip[hidden] { display: none; }
+        .vt-tip b { font-size: 13.5px; color: #fff; }
+        .vt-tip .vt-side { margin-left: 8px; font-size: 10.5px; font-weight: 600; letter-spacing: .6px; text-transform: uppercase; color: #9fb3ff; }
+        .vt-tip .vt-sub { display: block; margin-top: 2px; }
+        .vt-tip .vt-meta { display: block; margin-top: 6px; color: #a9b3c2; }
+        .vt-tip code { display: inline-block; margin-top: 6px; padding: 1px 6px; font-size: 11px; color: #c9d4ff; background: rgba(255, 255, 255, .08); border: 0; }
+
+        .vt-hud {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            left: 16px;
+            z-index: 3;
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 12px 24px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, .8);
+            border: 1px solid rgba(255, 255, 255, .95);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px -12px rgba(21, 27, 36, .28);
+            -webkit-backdrop-filter: blur(14px) saturate(1.3);
+            backdrop-filter: blur(14px) saturate(1.3);
+        }
+        .vt-ctl-head { display: flex; justify-content: space-between; gap: 8px; font-size: 11.5px; font-weight: 600; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); }
+        .vt-ctl-head label { cursor: pointer; }
+        .vt-ctl output { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0; text-transform: none; color: var(--accent-dark); }
+        .vt-ctl input[type="range"] { display: block; width: 100%; margin: 4px 0 0; accent-color: var(--accent); cursor: pointer; }
+        .vt-ctl input[type="range"]:disabled { cursor: default; }
+        .vt-scale { position: relative; height: 15px; font-size: 10.5px; color: var(--muted); }
+        .vt-scale span { position: absolute; top: 0; white-space: nowrap; transform: translateX(-50%); }
+        .vt-scale span:first-child { transform: none; }
+        .vt-scale span:last-child { right: 0; left: auto !important; transform: none; }
+        .vt-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+        .vt-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font: 600 12.5px/1.2 var(--font); white-space: nowrap; color: var(--ink); background: #fff; border: 1px solid #d9dfe8; border-radius: 999px; cursor: pointer; transition: color .2s ease, background-color .2s ease, border-color .2s ease; }
+        .vt-btn svg { width: 14px; height: 14px; flex: none; }
+        .vt-btn:hover:not(:disabled) { color: var(--accent-dark); border-color: var(--accent); }
+        .vt-btn[aria-pressed="true"] { color: #fff; background: var(--accent); border-color: var(--accent); }
+        .vt-btn[aria-pressed="true"]:hover { color: #fff; background: var(--accent-dark); }
+        .vt-btn:disabled { cursor: default; opacity: .5; }
+        .vt-btn.vt-icon { padding: 7px 9px; }
+        .vt-stage + figcaption, .vt-caption { margin-top: 12px; font-size: .85rem; line-height: 1.55; color: var(--muted); }
+
+        .vt-stage:fullscreen { display: flex; flex-direction: column; border: 0; border-radius: 0; }
+        .vt-stage:fullscreen .vt-view { flex: 1; aspect-ratio: auto; }
+        .vt-stage:-webkit-full-screen { display: flex; flex-direction: column; width: 100%; height: 100%; border: 0; border-radius: 0; }
+        .vt-stage:-webkit-full-screen .vt-view { flex: 1; aspect-ratio: auto; }
+
+        /* ---- stats ---- */
+        .vt-stats { grid-template-columns: repeat(auto-fit, minmax(min(136px, 100%), 1fr)); margin-top: 30px; }
+        .vt-stats .stat b { font-variant-numeric: tabular-nums; }
+        .vt-stats .stat.is-ok b::before { content: ""; display: inline-block; width: 9px; height: 9px; margin: 0 8px 2px 0; background: #22a35a; border-radius: 50%; box-shadow: 0 0 0 4px rgba(34, 163, 90, .16); }
+
+        /* ---- hover margin ---- */
+        .vt-gauges { display: grid; gap: 16px; margin: 20px 0 8px; padding: 20px 22px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+        .vt-gauge-head { display: flex; justify-content: space-between; gap: 12px; font-size: .9rem; }
+        .vt-gauge-head b { font-variant-numeric: tabular-nums; color: var(--ink); }
+        .vt-track { position: relative; height: 10px; margin-top: 7px; background: #e1e6ee; border-radius: 6px; }
+        .vt-track i { position: absolute; top: 0; bottom: 0; left: 0; width: var(--v); background: linear-gradient(90deg, #ffc247, #f08a24); border-radius: 6px; }
+        .vt-gauge.is-plan .vt-track i { background: linear-gradient(90deg, #4fd18b, #1f9d5c); }
+        .vt-track em { position: absolute; top: -6px; bottom: -6px; left: 60%; width: 2px; background: #d6453d; border-radius: 1px; }
+        .vt-limit { position: relative; height: 16px; font-size: 11px; font-weight: 600; color: #d6453d; }
+        .vt-limit span { position: absolute; left: 60%; transform: translateX(-50%); }
+        .vt-gauges p { margin: 0; font-size: .82rem; line-height: 1.5; color: var(--muted); }
+
+        /* ---- pipeline ---- */
+        .vt-flow { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin: 28px 0 0; padding: 0; list-style: none; }
+        .vt-flow::before { content: ""; position: absolute; top: 17px; right: calc(100% / 12); left: calc(100% / 12); height: 2px; background: linear-gradient(90deg, var(--accent), #1d9bf0 75%, #22a35a); opacity: .45; }
+        .vt-flow li { position: relative; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .vt-node { position: relative; z-index: 1; display: grid; place-items: center; width: 36px; height: 36px; font-size: 14px; font-weight: 700; color: var(--accent); background: #fff; border: 2px solid var(--accent); border-radius: 50%; box-shadow: 0 0 0 6px #fff; }
+        .vt-flow li:last-child .vt-node { color: #fff; background: #22a35a; border-color: #22a35a; }
+        .vt-flow-card { flex: 1; width: 100%; margin-top: 14px; padding: 14px 14px 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, .04); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+        .vt-flow-card:hover { border-color: rgba(62, 100, 255, .45); box-shadow: 0 10px 24px -12px rgba(21, 27, 36, .25); transform: translateY(-3px); }
+        .vt-flow li:last-child .vt-flow-card { background: linear-gradient(160deg, #f1fbf5, #e2f5e9); border-color: #bfe6cd; }
+        .vt-flow-card code { display: block; margin-bottom: 8px; padding: 0; font-size: 11.5px; line-height: 1.45; color: var(--accent-dark); background: none; border: 0; overflow-wrap: anywhere; }
+        .vt-flow-card b { display: block; margin-bottom: 4px; font-size: .95rem; line-height: 1.35; color: var(--ink); }
+        .vt-flow-card span { display: block; font-size: .84rem; line-height: 1.5; }
+
+        /* ---- gate ---- */
+        .section .vt-checks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 22px 0; padding: 0; list-style: none; }
+        .section .vt-checks li { position: relative; margin: 0; padding: 13px 14px 13px 42px; font-size: .85rem; line-height: 1.5; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+        .vt-checks li::before { content: ""; position: absolute; top: 15px; left: 14px; width: 18px; height: 18px; background: #22a35a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat; border-radius: 50%; }
+        .vt-checks b { display: block; font-size: .93rem; color: var(--ink); }
+        .section .vt-checks li.is-total { display: flex; flex-direction: column; justify-content: center; background: linear-gradient(150deg, #f1fbf5, #dff3e7); border-color: #bfe6cd; }
+        .vt-checks .is-total b { font-size: 1.5rem; line-height: 1.2; color: #17803f; }
+
+        .vt-term { margin: 24px 0; }
+        .vt-term-bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: #0d1117; border-radius: 10px 10px 0 0; }
+        .vt-term-bar i { width: 10px; height: 10px; background: #ff5f57; border-radius: 50%; }
+        .vt-term-bar i:nth-child(2) { background: #febc2e; }
+        .vt-term-bar i:nth-child(3) { background: #28c840; }
+        .vt-term-bar span { margin-left: 10px; font: 12px var(--mono); color: #8b96a8; }
+        .vt-term pre { font-size: .78rem; font-variant-ligatures: none; line-height: 1.75; color: #c9d1d9; background: #151b24; border-radius: 0 0 10px 10px; }
+        .vt-term .ok { color: #3fb950; }
+        .vt-term .dim { color: #6e7a8a; }
+        .vt-term .sum { font-weight: 700; color: #3fb950; }
+
+        /* ---- media ---- */
+        .vt-video { position: relative; margin: 24px 0; }
+        .grid-2 .vt-video { margin: 0; }
+        .vt-video video { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; background: #eef1f4; border: 1px solid var(--line); border-radius: 10px; }
+        .vt-vbtn { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; color: #fff; background: rgba(21, 27, 36, .55); border: 0; border-radius: 50%; cursor: pointer; opacity: .8; transition: opacity .2s ease, background-color .2s ease; }
+        .vt-vbtn:hover, .vt-vbtn:focus-visible { background: var(--accent); opacity: 1; }
+        .vt-vbtn svg { width: 14px; height: 14px; }
+        .vt-vbtn .i-play, .vt-video.is-paused .vt-vbtn .i-pause { display: none; }
+        .vt-video.is-paused .vt-vbtn .i-play { display: block; }
+        html:not(.js) .vt-vbtn { display: none; }
+        .vt-figure-wide { margin: 28px 0; }
+
+        /* ---- status ---- */
+        .section .vt-steps { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 26px 0 20px; padding: 0; list-style: none; }
+        .section .vt-steps li { position: relative; margin: 0; padding: 32px 6px 0; font-size: .8rem; line-height: 1.45; text-align: center; }
+        .vt-steps li::before { content: ""; position: absolute; top: 4px; left: 50%; z-index: 1; width: 18px; height: 18px; margin-left: -9px; background: #fff; border: 2px solid #c5ccd8; border-radius: 50%; }
+        .vt-steps li::after { content: ""; position: absolute; top: 12px; left: -50%; width: 100%; height: 2px; background: #dfe4ec; }
+        .vt-steps li:first-child::after { display: none; }
+        .vt-steps li.done::before { background: #22a35a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat; border-color: #22a35a; }
+        .vt-steps li.done::after, .vt-steps li.now::after { background: #22a35a; }
+        .vt-steps li.now::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 5px rgba(62, 100, 255, .2); }
+        .vt-steps b { display: block; margin-bottom: 2px; font-size: .86rem; color: var(--ink); }
+        .vt-steps li.now b { color: var(--accent-dark); }
+
+        @media (max-width: 960px) {
+            .vt-flow { grid-template-columns: minmax(0, 1fr); gap: 0; }
+            .vt-flow::before { top: 18px; bottom: 18px; left: 17px; width: 2px; height: auto; background: linear-gradient(var(--accent), #1d9bf0 75%, #22a35a); }
+            .vt-flow li { flex-direction: row; align-items: flex-start; gap: 16px; padding-bottom: 14px; }
+            .vt-flow-card { margin-top: 0; }
+            .vt-hud { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+            .vt-buttons { grid-column: 1 / -1; justify-content: flex-start; }
+        }
+        @media (max-width: 760px) {
+            .vt-stage { border-radius: 14px; }
+            .vt-view { aspect-ratio: 1 / 1; }
+            .vt-hud { position: static; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px 16px 16px; background: #fff; border: 0; border-top: 1px solid var(--line); border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+            .vt-legend { top: auto; right: 10px; bottom: 10px; left: 10px; justify-content: center; gap: 4px; max-width: none; }
+            .vt-legend li { gap: 5px; padding: 3px 8px; font-size: 11px; }
+            .vt-wide { display: none; }
+            .vt-hint { right: 14px; font-size: 11.5px; text-align: center; }
+            .section .vt-checks { grid-template-columns: minmax(0, 1fr); }
+            .section .vt-steps { grid-template-columns: minmax(0, 1fr); }
+            .section .vt-steps li { padding: 0 0 16px 34px; text-align: left; }
+            .vt-steps li::before { top: 2px; left: 0; margin-left: 0; }
+            .vt-steps li::after { top: -16px; left: 8px; width: 2px; height: 20px; }
+        }
+        @media (min-width: 761px) and (max-width: 1100px) {
+            .section .vt-checks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-nav">
+    <div class="wrap">
+        <a class="brand" href="../home.html"><span>A</span>jaya</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="../home.html#about-section">About</a></li>
+            <li><a href="../home.html#page-3">Projects</a></li>
+            <li><a href="../home.html#resume-section">Resume</a></li>
+            <li><a href="../home.html#contact-section">Contact</a></li>
+            <li class="nav-cta"><a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+    </div>
+</header>
+
+<main id="main">
+<article>
+    <div class="vt-hero">
+        <header class="project-hero col">
+            <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#page-3">Projects</a> / <span aria-current="page">Tilt-Rotor VTOL</span></nav>
+            <p class="eyebrow">November 2026 · v0.2: designed and verified, test prints next</p>
+            <h1>A <span class="vt-nw">3-D</span> Printed <span class="vt-nw">Tilt-Rotor</span> VTOL, <span class="vt-grad">Generated and Verified in Code</span></h1>
+            <p class="lede">It takes off like a drone and flies like a plane. Every part is generated by Python from a single parameter file, sliced from the command line, and signed off by an automated verification gate before any filament is used.</p>
+            <ul class="tags">
+                <li>Python CAD (build123d)</li>
+                <li>PX4 tilt-rotor</li>
+                <li>LW-PLA + PETG printing</li>
+                <li>three.js</li>
+                <li>CI verification</li>
+            </ul>
+            <div class="cta-row">
+                <a class="btn btn-primary" href="#model">Explore the 3-D model</a>
+                <a class="btn btn-outline" href="https://github.com/AjayaDahal/vtol-plane" target="_blank" rel="noopener">Source on GitHub</a>
+            </div>
+        </header>
+
+        <div class="wrap">
+            <figure class="vt-stage" id="model" aria-labelledby="vt-caption">
+                <div class="vt-view">
+                    <img class="vt-poster" src="../images/projects/vtol-plane/poster.webp" width="1600" height="900" alt="The VTOL plane from the front left: white LW-PLA skins, blue PETG structure, red motors tilted up for hover, V-tail on a carbon boom">
+                    <p class="vt-hint vt-chip"><span class="vt-mouse">Drag to orbit · scroll to zoom · point at a part to name it</span><span class="vt-touch">Swipe to turn · pinch to zoom · tap a part</span></p>
+                    <ul class="vt-legend" aria-label="Colours">
+                        <li class="vt-chip"><i style="--c:#eae6da"></i><span>LW-PLA<span class="vt-wide"> skin</span></span></li>
+                        <li class="vt-chip"><i style="--c:#2f6db5"></i><span>PETG<span class="vt-wide"> structure</span></span></li>
+                        <li class="vt-chip"><i style="--c:#1b1b1b"></i>Carbon</li>
+                        <li class="vt-chip"><i style="--c:#b03030"></i>Motors</li>
+                    </ul>
+                    <div class="vt-loading" role="status" aria-live="polite"><span id="vt-status">Loading the 3-D model…</span><span class="vt-bar"><i id="vt-progress"></i></span></div>
+                    <button class="btn btn-primary vt-load" type="button" hidden>Load the 3-D model (1 MB)</button>
+                    <div class="vt-tip" id="vt-tip" hidden></div>
+                </div>
+                <div class="vt-hud">
+                    <div class="vt-ctl">
+                        <div class="vt-ctl-head"><label for="vt-tilt">Front motors</label><output id="vt-tilt-out" for="vt-tilt">0° · hover</output></div>
+                        <input type="range" id="vt-tilt" min="-20" max="90" step="1" value="0" disabled>
+                        <div class="vt-scale" aria-hidden="true"><span style="left:0">−20°</span><span style="left:18.2%">hover</span><span style="left:100%">cruise 90°</span></div>
+                    </div>
+                    <div class="vt-ctl">
+                        <div class="vt-ctl-head"><label for="vt-explode">Explode</label><output id="vt-explode-out" for="vt-explode">0 %</output></div>
+                        <input type="range" id="vt-explode" min="0" max="100" step="1" value="0" disabled>
+                        <div class="vt-scale" aria-hidden="true"><span style="left:0">assembled</span><span style="left:100%">burst view</span></div>
+                    </div>
+                    <div class="vt-buttons">
+                        <button class="vt-btn" type="button" id="vt-play" aria-pressed="false" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3v10l8.5-5z" fill="currentColor"/></svg><span>Hover to cruise</span></button>
+                        <button class="vt-btn" type="button" id="vt-xray" aria-pressed="false" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.2 1.8"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg><span>X-ray</span></button>
+                        <button class="vt-btn" type="button" id="vt-reset" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5M3 2.5v3h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Reset</span></button>
+                        <button class="vt-btn vt-icon" type="button" id="vt-full" aria-label="Full screen" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    </div>
+                </div>
+            </figure>
+            <p class="vt-caption" id="vt-caption">The aircraft's own CAD, built from the repository's files: the printed parts, the carbon tubes, the motors and the equipment inside. Tilt the front motors from hover to cruise, burst it apart, or switch on x-ray to see the structure and the avionics bay. Pointing at a part shows its job, its mass and its print time.</p>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="stats vt-stats">
+            <div class="stat"><b>1478&nbsp;mm</b><span>Wingspan</span></div>
+            <div class="stat"><b>~2.0&nbsp;kg</b><span>All-up weight</span></div>
+            <div class="stat is-ok"><b>121/121</b><span>Checks passing</span></div>
+            <div class="stat"><b>58</b><span>Print jobs</span></div>
+            <div class="stat"><b>~65&nbsp;h</b><span>Print time</span></div>
+        </div>
+
+        <section class="section" id="overview">
+            <h2>At a glance</h2>
+            <dl class="facts">
+                <dt>Layout</dt><dd>Tilt-rotor tricopter: two front motors tilt from −20° to 90°, a fixed rear lift motor, V-tail</dd>
+                <dt>Wing</dt><dd>Clark Y, 220 → 150&nbsp;mm chord, 0.27&nbsp;m², Hoerner tips; V-tail NACA 0012 at 110° with ruddervators</dd>
+                <dt>Power</dt><dd>3 × Emax ECOII 2807 1700&nbsp;KV on 7 × 4.5 props, 50&nbsp;A DShot ESCs, 4S 5000&nbsp;mAh</dd>
+                <dt>Avionics</dt><dd>Pixhawk 6C running PX4 as a tilt-rotor VTOL; M10 GPS, airspeed sensor with pitot, ELRS receiver</dd>
+                <dt>Estimates</dt><dd>Cruise ~18&nbsp;m/s, stall 10–11.5&nbsp;m/s, ~7&nbsp;min of pure hover, static margin ~18&nbsp;%</dd>
+                <dt>Airframe</dt><dd>LW-PLA vase-mode skins with fused internal webs, PETG ribs and frames, carbon spars and tail boom</dd>
+                <dt>Toolchain</dt><dd>Python and build123d, Anycubic Slicer Next's command line, three.js, GitHub Actions</dd>
+            </dl>
+        </section>
+
+        <section class="section" id="flight">
+            <h2>Takes off like a drone, flies like a plane</h2>
+            <p>The layout is the same as the Flightory Stallion's: a tilt-rotor tricopter. Two motors on tilting yokes ahead of the wing lift the aircraft in hover and swing forward for cruise, while a third, fixed motor on the tail boom shares the hover load. In hover, PX4 controls yaw by tilting the two front motors in opposite directions. In forward flight the Clark Y wing and the V-tail carry the aircraft.</p>
+            <figure class="vt-video">
+                <video muted loop playsinline controls preload="metadata" poster="../images/projects/vtol-plane/transition.webp" width="800" height="500">
+                    <source src="../images/projects/vtol-plane/transition.mp4" type="video/mp4">
+                </video>
+                <button class="vt-vbtn" type="button" aria-label="Pause animation"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3v10l8.5-5z" fill="currentColor"/></svg></button>
+                <figcaption>Hover to cruise: the yokes swing the front motors from straight up to straight ahead. The tilt slider in the model above does the same.</figcaption>
+            </figure>
+
+            <h3>The number that matters: hover margin</h3>
+            <p>A VTOL lives or dies by how hard its motors work in hover. The gate fails the design if a front motor needs more than 60&nbsp;% of the thrust it makes on a nearly empty pack. The current 4S design passes at 58.9&nbsp;%, which is legal but thin, and that is why the next revision moves to 3S with bigger props.</p>
+            <div class="vt-gauges">
+                <div class="vt-limit" aria-hidden="true"><span>60&nbsp;% limit</span></div>
+                <div class="vt-gauge">
+                    <div class="vt-gauge-head"><span>4S design, as built</span><b>58.9&nbsp;%</b></div>
+                    <div class="vt-track" role="img" aria-label="58.9 percent, against a 60 percent limit"><i style="--v:58.9%"></i><em></em></div>
+                </div>
+                <div class="vt-gauge is-plan">
+                    <div class="vt-gauge-head"><span>3S plan, 12&nbsp;in props (modelled)</span><b>47.9&nbsp;%</b></div>
+                    <div class="vt-track" role="img" aria-label="47.9 percent, against a 60 percent limit"><i style="--v:47.9%"></i><em></em></div>
+                </div>
+                <p>Thrust each front motor needs in hover, as a share of what it makes on a nearly empty pack. Both figures come from the repository's mass balance.</p>
+            </div>
+        </section>
+
+        <section class="section" id="pipeline">
+            <h2>Design as code</h2>
+            <p>The design lives in code, not in a CAD file. Every dimension is in one Python file. Scripts generate every part from it, lay each one out for its printer, slice it through the slicer's command line, and regenerate the documentation from the sliced files. Change one number and <code>build_all.py</code> rebuilds, re-slices and re-verifies the whole aircraft.</p>
+        </section>
+    </div>
+
+    <div class="wrap">
+        <ol class="vt-flow">
+            <li><span class="vt-node" aria-hidden="true">1</span><div class="vt-flow-card"><code>params.py</code><b>One source of truth</b><span>Every dimension of the aircraft, in one file.</span></div></li>
+            <li><span class="vt-node" aria-hidden="true">2</span><div class="vt-flow-card"><code>skins.py · structure.py</code><b>Generate the parts</b><span>LW-PLA vase skins, and PETG structure in build123d.</span></div></li>
+            <li><span class="vt-node" aria-hidden="true">3</span><div class="vt-flow-card"><code>make_print_ready.py · plates.py</code><b>Lay out for printing</b><span>Orientation, printer and copies, and the seven PETG plates.</span></div></li>
+            <li><span class="vt-node" aria-hidden="true">4</span><div class="vt-flow-card"><code>slice_all.py</code><b>Slice headless</b><span>G-code and a 3MF project for every job, from the slicer's CLI.</span></div></li>
+            <li><span class="vt-node" aria-hidden="true">5</span><div class="vt-flow-card"><code>mass_balance.py · make_viewer.py · make_tracker.py</code><b>Measure and document</b><span>Mass, CG and hover margin, the viewer, the tracker and charts.</span></div></li>
+            <li><span class="vt-node" aria-hidden="true">✓</span><div class="vt-flow-card"><code>check_parts.py</code><b>Sign off</b><span>121 checks, locally and in CI on every push.</span></div></li>
+        </ol>
+    </div>
+
+    <div class="col">
+        <section class="section" id="gate">
+            <h2>A sign-off gate before any filament</h2>
+            <p>I borrowed a habit from chip design: nothing goes to a printer until a sign-off gate passes. <code>check_parts.py</code> checks the generated meshes, the sliced G-code and the documentation, on my machine and in GitHub Actions on every push. It reads the G-code back instead of trusting the settings that produced it, and every G-code file carries a hash of the STL it was sliced from, so a stale file cannot slip through.</p>
+            <ul class="vt-checks">
+                <li><b>Meshes</b>Watertight, and left and right parts true mirror images.</li>
+                <li><b>Fits</b>Every spigot, coupler, frame, ring and hatch, with its glue gap.</li>
+                <li><b>Finish</b>Every glued skin joint flush to 0.15&nbsp;mm, with no creases.</li>
+                <li><b>Paths</b>Spars, joiners, the tail boom and every wire route stay clear.</li>
+                <li><b>Mechanism</b>Motor screws with hex-key room, the tilt sweep, prop clearances.</li>
+                <li><b>Balance</b>Thrust split, CG band, static margin and the hover margin.</li>
+                <li><b>Printability</b>No supports anywhere; no vase wall leans past 45°.</li>
+                <li><b>Equipment</b>Everything fits; the battery and every servo come out.</li>
+                <li><b>G-code</b>Fresh, inside the bed, webs fused, nothing far over air.</li>
+                <li><b>Slicer projects</b>Every job's 3MF matches its G-code and settings.</li>
+                <li><b>Docs</b>Viewer, tracker, charts and previews match the files.</li>
+                <li class="is-total"><b>121/121</b>checks passing on the current design</li>
+            </ul>
+            <figure class="vt-term">
+                <div class="vt-term-bar" aria-hidden="true"><i></i><i></i><i></i><span>python scripts/check_parts.py</span></div>
+<pre><code><span class="ok">[PASS]</span> glued skin joints are flush (wing, V-tail, fuselage): root rib 0.02, boom rib in 0.02, <span class="dim">…</span>
+<span class="ok">[PASS]</span> tilt yoke clears pod and boom rib over -25..95 deg: min 0.50 mm at -25 deg
+<span class="ok">[PASS]</span> front prop disc clears wing, pod and fuselage over the tilt range: min 30.0 mm at -20 deg
+<span class="ok">[PASS]</span> hover thrust per front motor &lt;= 60 % of worst-case max: 58.9 % of 1250 g
+<span class="ok">[PASS]</span> static margin 10-25 % MAC: 18 %
+<span class="ok">[PASS]</span> battery slides out through the nose opening: 9.6 mm each side at the tightest point of its path
+<span class="ok">[PASS]</span> wing webs print as fused double walls (G-code): 4 skins, every web fused (&lt;= 0.42 mm) <span class="dim">…</span>
+<span class="ok">[PASS]</span> PETG G-code lays nothing far over air: bridges span &lt;= 30 mm, <span class="dim">…</span> longest 23.8 mm
+<span class="ok">[PASS]</span> G-code has no support extrusions (profile sanity): 0 support moves
+<span class="dim">…</span>
+<span class="sum">121/121 checks passed</span></code></pre>
+                <figcaption>Lines from the gate's run in GitHub Actions on the current design.</figcaption>
+            </figure>
+            <p>The design itself went through eleven rounds of review and a premortem that started from "assume it already failed". Every finding and its fix is recorded in the repository's review report.</p>
+        </section>
+
+        <section class="section" id="airframe">
+            <h2>Inside the airframe</h2>
+            <p>The skins are LW-PLA printed in vase mode: one continuous wall about 0.5&nbsp;mm thick, foamed in the nozzle to roughly half the density of PLA. Ribs, frames, pods and couplers are PETG, and carbon tubes carry the bending loads: 10&nbsp;mm and 6&nbsp;mm wing spars on joiners, and a 16&nbsp;mm tail boom.</p>
+            <p>Vase mode prints a single wall and nothing else, so the wing's internal webs are a trick of the geometry. Each web is a 0.06&nbsp;mm slot cut up from the bottom skin. The nozzle runs up one side of the slot and back down the other, which prints a fused double wall joined to the top skin, with no extra moves. The gate checks in the G-code that every web came out fused.</p>
+            <figure class="vt-video">
+                <video muted loop playsinline controls preload="metadata" poster="../images/projects/vtol-plane/burst.webp" width="800" height="500">
+                    <source src="../images/projects/vtol-plane/burst.mp4" type="video/mp4">
+                </video>
+                <button class="vt-vbtn" type="button" aria-label="Pause animation"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3v10l8.5-5z" fill="currentColor"/></svg></button>
+                <figcaption>Burst view: every part, electronics included, moves out along the way it goes together.</figcaption>
+            </figure>
+            <div class="grid-2">
+                <figure>
+                    <a href="../images/projects/vtol-plane/xray-structure.webp" data-zoom><img src="../images/projects/vtol-plane/xray-structure.webp" width="1400" height="875" loading="lazy" alt="X-ray view: blue PETG ribs, couplers and frames threaded on black carbon spars and the tail boom, inside see-through skins"></a>
+                    <figcaption>X-ray: PETG ribs, frames and pods on the carbon spars and boom.</figcaption>
+                </figure>
+                <figure>
+                    <a href="../images/projects/vtol-plane/wing-webs.webp" data-zoom><img src="../images/projects/vtol-plane/wing-webs.webp" width="1400" height="875" loading="lazy" alt="Cut through the wing root: thin vertical webs joining the top and bottom skin, with the two carbon spars between them"></a>
+                    <figcaption>Cut through the wing root: the webs printed as part of the vase wall, and the spars between them.</figcaption>
+                </figure>
+                <figure>
+                    <a href="../images/projects/vtol-plane/reflection-stripes.webp" data-zoom><img src="../images/projects/vtol-plane/reflection-stripes.webp" width="1400" height="875" loading="lazy" alt="The wing seen from above with black and white reflection stripes running straight across the glued joints"></a>
+                    <figcaption>Reflection stripes run straight across every glued joint. The gate holds the seams flush to 0.15&nbsp;mm; the model measures 0.04&nbsp;mm or less.</figcaption>
+                </figure>
+                <figure>
+                    <a href="../images/projects/vtol-plane/xray-equipment.webp" data-zoom><img src="../images/projects/vtol-plane/xray-equipment.webp" width="1400" height="875" loading="lazy" alt="X-ray of the fuselage with labels: 4S battery on its tray, Pixhawk 6C, three ESCs, receiver, power module, GPS on top, and the cable runs"></a>
+                    <figcaption>The avionics bay: Pixhawk 6C, ESCs, receiver and the 4S pack on its tray, with the cable runs.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section" id="service">
+            <h2>Built to be serviced</h2>
+            <p>Nothing that might need replacing is glued in. One nylon screw holds the nose; take it off and the battery slides out through the coupler ring in about a minute. Every aileron and ruddervator servo is screwed to its own hatch, and the tilt servos and front motors come out with the yokes. The gate checks those paths too: the battery's way out through the nose, the strap path, and every servo's way out through its hatch.</p>
+            <div class="grid-2">
+                <figure class="vt-video">
+                    <video muted loop playsinline controls preload="metadata" poster="../images/projects/vtol-plane/battery.webp" width="800" height="500">
+                        <source src="../images/projects/vtol-plane/battery.mp4" type="video/mp4">
+                    </video>
+                    <button class="vt-vbtn" type="button" aria-label="Pause animation"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3v10l8.5-5z" fill="currentColor"/></svg></button>
+                    <figcaption>Battery change: the nose slides off and the pack comes out forward.</figcaption>
+                </figure>
+                <figure class="vt-video">
+                    <video muted loop playsinline controls preload="metadata" poster="../images/projects/vtol-plane/service.webp" width="800" height="500">
+                        <source src="../images/projects/vtol-plane/service.mp4" type="video/mp4">
+                    </video>
+                    <button class="vt-vbtn" type="button" aria-label="Pause animation"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3v10l8.5-5z" fill="currentColor"/></svg></button>
+                    <figcaption>Servicing: the hatches come out with their servos, and the yokes lift off the pods.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section" id="printing">
+            <h2>Two printers, one material each</h2>
+            <p>The open-frame Kobra X prints every LW-PLA skin, one per job, since vase-mode parts cannot share a bed: 22 jobs, 49&nbsp;h and 266&nbsp;g from a single spool and a single flow calibration. The enclosed Kobra S1 prints all the PETG as seven plates in build order, in 16&nbsp;h and 464&nbsp;g. No part needs supports. Each job exists as G-code, as a 3MF project, and as a named plate in one complete project per printer.</p>
+            <figure class="vt-figure-wide">
+                <a href="../images/projects/vtol-plane/sliced-petg.webp" data-zoom><img src="../images/projects/vtol-plane/sliced-petg.webp" width="2400" height="1059" loading="lazy" alt="The seven PETG plates as the slicer prints them, coloured by feature: outer walls, infill, top surfaces, bridges and brims, with no supports"></a>
+                <figcaption>Every PETG plate drawn from its own G-code: walls, infill, bridges and brims, and no supports. Select to enlarge.</figcaption>
+            </figure>
+            <figure class="vt-figure-wide">
+                <a href="../images/projects/vtol-plane/print-schedule.svg" data-zoom><img src="../images/projects/vtol-plane/print-schedule.svg" width="900" height="730" loading="lazy" alt="Print queue chart: the Kobra X prints the LW-PLA skins over about 49 hours while the Kobra S1 prints seven PETG plates over about 16 hours"></a>
+                <figcaption>The print queue with both printers running at once, regenerated from the sliced files on every build.</figcaption>
+            </figure>
+        </section>
+
+        <section class="section" id="status">
+            <h2>Where it stands</h2>
+            <ol class="vt-steps">
+                <li class="done"><b>Designed</b>51 parts from one parameter file</li>
+                <li class="done"><b>Verified</b>121/121 checks, 58 jobs sliced</li>
+                <li class="now"><b>Test prints</b>Flow, fits and wing webs</li>
+                <li><b>Weigh and balance</b>Real masses into the balance</li>
+                <li><b>Glide test</b>At the design CG</li>
+                <li><b>Hover, then transition</b>Bench, hover, then at altitude</li>
+            </ol>
+            <div class="note">
+                <p><strong>Next revision: 3S.</strong> I'm moving the build to parts I already own: 3S packs, a Cube Black flight controller, a Power Brick Mini, and SunnySky X2814 900&nbsp;KV motors on 12&nbsp;in props. Modelled, the front motors hover at 47.9&nbsp;% of their thrust instead of 58.9&nbsp;%, and pure hover grows from about 7 to about 18 minutes. Only two PETG plates change, so everything else can print now.</p>
+            </div>
+        </section>
+
+        <section class="section" id="files">
+            <h2>Files and links</h2>
+            <ul class="links">
+                <li><a href="https://github.com/AjayaDahal/vtol-plane" target="_blank" rel="noopener"><b>GitHub repository</b><span>Generators, gate, G-code and slicer projects</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/DESIGN.md" target="_blank" rel="noopener"><b>Design and build guide</b><span>Key numbers, assembly, servicing</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/REPORT.md" target="_blank" rel="noopener"><b>Review report</b><span>Eleven rounds of review and a premortem</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/tracker.md" target="_blank" rel="noopener"><b>Print tracker</b><span>Every job with its mass and time</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/PX4_GUIDE.md" target="_blank" rel="noopener"><b>PX4 setup</b><span>Geometry, outputs, tilt calibration, first flight</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/PLAN_3S.md" target="_blank" rel="noopener"><b>3S build plan</b><span>Motor choice, changes, shopping list</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/renders/vtol_plane.stl" target="_blank" rel="noopener"><b>Exterior model (STL)</b><span>In GitHub's 3-D viewer</span></a></li>
+                <li><a href="../images/projects/vtol-plane/model.glb" download><b>This page's 3-D model</b><span>glTF binary (GLB), 1&nbsp;MB</span></a></li>
+            </ul>
+        </section>
+    </div>
+</article>
+
+<section class="related" aria-labelledby="related-title">
+    <div class="wrap">
+        <h2 id="related-title">More projects</h2>
+        <div class="cards">
+            <a class="card" href="wifi-har-versal.html"><img src="../images/wifi-har/board/setup_pi4b.webp" alt="" loading="lazy"><div><small>Featured &middot; Versal AI Engine</small><b>WiFi Human-Activity Recognition on the Versal AI Engine</b></div></a>
+            <a class="card" href="versal-ethernet.html"><img src="../images/projects/versal-ethernet/vck190-lab.webp" alt="" loading="lazy"><div><small>Featured &middot; AMD, 2023&ndash;2025</small><b>Versal Ethernet Reference Designs</b></div></a>
+            <a class="card" href="covid-drone.html"><img src="../images/projects/covid-drone/flight.webp" alt="" loading="lazy"><div><small>February 2021</small><b>COVID-19 Sample-Collection Drone</b></div></a>
+            <a class="card" href="rc-plane.html"><img src="../images/projects/rc-plane/plane.webp" alt="" loading="lazy"><div><small>December 2023</small><b>Shark Aero RC Plane Build</b></div></a>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <p>Ajaya Dahal · Sr. Silicon Design Engineer at AMD · Austin, TX</p>
+        <nav aria-label="Elsewhere">
+            <a href="../home.html">Portfolio</a>
+            <a href="../Dahal_Ajaya_Resume.pdf" target="_blank">Resume</a>
+            <a href="https://github.com/AjayaDahal" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ajaya-dahal-137b94108/" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+    </div>
+</footer>
+
+<script src="../js/project.js" defer></script>
+<script>
+// Looping animations: they play while on screen, stay still for reduced motion, and the button
+// pauses or plays one. Without this script the native controls stay.
+(() => {
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const watch = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+        for (const e of entries) {
+            const v = e.target;
+            if (!e.isIntersecting) v.pause();
+            else if (!v.dataset.held) v.play().catch(() => {});
+        }
+    }, { threshold: 0.2 }) : null;
+    document.querySelectorAll('.vt-video').forEach((fig) => {
+        const video = fig.querySelector('video');
+        const button = fig.querySelector('.vt-vbtn');
+        const sync = () => {
+            fig.classList.toggle('is-paused', video.paused);
+            button.setAttribute('aria-label', video.paused ? 'Play animation' : 'Pause animation');
+        };
+        video.controls = false;
+        video.addEventListener('play', sync);
+        video.addEventListener('pause', sync);
+        button.addEventListener('click', () => {
+            if (video.paused) { delete video.dataset.held; video.play().catch(() => {}); }
+            else { video.dataset.held = '1'; video.pause(); }
+        });
+        if (still) video.dataset.held = '1';
+        if (watch) watch.observe(video);
+        else if (!still) video.play().catch(() => {});
+        sync();
+    });
+})();
+</script>
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.min.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+    }
+}
+</script>
+<script type="module">
+// Interactive model. model.glb is built from the vtol-plane repository's viewer manifest and
+// assembly STLs; its nodes keep the aircraft's own frame (mm, z up, x aft from the nose tip) and
+// carry their burst offsets and tooltip text as extras.
+const stage = document.getElementById('model');
+const view = stage.querySelector('.vt-view');
+const statusText = document.getElementById('vt-status');
+const progress = document.getElementById('vt-progress');
+const loadButton = stage.querySelector('.vt-load');
+const tip = document.getElementById('vt-tip');
+const $ = (id) => document.getElementById(id);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let started = false;
+function start() {
+    if (started) return;
+    started = true;
+    loadButton.hidden = true;
+    stage.classList.add('is-loading');
+    init().catch((error) => {
+        console.error(error);
+        stage.classList.remove('is-loading');
+        stage.classList.add('is-failed');
+        statusText.textContent = 'The interactive view needs WebGL 2. The picture is a render of the same model.';
+    });
+}
+if (navigator.connection && navigator.connection.saveData) {
+    loadButton.hidden = false;
+    loadButton.addEventListener('click', start);
+} else if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { io.disconnect(); start(); }
+    }, { rootMargin: '300px' });
+    io.observe(stage);
+} else {
+    start();
+}
+
+async function init() {
+    const [THREE, { OrbitControls }, { GLTFLoader }, { MeshoptDecoder }, { RoomEnvironment }] = await Promise.all([
+        import('three'),
+        import('three/addons/controls/OrbitControls.js'),
+        import('three/addons/loaders/GLTFLoader.js'),
+        import('three/addons/libs/meshopt_decoder.module.js'),
+        import('three/addons/environments/RoomEnvironment.js'),
+    ]);
+    const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.NeutralToneMapping;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+    const canvas = renderer.domElement;
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', 'Interactive 3-D model of the VTOL plane');
+    view.prepend(canvas);
+
+    const scene = new THREE.Scene();
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.35;
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f99, 0.9));
+    const centre = V(550, 0, 0);
+    const key = new THREE.DirectionalLight(0xffffff, 1.9);
+    key.position.copy(centre).add(V(-500, -700, 900).setLength(2600));
+    key.target.position.copy(centre);
+    key.castShadow = true;
+    key.shadow.mapSize.set(2048, 2048);
+    Object.assign(key.shadow.camera, { left: -1100, right: 1100, top: 1100, bottom: -1100, near: 200, far: 5200 });
+    key.shadow.bias = -0.0005;
+    key.shadow.normalBias = 1.5;
+    key.shadow.radius = 5;
+    const fill = new THREE.DirectionalLight(0xffffff, 0.55);
+    fill.position.copy(centre).add(V(700, 500, 300));
+    fill.target.position.copy(centre);
+    scene.add(key, key.target, fill, fill.target);
+
+    // Floor: a soft shadow and a grid that fades out with distance, like the renders' floor.
+    const FLOOR_Z = -75;
+    const floor = new THREE.Group();
+    floor.position.set(550, 0, FLOOR_Z);
+    scene.add(floor);
+    const catcher = new THREE.Mesh(new THREE.PlaneGeometry(8000, 8000), new THREE.ShadowMaterial({ color: 0x1b2433, opacity: 0.18 }));
+    catcher.receiveShadow = true;
+    catcher.renderOrder = 1;
+    const grid = new THREE.Mesh(new THREE.PlaneGeometry(8000, 8000), new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        uniforms: { colour: { value: new THREE.Color(0x8d99ab) }, centre: { value: new THREE.Vector2(550, 0) }, radius: { value: 1500 } },
+        vertexShader: 'varying vec3 vW; void main() { vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
+        fragmentShader: `
+            uniform vec3 colour; uniform vec2 centre; uniform float radius; varying vec3 vW;
+            float lines(float size) { vec2 c = vW.xy / size; vec2 g = abs(fract(c - 0.5) - 0.5) / fwidth(c); return 1.0 - min(min(g.x, g.y), 1.0); }
+            void main() {
+                float a = max(lines(50.0) * 0.22, lines(250.0) * 0.45);
+                a *= 1.0 - smoothstep(0.2, 1.0, length(vW.xy - centre) / radius);
+                if (a < 0.004) discard;
+                gl_FragColor = vec4(colour, a);
+                #include <tonemapping_fragment>
+                #include <colorspace_fragment>
+            }`,
+    }));
+    floor.add(grid, catcher);
+
+    const camera = new THREE.PerspectiveCamera(26, 16 / 9, 10, 30000);
+    camera.up.set(0, 0, 1);
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.minDistance = 250;
+    controls.maxDistance = 7000;
+    controls.maxPolarAngle = Math.PI * 0.62;
+    controls.autoRotate = !reduceMotion;
+    controls.autoRotateSpeed = 0.7;
+    // One finger scrolls the page vertically and turns the model sideways; two fingers zoom.
+    canvas.style.touchAction = 'pan-y';
+
+    const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+    const gltf = await loader.loadAsync('../images/projects/vtol-plane/model.glb', (e) => {
+        if (!e.total) return;
+        const pct = Math.round((100 * e.loaded) / e.total);
+        progress.style.width = `${pct}%`;
+        statusText.textContent = `Loading the 3-D model… ${pct} %`;
+    });
+    const model = gltf.scene.getObjectByName('vtol_plane');
+    model.rotation.set(0, 0, 0);
+    model.scale.setScalar(1);
+    scene.add(model);
+
+    const movers = [], skins = [], pickable = [];
+    model.traverse((o) => {
+        const u = o.userData;
+        if (u.burst) { u.base = o.position.clone(); u.offset = V(...u.burst); movers.push(o); }
+        if (!o.isMesh) return;
+        u.mat = o.material;
+        o.castShadow = u.kind !== 'prop';
+        if (u.group === 'skin') skins.push(o);
+        if (u.title) pickable.push(o);
+    });
+    const pivots = ['pivot_l', 'pivot_r'].map((n) => model.getObjectByName(n));
+    const cables = model.getObjectByName('cables');
+    const shown = (o) => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+
+    let needsRender = true;
+    let tilt = 0, explode = 0, xray = false;
+    let sequence = null, flight = null;
+
+    function pose() {
+        const e = ease(explode);
+        for (const o of movers) o.position.copy(o.userData.base).addScaledVector(o.userData.offset, e);
+        cables.visible = e < 0.01;
+        floor.position.z = FLOOR_Z - 200 * e;
+        needsRender = true;
+    }
+    const phase = (d) => (d < -2 ? 'tilted back' : d <= 12 ? 'hover' : d < 78 ? 'transition' : 'cruise');
+    function setTilt(deg) {
+        tilt = deg;
+        for (const p of pivots) p.rotation.y = -THREE.MathUtils.degToRad(deg);
+        $('vt-tilt').value = String(Math.round(deg));
+        $('vt-tilt-out').textContent = `${Math.round(deg)}° · ${phase(deg)}`;
+        needsRender = true;
+    }
+
+    // Camera framing on sampled vertices, as the repository's viewer does.
+    const HOME = V(1, 0.85, -0.55).normalize();
+    function framing(dir) {
+        model.updateMatrixWorld(true);
+        const pts = [], q = V();
+        model.traverse((o) => {
+            if (!o.isMesh || !shown(o) || o.userData.kind === 'prop') return;
+            const pos = o.geometry.attributes.position, step = Math.max(1, Math.floor(pos.count / 300));
+            for (let i = 0; i < pos.count; i += step) pts.push(q.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld).clone());
+        });
+        const f = dir.clone().normalize(), r = V().crossVectors(f, camera.up).normalize(), u = V().crossVectors(r, f);
+        const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+        for (const p of pts) [p.dot(r), p.dot(u), p.dot(f)].forEach((v, k) => { lo[k] = Math.min(lo[k], v); hi[k] = Math.max(hi[k], v); });
+        const target = V().addScaledVector(r, (lo[0] + hi[0]) / 2).addScaledVector(u, (lo[1] + hi[1]) / 2).addScaledVector(f, (lo[2] + hi[2]) / 2);
+        const tv = fit.tv, th = fit.th;
+        let d = 0;
+        for (const p of pts) {
+            const a = p.clone().sub(target), z = a.dot(f);
+            d = Math.max(d, Math.abs(a.dot(r)) / th - z, Math.abs(a.dot(u)) / tv - z);
+        }
+        d *= 1.04;
+        return { target, position: target.clone().addScaledVector(f, -d), dist: d };
+    }
+
+    // The chips and the control bar float over the canvas. The camera's view is offset so that
+    // the centre of projection sits in the middle of the clear area between them, and the model
+    // is framed to fit that area.
+    const fit = { tv: 1, th: 1 };
+    let framedOnce = false;
+    function resize() {
+        const w = view.clientWidth, h = view.clientHeight;
+        if (!w || !h) return;
+        renderer.setSize(w, h, false);
+        const vr = view.getBoundingClientRect();
+        let top = 0, bottom = 0;
+        for (const el of stage.querySelectorAll('.vt-hud, .vt-legend, .vt-hint')) {
+            const r = el.getBoundingClientRect();
+            if (getComputedStyle(el).position !== 'absolute' || !r.height) continue;
+            if (r.top + r.height / 2 < vr.top + h / 2) top = Math.max(top, r.bottom - vr.top + 6);
+            else bottom = Math.max(bottom, vr.bottom - r.top + 6);
+        }
+        const shift = (bottom - top) / 2, full = h + 2 * Math.abs(shift);
+        camera.aspect = w / full;
+        if (shift) camera.setViewOffset(w, full, 0, shift > 0 ? 2 * shift : 0, w, h);
+        else camera.clearViewOffset();
+        camera.updateProjectionMatrix();
+        const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+        fit.tv = (t * Math.max(h - top - bottom, h * 0.4)) / full;
+        fit.th = (t * w) / full;
+        // Until someone moves the camera, a new size gets a new framing.
+        if (framedOnce && !stage.classList.contains('has-interacted') && !flight) {
+            const spec = framing(HOME);
+            camera.position.copy(spec.position);
+            controls.target.copy(spec.target);
+        }
+        needsRender = true;
+    }
+    resize();
+    new ResizeObserver(resize).observe(view);
+
+    // Bursting the aircraft apart pulls the camera back by the ratio of the two framings.
+    pose();
+    setTilt(0);
+    const home = framing(HOME);
+    explode = 1; pose();
+    const burstRatio = framing(HOME).dist / home.dist;
+    explode = 0; pose();
+    const zoomAt = (e) => 1 + (burstRatio - 1) * ease(e);
+    camera.position.copy(home.position);
+    controls.target.copy(home.target);
+    controls.update();
+    framedOnce = true;
+
+    // ---- animations -------------------------------------------------------------------------
+    const playButton = $('vt-play');
+    function stopTransition() {
+        sequence = null;
+        playButton.setAttribute('aria-pressed', 'false');
+        playButton.lastElementChild.textContent = 'Hover to cruise';
+    }
+    function playTransition() {
+        sequence = { t0: performance.now(), keys: [[0, tilt], [2.2, 90], [3.6, 90], [5.8, 0], [6.4, 0]] };
+        playButton.setAttribute('aria-pressed', 'true');
+        playButton.lastElementChild.textContent = 'Stop';
+    }
+    function stepSequence(now) {
+        if (!sequence) return false;
+        const t = (now - sequence.t0) / 1000, k = sequence.keys;
+        if (t >= k[k.length - 1][0]) { setTilt(k[k.length - 1][1]); stopTransition(); return true; }
+        let i = 0;
+        while (t > k[i + 1][0]) i++;
+        const [ta, a] = k[i], [tb, b] = k[i + 1];
+        setTilt(a + (b - a) * ease((t - ta) / (tb - ta)));
+        return true;
+    }
+    function flyTo(spec) {
+        flight = { t0: performance.now(), p0: camera.position.clone(), q0: controls.target.clone(), p1: spec.position, q1: spec.target };
+    }
+    function stepFlight(now) {
+        if (!flight) return false;
+        const k = Math.min(1, (now - flight.t0) / 900), e = ease(k);
+        camera.position.lerpVectors(flight.p0, flight.p1, e);
+        controls.target.lerpVectors(flight.q0, flight.q1, e);
+        if (k === 1) { flight = null; controls.autoRotate = !reduceMotion; }
+        return true;
+    }
+
+    // ---- appearance: x-ray and the highlighted part --------------------------------------------
+    const ghosts = new Map(), glows = new Map();
+    const ghost = (m) => {
+        if (!ghosts.has(m)) ghosts.set(m, Object.assign(m.clone(), { transparent: true, opacity: 0.12, depthWrite: false }));
+        return ghosts.get(m);
+    };
+    const glow = (m) => {
+        if (!glows.has(m)) {
+            const g = m.clone();
+            g.emissive = new THREE.Color(0x3e64ff);
+            g.emissiveIntensity = 0.45;
+            glows.set(m, g);
+        }
+        return glows.get(m);
+    };
+    const look = (o) => (xray && o.userData.group === 'skin' ? ghost(o.userData.mat) : o.userData.mat);
+    const unit = (o) => (o.userData.kind === 'motor' || o.userData.kind === 'prop' ? o.parent.children.filter((c) => c.isMesh) : [o]);
+    let hover = null;
+    function setHover(o) {
+        if (o === hover) return;
+        if (hover) for (const m of unit(hover)) m.material = look(m);
+        hover = o;
+        if (o) for (const m of unit(o)) m.material = glow(look(m));
+        needsRender = true;
+    }
+    function setXray(on) {
+        setHover(null);
+        showTip(null);
+        xray = on;
+        for (const s of skins) { s.material = look(s); s.castShadow = !on; }
+        $('vt-xray').setAttribute('aria-pressed', String(on));
+        needsRender = true;
+    }
+
+    // ---- naming parts ---------------------------------------------------------------------------
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+    function pickAt(x, y) {
+        const r = canvas.getBoundingClientRect();
+        ndc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1);
+        ray.setFromCamera(ndc, camera);
+        const hits = ray.intersectObjects(pickable, false).filter((h) => shown(h.object) && !(xray && h.object.userData.group === 'skin'));
+        const hit = hits.find((h) => h.object.userData.kind !== 'prop') || hits[0];
+        return hit ? hit.object : null;
+    }
+    function showTip(o, x, y) {
+        if (!o) { tip.hidden = true; return; }
+        const u = o.userData;
+        const part = (tag, cls, text) => { const el = document.createElement(tag); if (cls) el.className = cls; el.textContent = text; return el; };
+        tip.replaceChildren(part('b', '', u.title));
+        if (u.side) tip.append(part('span', 'vt-side', u.side));
+        if (u.sub) tip.append(part('span', 'vt-sub', u.sub));
+        if (u.meta) tip.append(part('span', 'vt-meta', u.meta));
+        if (u.file) tip.append(part('code', '', u.file));
+        tip.hidden = false;
+        const r = view.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+        let left = x - r.left + 16, top = y - r.top + 16;
+        if (left + w > r.width - 8) left = x - r.left - w - 16;
+        if (top + h > r.height - 8) top = y - r.top - h - 16;
+        tip.style.transform = `translate(${Math.max(8, left)}px, ${Math.max(8, top)}px)`;
+    }
+    let dragging = false, queued = null;
+    canvas.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse' || dragging) return;
+        if (!queued) requestAnimationFrame(() => {
+            const ev = queued;
+            queued = null;
+            const o = pickAt(ev.clientX, ev.clientY);
+            setHover(o);
+            showTip(o, ev.clientX, ev.clientY);
+        });
+        queued = e;
+    });
+    canvas.addEventListener('pointerleave', () => { setHover(null); showTip(null); });
+    let down = null;
+    canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
+    canvas.addEventListener('pointerup', (e) => {
+        if (e.pointerType !== 'mouse' && down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 8 && performance.now() - down.t < 500) {
+            const o = pickAt(e.clientX, e.clientY);
+            setHover(o);
+            showTip(o, e.clientX, e.clientY);
+        }
+        down = null;
+    });
+    controls.addEventListener('start', () => {
+        dragging = true;
+        flight = null;
+        controls.autoRotate = false;
+        stage.classList.add('has-interacted');
+        setHover(null);
+        showTip(null);
+    });
+    controls.addEventListener('end', () => { dragging = false; });
+    // Wheel zoom updates the camera inside the controls' own handler: draw that too.
+    controls.addEventListener('change', () => { needsRender = true; });
+
+    // ---- controls ------------------------------------------------------------------------------
+    $('vt-tilt').addEventListener('input', (e) => { stopTransition(); setTilt(Number(e.target.value)); });
+    $('vt-explode').addEventListener('input', (e) => {
+        const before = explode;
+        explode = Number(e.target.value) / 100;
+        const k = zoomAt(explode) / zoomAt(before);
+        camera.position.sub(controls.target).multiplyScalar(k).add(controls.target);
+        $('vt-explode-out').textContent = `${e.target.value} %`;
+        setHover(null);
+        showTip(null);
+        pose();
+    });
+    playButton.addEventListener('click', () => (sequence ? stopTransition() : playTransition()));
+    $('vt-xray').addEventListener('click', () => setXray(!xray));
+    $('vt-reset').addEventListener('click', () => {
+        stopTransition();
+        setXray(false);
+        setTilt(0);
+        explode = 0;
+        $('vt-explode').value = '0';
+        $('vt-explode-out').textContent = '0 %';
+        pose();
+        stage.classList.remove('has-interacted');
+        flyTo(framing(HOME));
+    });
+    const fullButton = $('vt-full');
+    const enterFull = stage.requestFullscreen || stage.webkitRequestFullscreen;
+    const fullElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+    if (!enterFull) fullButton.hidden = true;
+    fullButton.addEventListener('click', () => {
+        if (fullElement()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        else enterFull.call(stage);
+    });
+    const onFullscreen = () => {
+        const on = fullElement() === stage;
+        fullButton.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+        canvas.style.touchAction = on ? 'none' : 'pan-y';
+    };
+    document.addEventListener('fullscreenchange', onFullscreen);
+    document.addEventListener('webkitfullscreenchange', onFullscreen);
+
+    // ---- render loop: runs while the stage is on screen, draws only when something changed -----
+    let onScreen = true, frameId = 0, last = performance.now();
+    function frame(now) {
+        frameId = 0;
+        const dt = Math.min(0.1, (now - last) / 1000);
+        last = now;
+        let moving = stepSequence(now);
+        moving = stepFlight(now) || moving;
+        moving = controls.update(dt) || moving;
+        if (moving || needsRender) { renderer.render(scene, camera); needsRender = false; }
+        if (onScreen && !document.hidden) frameId = requestAnimationFrame(frame);
+    }
+    const wake = () => {
+        if (!frameId && onScreen && !document.hidden) { last = performance.now(); frameId = requestAnimationFrame(frame); }
+    };
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; wake(); }).observe(stage);
+    document.addEventListener('visibilitychange', wake);
+
+    renderer.render(scene, camera);
+    stage.querySelectorAll('.vt-hud [disabled]').forEach((el) => { el.disabled = false; });
+    stage.classList.remove('is-loading');
+    stage.classList.add('is-ready');
+    wake();
+}
+</script>
+</body>
+</html>
