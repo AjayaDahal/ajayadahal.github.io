@@ -2377,11 +2377,20 @@
             </div>
             <div class="row justify-content-center mb-5 pb-3">
                 <div class="col-md-8 heading-section text-center ftco-animate">
-                    <div style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #f0f0f0; display: inline-block;">
-                        <a target="_blank" href="https://info.flagcounter.com/WPje" style="display: block;">
+                    <!-- Flag Counter WPje. Keep the live image: Flag Counter deletes a free counter that logs no new
+                         visitor for 30 days. Blockers that use EasyPrivacy block flagcounter.com, so the saved copy
+                         stands in for them; tools/backup_flag_counter.py backs up the stats and refreshes the copy. -->
+                    <div class="visitor-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #f0f0f0; display: inline-block;">
+                        <a class="visitor-live" target="_blank" rel="noopener" href="https://info.flagcounter.com/WPje">
                             <img src="https://s01.flagcounter.com/countxl/WPje/bg_FFFFFF/txt_3e64ff/border_CCCCCC/columns_2/maxflags_20/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
-                                alt="Flag Counter" border="0" style="max-width: 100%; height: auto; border-radius: 8px;">
+                                width="193" height="299" alt="Visitors to this site by country (Flag Counter)"
+                                onload="if (this.naturalWidth < 20 || !this.getClientRects().length) this.closest('.visitor-card').classList.add('is-blocked')"
+                                onerror="this.closest('.visitor-card').classList.add('is-blocked')">
                         </a>
+                        <figure class="visitor-snapshot">
+                            <img src="images/flag-counter/snapshot.png" width="193" height="299" loading="lazy" alt="Visitors to this site by country (saved copy)">
+                            <figcaption>Saved copy from <time class="flag-snapshot-date" datetime="2026-11-04">November 4, 2026</time>. The live counter did not load in this browser; <a target="_blank" rel="noopener" href="https://info.flagcounter.com/WPje">see the live stats</a>.</figcaption>
+                        </figure>
                     </div>
                 </div>
             </div>
