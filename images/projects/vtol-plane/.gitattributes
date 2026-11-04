@@ -1,0 +1,3 @@
+# GitHub Pages cannot serve Git LFS objects, and on a case-insensitive checkout the root
+# *.MP4 rule also matches *.mp4: keep these videos in plain git so the site serves them.
+*.mp4 -filter -diff -merge binary
