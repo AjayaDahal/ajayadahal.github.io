@@ -126,8 +126,7 @@
                             </p>
                             
                             <p style="font-size: 1.05rem; line-height: 1.8; color: #555; text-align: justify; margin-bottom: 25px;">
-                                Formerly a Graduate Researcher in <b>Software Defined Radio (SDR)</b> and Autonomous Systems. Outside of work, I design 
-                                <b>production-grade software systems</b> — including a <a href="projects/sma.html" style="color: var(--accent); font-weight: 600;">24,700-line AI content pipeline</a> orchestrated by Temporal, and a <a href="projects/cognitive-silo.html" style="color: var(--accent); font-weight: 600;">self-hosted AI infrastructure stack</a> running 12 models across 15 Docker services on a single GPU. I enjoy solving problems where nanoseconds matter — and problems where 55 distributed activities need to compose reliably.
+                                Formerly a Graduate Researcher in <b>Software Defined Radio (SDR)</b> and Autonomous Systems at Mississippi State; my Master's thesis work on WiFi sensing now runs on the <a href="projects/wifi-har-versal.html" style="color: var(--accent); font-weight: 600;">Versal AI Engine</a>. Outside of work I build drones and aircraft, most recently a <a href="projects/vtol-plane.html" style="color: var(--accent); font-weight: 600;">3-D printed tilt-rotor VTOL</a> whose every part is generated in code and checked by an automated sign-off gate before it is printed.
                             </p>
                             
                             <div style="background: var(--dark); padding: 25px; border-radius: 12px; margin: 30px 0;">
@@ -380,7 +379,7 @@
                                 <a href="#page-3">Projects</a>
                                 <ul class="submenu">
                                     <li><a href="#featured-work">Featured Work</a></li>
-                                    <li><a href="#featured-amd">AMD Designs &amp; FPGA</a></li>
+                                    <li><a href="#featured-amd">FPGA &amp; RTL</a></li>
                                     <li><a href="#tier1-systems">Systems &amp; Hardware</a></li>
                                     <li><a href="#tier2-sandbox">The Sandbox</a></li>
                                 </ul>
@@ -1174,434 +1173,184 @@
                         </div>
 
                         <!-- ============ FEATURED WORK ============ -->
-                        <div id="featured-work" style="margin-bottom: 28px; scroll-margin-top: 80px;">
-                            <h3 style="font-size: 1.6rem; font-weight: 700; color: #1a1a1a; margin-bottom: 6px;">⭐ Featured Work</h3>
-                            <p style="color: #666; font-size: 0.98rem; font-weight: 500; margin: 0;">The projects I'm most proud of — deep, end-to-end builds validated on real silicon.</p>
-                        </div>
+                        <div id="featured-work" class="proj-section">
+                            <div class="proj-head">
+                                <h3>Featured Work</h3>
+                                <p>Three projects, end to end, with the evidence behind them: a Master's thesis taken onto AMD silicon, the Ethernet designs AMD publishes for its customers, and an aircraft that has to pass 121 automated checks before it is printed.</p>
+                            </div>
 
-                        <!-- Featured: 72ns Gateway HFT Accelerator -->
-                        <div class="row mb-5" style="margin-bottom: 50px !important;">
-                            <div class="col-md-12 ftco-animate">
-                                <div class="project-card" style="background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; position: relative; overflow: hidden;">
-                                    <!-- Accent Corner Badge -->
-                                    <div style="position: absolute; top: 15px; right: 15px; background: var(--accent); color: white; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px;">
-                                        ⚡ FEATURED PROJECT
-                                    </div>
-                                    
-                                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                                        <div style="width: 60px; height: 60px; background: var(--accent-tint); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 28px; color: white;">
-                                            ⚡
-                                        </div>
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">DECEMBER 2025 • R&D INITIATIVE</span>
-                                            <h3 style="margin: 5px 0; color: var(--ink); font-size: 28px; font-weight: 700;">
-                                                72ns Gateway: A Versal ACAP HFT Accelerator
-                                            </h3>
-                                            <p style="margin: 5px 0; color: #495057; font-weight: 600; font-size: 15px;">
-                                                Nanosecond-Latency Network Processing on FPGA
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <p style="color: #495057; line-height: 1.8; margin-bottom: 20px; font-size: 15px;">
-                                        Personal R&D exploration into <strong>sub-100ns packet processing</strong> on Xilinx Versal ACAP. Implements a complete hardware network stack: 
-                                        <strong>UDP filtering at wire speed</strong>, <strong>clock domain crossing with Gray code synchronizers</strong>, and protocol parsing for 
-                                        <strong>NASDAQ TotalView-ITCH 5.0</strong> market data feeds. Demonstrates mastery of heterogeneous computing, metastability prevention, and 
-                                        low-latency architecture design. Target latency: <strong>72ns</strong> (9 clock cycles @ 125 MHz).
-                                    </p>
-                                    
-                                    <!-- Key Metrics Grid -->
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr)); gap: 15px; margin-bottom: 20px;">
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">72ns</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Target Latency</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">125 MHz</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Clock Frequency</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">1 Gbps</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Throughput</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">42 Bytes</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Header Stripped</div>
+                            <div class="fw-list">
+                                <!-- Featured: WiFi HAR on the Versal AI Engine -->
+                                <article class="fw-card ftco-animate">
+                                    <a class="fw-media" href="projects/wifi-har-versal.html" tabindex="-1" aria-hidden="true">
+                                        <img src="images/wifi-har/board/setup_pi4b.webp" width="1400" height="788" alt="" loading="lazy">
+                                        <span class="fw-proof">Validated on a VCK190</span>
+                                    </a>
+                                    <div class="fw-body">
+                                        <p class="fw-eyebrow">Master's thesis, taken to silicon &middot; AMD Versal VCK190</p>
+                                        <h4 class="fw-title"><a href="projects/wifi-har-versal.html">WiFi Human-Activity Recognition on the Versal AI Engine</a></h4>
+                                        <p class="fw-summary">The hardware version of my Master's thesis. A Raspberry Pi running nexmon streams WiFi channel-state information to a VCK190; the programmable logic parses the UDP/CSI packets, and a graph on the AI Engine array computes the STFT and the activity, breathing and fall features. Checked bit-accurate against a golden model on real silicon, with ILAs on the live datapath.</p>
+                                        <ul class="fw-facts">
+                                            <li><b>5.96&times;10<sup>&minus;8</sup></b><span>Max error vs. the golden model</span></li>
+                                            <li><b>3 branches</b><span>AI Engine feature graph</span></li>
+                                            <li><b>4 ILAs</b><span>On the live datapath</span></li>
+                                        </ul>
+                                        <ul class="fw-tags" aria-label="Technologies">
+                                            <li>Versal AI Engine</li>
+                                            <li>Programmable Logic</li>
+                                            <li>WiFi CSI (nexmon)</li>
+                                            <li>STFT</li>
+                                            <li>PetaLinux</li>
+                                        </ul>
+                                        <div class="fw-actions">
+                                            <a class="fw-btn fw-btn-primary" href="projects/wifi-har-versal.html">Read the case study <span aria-hidden="true">&rarr;</span></a>
+                                            <a class="fw-btn fw-btn-ghost" href="https://github.com/ajayadaha1/Wifi-HAR-Versal-VCK190-PL" target="_blank" rel="noopener">GitHub</a>
+                                            <a class="fw-btn fw-btn-ghost" href="https://scholarsjunction.msstate.edu/td/6097/" target="_blank" rel="noopener">Thesis</a>
                                         </div>
                                     </div>
-                                    
-                                    <div style="margin-bottom: 20px;">
-                                        <span class="tech-badge">Versal VCK190</span>
-                                        <span class="tech-badge">UDP Filter RTL</span>
-                                        <span class="tech-badge">Async FIFO CDC</span>
-                                        <span class="tech-badge">Gray Code Sync</span>
-                                        <span class="tech-badge">NASDAQ ITCH 5.0</span>
-                                        <span class="tech-badge">MoldUDP64</span>
-                                        <span class="tech-badge">AXI Stream</span>
-                                        <span class="tech-badge">Vivado 2024.2</span>
+                                </article>
+
+                                <!-- Featured: AMD Ethernet reference designs -->
+                                <article class="fw-card ftco-animate">
+                                    <a class="fw-media" href="projects/versal-ethernet.html" tabindex="-1" aria-hidden="true">
+                                        <img src="images/projects/versal-ethernet/vck190-lab.webp" width="1200" height="900" alt="" loading="lazy" style="object-position: 50% 62%;">
+                                        <span class="fw-proof">100G traffic test on my bench</span>
+                                    </a>
+                                    <div class="fw-body">
+                                        <p class="fw-eyebrow">AMD &middot; 2023&ndash;2025 &middot; Public reference designs</p>
+                                        <h4 class="fw-title"><a href="projects/versal-ethernet.html">Ethernet Reference Designs for Versal and Zynq UltraScale+</a></h4>
+                                        <p class="fw-summary">The Ethernet example designs AMD publishes for its customers, which I maintained as a Sr. Embedded Product Application Engineer: PS GEM, AXI Ethernet and 10G/25G subsystems up to 4&times;25G and 1&times;100G on the Versal MRMAC and DCMAC, on five Versal boards and the ZCU102. Each design is rebuilt for every Vivado release with its validation results, and I wrote AMD Answer Records for the questions customers kept asking.</p>
+                                        <ul class="fw-facts">
+                                            <li><b>1G &rarr; 100G</b><span>PS GEM up to the DCMAC</span></li>
+                                            <li><b>6 boards</b><span>VCK190, VPK120, VPK180, VMK180, VEK280, ZCU102</span></li>
+                                            <li><b>2020.2 &rarr; 2025.1</b><span>Vivado releases maintained</span></li>
+                                        </ul>
+                                        <ul class="fw-tags" aria-label="Technologies">
+                                            <li>Versal MRMAC / DCMAC</li>
+                                            <li>10G/25G Ethernet</li>
+                                            <li>Zynq UltraScale+</li>
+                                            <li>PS GEM</li>
+                                            <li>Vivado Tcl</li>
+                                        </ul>
+                                        <div class="fw-actions">
+                                            <a class="fw-btn fw-btn-primary" href="projects/versal-ethernet.html">Versal designs <span aria-hidden="true">&rarr;</span></a>
+                                            <a class="fw-btn fw-btn-ghost" href="projects/zcu102-ethernet.html">ZCU102 designs</a>
+                                            <a class="fw-btn fw-btn-ghost" href="https://github.com/Xilinx-Wiki-Projects/Versal-Ethernet" target="_blank" rel="noopener">GitHub</a>
+                                        </div>
                                     </div>
-                                    
-                                    <div style="display: flex; gap: 12px;">
-                                        <a href="projects/72ns-gateway.html" class="btn btn-primary" style="flex: 1; text-align: center; padding: 14px; font-size: 15px; font-weight: 600; border: none;">
-                                            ⚡ View Full Technical Documentation
-                                        </a>
+                                </article>
+
+                                <!-- Featured: Tilt-rotor VTOL -->
+                                <article class="fw-card ftco-animate">
+                                    <a class="fw-media" href="projects/vtol-plane.html" tabindex="-1" aria-hidden="true">
+                                        <img src="images/projects/vtol-plane/poster.webp" width="1600" height="900" alt="" loading="lazy" style="object-position: 50% 45%;">
+                                        <span class="fw-proof">Interactive 3-D model</span>
+                                    </a>
+                                    <div class="fw-body">
+                                        <p class="fw-eyebrow">Personal build &middot; 2026 &middot; Designed and verified, test prints next</p>
+                                        <h4 class="fw-title"><a href="projects/vtol-plane.html">A 3-D Printed Tilt-Rotor VTOL, Generated and Verified in Code</a></h4>
+                                        <p class="fw-summary">A tilt-rotor tricopter that takes off like a drone and flies like a plane, under PX4. Every part is generated in Python from one parameter file and sliced from the command line, and nothing is printed until a verification gate signs off the fits, flush joints, clearances, balance, hover margin and the G-code itself.</p>
+                                        <ul class="fw-facts">
+                                            <li><b>121/121</b><span>Checks passing, in CI on every push</span></li>
+                                            <li><b>51 parts</b><span>From one parameter file</span></li>
+                                            <li><b>1478&nbsp;mm</b><span>Span, about 2.0&nbsp;kg all-up</span></li>
+                                        </ul>
+                                        <ul class="fw-tags" aria-label="Technologies">
+                                            <li>Python CAD (build123d)</li>
+                                            <li>PX4 tilt-rotor</li>
+                                            <li>LW-PLA + PETG</li>
+                                            <li>three.js</li>
+                                            <li>GitHub Actions</li>
+                                        </ul>
+                                        <div class="fw-actions">
+                                            <a class="fw-btn fw-btn-primary" href="projects/vtol-plane.html">Read the case study <span aria-hidden="true">&rarr;</span></a>
+                                            <a class="fw-btn fw-btn-ghost" href="projects/vtol-plane.html#model">Explore in 3-D</a>
+                                            <a class="fw-btn fw-btn-ghost" href="https://github.com/AjayaDahal/vtol-plane" target="_blank" rel="noopener">GitHub</a>
+                                        </div>
                                     </div>
-                                </div>
+                                </article>
                             </div>
                         </div>
 
-                        <!-- Featured: WiFi HAR on Versal AI Engine -->
-                        <div class="row mb-5" style="margin-bottom: 50px !important;">
-                            <div class="col-md-12 ftco-animate">
-                                <div class="project-card" style="background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; position: relative; overflow: hidden;">
-                                    <!-- Accent Corner Badge -->
-                                    <div style="position: absolute; top: 15px; right: 15px; background: var(--accent); color: white; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px;">
-                                        ⚡ FEATURED PROJECT
-                                    </div>
-
-                                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                                        <div style="width: 60px; height: 60px; background: var(--accent-tint); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 28px; color: white;">
-                                            📡
-                                        </div>
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">MASTER'S THESIS → SILICON</span>
-                                            <h3 style="margin: 5px 0; color: var(--ink); font-size: 28px; font-weight: 700;">
-                                                Seeing Through Walls: WiFi HAR on the Versal AI Engine
-                                            </h3>
-                                            <p style="margin: 5px 0; color: #495057; font-weight: 600; font-size: 15px;">
-                                                Device-Free Human Sensing on an AMD Versal ACAP
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <p style="color: #495057; line-height: 1.8; margin-bottom: 20px; font-size: 15px;">
-                                        The FPGA realization of my Master's thesis. Streams WiFi <strong>Channel-State-Information</strong> from a
-                                        Raspberry Pi (<strong>nexmon</strong>) into an AMD <strong>Versal VCK190</strong>, parses the UDP/CSI packets in the
-                                        <strong>Programmable Logic</strong>, and runs the STFT + activity / breathing / fall feature extraction on the
-                                        <strong>AI Engine array</strong> — turning ordinary WiFi into a room sensor. Validated <strong>bit-accurate on real
-                                        silicon</strong>, with an on-board live dashboard.
-                                    </p>
-
-                                    <!-- Key Metrics Grid -->
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr)); gap: 15px; margin-bottom: 20px;">
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">5.96e-8</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Max Abs Error</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">L = 256</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">STFT Window</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">3-branch</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">AIE Feature Graph</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">Silicon</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Bit-Accurate</div>
-                                        </div>
-                                    </div>
-
-                                    <div style="margin-bottom: 20px;">
-                                        <span class="tech-badge">Versal VCK190</span>
-                                        <span class="tech-badge">AI Engine</span>
-                                        <span class="tech-badge">WiFi CSI</span>
-                                        <span class="tech-badge">nexmon</span>
-                                        <span class="tech-badge">STFT / HAR</span>
-                                        <span class="tech-badge">PetaLinux</span>
-                                    </div>
-
-                                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                        <a href="projects/wifi-har-versal.html" class="btn btn-primary" style="flex: 1; min-width: 200px; text-align: center; padding: 14px; font-size: 15px; font-weight: 600; border: none;">
-                                            📡 View Full Technical Documentation
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Featured: Social Media Automation Engine -->
-                        <div class="row mb-5" style="margin-bottom: 50px !important;">
-                            <div class="col-md-12 ftco-animate">
-                                <div class="project-card" style="background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; position: relative; overflow: hidden;">
-                                    <!-- Accent Corner Badge -->
-                                    <div style="position: absolute; top: 15px; right: 15px; background: var(--accent); color: white; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px;">
-                                        🤖 FEATURED PROJECT
-                                    </div>
-                                    
-                                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                                        <div style="width: 60px; height: 60px; background: var(--accent-tint); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 28px; color: white;">
-                                            🤖
-                                        </div>
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">2024–2025 • PRODUCTION SYSTEM</span>
-                                            <h3 style="margin: 5px 0; color: var(--ink); font-size: 28px; font-weight: 700;">
-                                                Social Media Automation Engine
-                                            </h3>
-                                            <p style="margin: 5px 0; color: #495057; font-weight: 600; font-size: 15px;">
-                                                Temporal-Orchestrated AI Content Pipeline — Script to Published Video, Zero Human Typing
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <p style="color: #495057; line-height: 1.8; margin-bottom: 20px; font-size: 15px;">
-                                        A <strong>24,700-line Python system</strong> that autonomously discovers trending topics, generates scripts via multi-provider LLM orchestration (GPT-4o, DeepSeek, Claude), renders broadcast-quality vertical videos with <strong>FFmpeg compositing</strong> (karaoke captions, code blocks, Mermaid diagrams), and publishes to 4 platforms. Orchestrated by <strong>Temporal durable workflows</strong> with 55 activities, 5 QA gates, cascading fallback chains, and a signal-based human-in-the-loop approval via Telegram. Self-learning intelligence layer feeds performance data back into content generation. Runs on a <strong>local GPU server at $0/month</strong>.
-                                    </p>
-                                    
-                                    <!-- Key Metrics Grid -->
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr)); gap: 15px; margin-bottom: 20px;">
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">24,700</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Lines of Code</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">5</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Temporal Workflows</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">55</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Activities</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">$0/mo</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Infrastructure Cost</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div style="margin-bottom: 20px;">
-                                        <span class="tech-badge">Python 3.11</span>
-                                        <span class="tech-badge">Temporal.io</span>
-                                        <span class="tech-badge">GPT-4o / DeepSeek</span>
-                                        <span class="tech-badge">FFmpeg</span>
-                                        <span class="tech-badge">Docker Compose</span>
-                                        <span class="tech-badge">FastAPI + HTMX</span>
-                                        <span class="tech-badge">Whisper / XTTS</span>
-                                        <span class="tech-badge">ComfyUI / FLUX</span>
-                                    </div>
-                                    
-                                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                        <a href="projects/sma.html" class="btn btn-primary" style="flex: 1; min-width: 200px; text-align: center; padding: 14px; font-size: 15px; font-weight: 600; border: none;">
-                                            🤖 View Project Overview
-                                        </a>
-                                        <a href="projects/sma-architecture.html" class="btn btn-outline-primary" style="flex: 1; min-width: 200px; text-align: center; padding: 14px; font-size: 15px; font-weight: 600; border: 2px solid var(--accent);">
-                                            🏗️ Architecture Deep-Dive
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Featured: Cognitive Silo — Private AI Infrastructure -->
-                        <div class="row mb-5" style="margin-bottom: 50px !important;">
-                            <div class="col-md-12 ftco-animate">
-                                <div class="project-card" style="background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; position: relative; overflow: hidden;">
-                                    <!-- Accent Corner Badge -->
-                                    <div style="position: absolute; top: 15px; right: 15px; background: var(--accent); color: white; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px;">
-                                        🧠 FEATURED PROJECT
-                                    </div>
-                                    
-                                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                                        <div style="width: 60px; height: 60px; background: var(--accent-tint); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 28px; color: white;">
-                                            🧠
-                                        </div>
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">2024–2025 • PRIVATE INFRASTRUCTURE</span>
-                                            <h3 style="margin: 5px 0; color: var(--ink); font-size: 28px; font-weight: 700;">
-                                                Cognitive Silo: Private AI Infrastructure
-                                            </h3>
-                                            <p style="margin: 5px 0; color: #495057; font-weight: 600; font-size: 15px;">
-                                                15 Docker Services · 12 AI Models · 48 GB VRAM · $0/Month Self-Hosted AI Stack
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <p style="color: #495057; line-height: 1.8; margin-bottom: 20px; font-size: 15px;">
-                                        A <strong>single docker compose up</strong> deploys LLMs, voice cloning, image generation, video generation, music generation, and persistent AI memory behind a <strong>unified OpenAI-compatible gateway</strong>. Runs on an <strong>AMD Radeon PRO W7900</strong> (48 GB VRAM, ROCm 6.0) with VRAM budget management, init container pattern for idempotent deployments, LiteLLM fallback routing to GPT-4o, and a 544-line interactive setup wizard. The infrastructure layer that powers the <a href="projects/sma.html" style="color: var(--accent); font-weight: 600;">SMA pipeline</a> and all local AI workloads.
-                                    </p>
-                                    
-                                    <!-- Key Metrics Grid -->
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr)); gap: 15px; margin-bottom: 20px;">
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">15</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Docker Services</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">12</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">AI Models</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">48 GB</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">VRAM Managed</div>
-                                        </div>
-                                        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 22px; font-weight: 700; color: var(--ink);">$0/mo</div>
-                                            <div style="font-size: 11px; color: #666; font-weight: 600;">Infrastructure Cost</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div style="margin-bottom: 20px;">
-                                        <span class="tech-badge">Docker Compose</span>
-                                        <span class="tech-badge">Ollama (ROCm)</span>
-                                        <span class="tech-badge">LiteLLM Gateway</span>
-                                        <span class="tech-badge">AMD W7900 48GB</span>
-                                        <span class="tech-badge">ComfyUI / FLUX</span>
-                                        <span class="tech-badge">Whisper / XTTS</span>
-                                        <span class="tech-badge">Qdrant + Mem0</span>
-                                        <span class="tech-badge">PostgreSQL + Redis</span>
-                                    </div>
-                                    
-                                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                        <a href="projects/cognitive-silo.html" class="btn btn-primary" style="flex: 1; min-width: 200px; text-align: center; padding: 14px; font-size: 15px; font-weight: 600; border: none;">
-                                            🧠 View Project Overview
-                                        </a>
-                                        <a href="projects/cognitive-silo-architecture.html" class="btn btn-outline-primary" style="flex: 1; min-width: 200px; text-align: center; padding: 14px; font-size: 15px; font-weight: 600; border: 2px solid var(--accent);">
-                                            🏗️ Architecture Deep-Dive
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- AMD Reference Designs & FPGA Engineering -->
-                        <div id="featured-amd" style="scroll-margin-top: 80px; margin-top: 20px;">
-                            <h3 class="mb-1" style="color: var(--accent); font-weight: 600;">AMD Reference Designs &amp; FPGA Engineering</h3>
-                            <p style="color: #666; font-size: 1rem; margin-bottom: 24px;">Production AMD Versal / Zynq reference designs, reusable RTL, and the workstation that builds them (2023&ndash;present).</p>
-
-                        <div class="row mb-4">
-                            <!-- Versal Ethernet Project Card -->
-                            <div class="col-md-6 ftco-animate">
-                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
-                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                                        <img src="skills_icon/vivado_design_suite_ml_edition.png" style="width: 50px; height: 50px; margin-right: 15px; object-fit: contain;" alt="Vivado" loading="lazy" />
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">2023 - 2025</span>
-                                            <h4 style="margin: 5px 0; color: var(--ink); font-size: 20px; font-weight: 600;">Versal ACAP Ethernet Reference Designs</h4>
-                                        </div>
-                                    </div>
-                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
-                                        AMD's public Ethernet example designs for the Versal VCK190, VPK120, VPK180, VMK180 and VEK280: PS GEM and PL designs from 1G up to 4x25G and 1x100G on the MRMAC and DCMAC, rebuilt for each Vivado release.
-                                    </p>
-                                    <div style="margin-bottom: 15px;">
-                                        <span class="tech-badge">Versal ACAP</span>
-                                        <span class="tech-badge">MRMAC</span>
-                                        <span class="tech-badge">100G DCMAC</span>
-                                        <span class="tech-badge">10G/25G Ethernet</span>
-                                        <span class="tech-badge">PS GEM</span>
-                                        <span class="tech-badge">Vivado Tcl</span>
-                                    </div>
-                                    <div style="display: flex; gap: 10px;">
-                                        <a href="projects/versal-ethernet.html" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
-                                            <i class="icon-github"></i> View Project
-                                        </a>
-                                    </div>
-                                </div>
+                        <!-- ============ FPGA & RTL ============ -->
+                        <div id="featured-amd" class="proj-section">
+                            <div class="proj-head">
+                                <h3>FPGA &amp; RTL</h3>
+                                <p>Personal FPGA and RTL builds, outside my day job.</p>
                             </div>
 
-                            <!-- ZCU102 Ethernet Project Card -->
-                            <div class="col-md-6 ftco-animate">
-                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
-                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                                        <img src="skills_icon/vivado_design_suite_ml_edition.png" style="width: 50px; height: 50px; margin-right: 15px; object-fit: contain;" alt="Vivado" loading="lazy" />
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">2023 - 2025</span>
-                                            <h4 style="margin: 5px 0; color: var(--ink); font-size: 20px; font-weight: 600;">Zynq UltraScale+ MPSoC Ethernet</h4>
-                                        </div>
+                            <div class="rtl-grid">
+                                <!-- NAND to Tetris on a Basys3 -->
+                                <article class="rtl-card is-wide ftco-animate">
+                                    <a class="rtl-thumb" href="projects/hack-computer-basys3.html" tabindex="-1" aria-hidden="true"><img src="images/hack-nand2tetris.svg" width="400" height="220" alt="" loading="lazy"></a>
+                                    <div class="rtl-body">
+                                        <p class="rtl-meta">September 2026 <span class="rtl-status is-live">Playable in browser</span></p>
+                                        <h4><a href="projects/hack-computer-basys3.html">NAND to Tetris, on Real Silicon</a></h4>
+                                        <p>The Nand2Tetris Hack computer, built up from a single NAND gate and put on a Basys3: a 16-bit CPU that closes timing at 100&nbsp;MHz (+1.74&nbsp;ns slack), a 512&times;256 VGA framebuffer and a PS/2 keyboard, playing Tetris on a real monitor. The project page runs the same ROM in a browser emulator.</p>
+                                        <ul class="fw-tags" aria-label="Technologies">
+                                            <li>Verilog</li>
+                                            <li>Basys3 (Artix-7)</li>
+                                            <li>CPU design</li>
+                                            <li>VGA</li>
+                                            <li>PS/2</li>
+                                        </ul>
+                                        <p class="rtl-links"><a href="projects/hack-computer-basys3.html">View project <span aria-hidden="true">&rarr;</span></a><a href="https://github.com/ajayadaha1/HackComputer" target="_blank" rel="noopener">GitHub</a></p>
                                     </div>
-                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
-                                        Six PS- and PL-based 1G/10G Ethernet example designs for the ZCU102 (PS GEM over MIO and EMIO, SGMII, 1000BASE-X, 10GBASE-R). The repository replaced XAPP1305 and is released per Vivado version.
-                                    </p>
-                                    <div style="margin-bottom: 15px;">
-                                        <span class="tech-badge">Zynq UltraScale+</span>
-                                        <span class="tech-badge">10G Ethernet</span>
-                                        <span class="tech-badge">AXI Ethernet</span>
-                                        <span class="tech-badge">PS GEM</span>
-                                        <span class="tech-badge">SGMII</span>
-                                        <span class="tech-badge">Vivado 2024.2</span>
-                                    </div>
-                                    <div style="display: flex; gap: 10px;">
-                                        <a href="projects/zcu102-ethernet.html" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
-                                            <i class="icon-github"></i> View Project
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                </article>
 
-                        <div class="row mb-4">
-                            <!-- Cummings-FIFO Project Card -->
-                            <div class="col-md-6 ftco-animate">
-                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
-                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                                        <img src="skills_icon/vivado_design_suite_ml_edition.png" style="width: 50px; height: 50px; margin-right: 15px; object-fit: contain;" alt="Vivado" loading="lazy" />
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">DECEMBER 2025</span>
-                                            <h4 style="margin: 5px 0; color: var(--ink); font-size: 20px; font-weight: 600;">Asynchronous FIFO (Clock Domain Crossing)</h4>
-                                        </div>
+                                <!-- 72ns Gateway (in progress) -->
+                                <article class="rtl-card ftco-animate">
+                                    <div class="rtl-body">
+                                        <p class="rtl-meta">December 2025 <span class="rtl-status">In progress</span></p>
+                                        <h4><a href="projects/72ns-gateway.html">72ns Gateway: Market-Data Path on Versal</a></h4>
+                                        <p>A build toward a sub-100&nbsp;ns market-data path on the VCK190. The 1000BASE-X link is up and the UDP packet parser is validated on the board, with a Cummings asynchronous FIFO for the clock crossing. 72&nbsp;ns (9 cycles at 125&nbsp;MHz) is the target for the full path; it has not been measured end to end yet.</p>
+                                        <ul class="fw-tags" aria-label="Technologies">
+                                            <li>Versal VCK190</li>
+                                            <li>Verilog</li>
+                                            <li>1000BASE-X</li>
+                                            <li>CDC</li>
+                                            <li>NASDAQ ITCH 5.0</li>
+                                        </ul>
+                                        <p class="rtl-links"><a href="projects/72ns-gateway.html">View project <span aria-hidden="true">&rarr;</span></a><a href="https://github.com/AjayaDahal/fpga-72ns-gateway" target="_blank" rel="noopener">GitHub</a></p>
                                     </div>
-                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
-                                        A Verilog asynchronous FIFO for moving data between unrelated clock domains: Gray-code pointers, two-flop synchronizers and safe full/empty flags, following Clifford E. Cummings' SNUG 2002 design. Simulated in Vivado.
-                                    </p>
-                                    <div style="margin-bottom: 15px;">
-                                        <span class="tech-badge">Verilog</span>
-                                        <span class="tech-badge">Clock Domain Crossing</span>
-                                        <span class="tech-badge">Gray Code</span>
-                                        <span class="tech-badge">Synchronizers</span>
-                                        <span class="tech-badge">Vivado Simulation</span>
-                                    </div>
-                                    <div style="display: flex; gap: 10px;">
-                                        <a href="projects/cummings-fifo.html" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
-                                            <i class="icon-github"></i> View Project
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                </article>
 
-                            <!-- Workstation Build -->
-                            <div class="col-md-6 ftco-animate">
-                                <div class="project-card" style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
-                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                                        <img src="images/projects/workstation/pc.webp" style="width: 50px; height: 50px; margin-right: 15px; object-fit: cover; border-radius: 4px;" alt="Workstation" loading="lazy" />
-                                        <div>
-                                            <span style="color: #6c757d; font-size: 13px; font-weight: 500;">DECEMBER 2023</span>
-                                            <h4 style="margin: 5px 0; color: var(--ink); font-size: 20px; font-weight: 600;">Workstation Build</h4>
-                                        </div>
+                                <!-- Asynchronous FIFO -->
+                                <article class="rtl-card ftco-animate">
+                                    <div class="rtl-body">
+                                        <p class="rtl-meta">December 2025</p>
+                                        <h4><a href="projects/cummings-fifo.html">Asynchronous FIFO (Clock Domain Crossing)</a></h4>
+                                        <p>A Verilog asynchronous FIFO for moving data between unrelated clock domains: Gray-code pointers, two-flop synchronizers and safe full/empty flags, following Clifford E. Cummings' SNUG 2002 design. Simulated in Vivado.</p>
+                                        <ul class="fw-tags" aria-label="Technologies">
+                                            <li>Verilog</li>
+                                            <li>Clock domain crossing</li>
+                                            <li>Gray code</li>
+                                            <li>Vivado simulation</li>
+                                        </ul>
+                                        <p class="rtl-links"><a href="projects/cummings-fifo.html">View project <span aria-hidden="true">&rarr;</span></a><a href="https://github.com/AjayaDahal/Cummings-FIFO" target="_blank" rel="noopener">GitHub</a></p>
                                     </div>
-                                    <p style="color: #495057; line-height: 1.6; margin-bottom: 15px;">
-                                        The desktop I built at the end of 2023 on an ASUS ProArt X670E with a Ryzen 9 X3D and 64 GB of DDR5. It now runs my self-hosted AI stack, Cognitive Silo, on an AMD Radeon PRO W7900.
-                                    </p>
-                                    <div style="margin-bottom: 15px;">
-                                        <span class="tech-badge">AMD Ryzen 9</span>
-                                        <span class="tech-badge">64 GB DDR5</span>
-                                        <span class="tech-badge">Radeon PRO W7900</span>
-                                        <span class="tech-badge">Home Lab</span>
-                                    </div>
-                                    <div style="display: flex; gap: 10px;">
-                                        <a href="projects/workstation.html" class="btn btn-primary" style="flex: 1; text-align: center; padding: 10px; font-size: 14px;">
-                                            <i class="icon-external-link"></i> View Project
-                                        </a>
-                                    </div>
-                                </div>
+                                </article>
                             </div>
                         </div>
 
                         <!-- =============================================================== -->
                         <!-- SYSTEMS & HARDWARE -->
                         <!-- =============================================================== -->
-                        <div id="tier1-systems" style="margin-top: 60px; margin-bottom: 80px; scroll-margin-top: 80px;">
-                            <div style="text-align: center; margin-bottom: 50px;">
-                                <h3 style="font-size: 2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 10px;">Systems &amp; Hardware</h3>
-                                <p style="color: #666; font-size: 1rem; font-weight: 500;">Senior design, coursework and competition builds: roadside sensing, power electronics and drones.</p>
+                        <div id="tier1-systems" class="proj-section">
+                            <div class="proj-head">
+                                <h3>Systems &amp; Hardware</h3>
+                                <p>Senior design, coursework and competition builds: roadside sensing, power electronics and drones.</p>
                             </div>
 
                             <!-- WRECKS - Senior Design Project -->
                             <div class="resume-wrap d-flex ftco-animate" style="background: var(--surface); border-left: 5px solid var(--accent); padding: 25px; border-radius: 12px; margin-bottom: 30px;">
                                 <img src="https://collide-o-scope-msu.github.io/static/images/hardware.jpeg" width="80"
-                                    height="80" style="object-fit: cover; border-radius: 12px; flex-shrink: 0;" loading="lazy" />
+                                    height="80" style="object-fit: cover; border-radius: 12px; flex-shrink: 0;" loading="lazy" alt="" />
                                 <div class="text pl-3">
                                     <span class="date" style="font-weight: 600;">APRIL - DECEMBER 2022</span>
-                                    <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">WRECKS - Senior Design Project</h2>
+                                    <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">WRECKS: Guardrail Collision Sensor</h2>
                                     <span class="position" style="font-weight: 600; color: var(--accent);">Wireless Roadside Emergency Collision Kinetic Sensor</span>
-                                    <p style="margin-top: 12px; line-height: 1.7;">IoT sensor system for real-time collision detection on guardrails with wireless notification capabilities. Features low-latency wireless telemetry, distributed embedded architecture, and edge computing.</p>
+                                    <p style="margin-top: 12px; line-height: 1.7;">Senior design project with a five-person team: a guardrail-mounted sensor that detects collisions and sends real-time notifications to a web app.</p>
                                     <div class="mb-2">
                                         <span class="tech-badge">Raspberry Pi</span>
                                         <span class="tech-badge">Real-Time Systems</span>
@@ -1609,8 +1358,8 @@
                                         <span class="tech-badge">Embedded Linux</span>
                                         <span class="tech-badge">Signal Processing</span>
                                     </div>
-                                    <p><a target="_blank" href="https://collide-o-scope-msu.github.io/"
-                                            class="btn btn-primary py-2 px-3">View Project</a></p>
+                                    <p><a target="_blank" rel="noopener" href="https://collide-o-scope-msu.github.io/"
+                                            class="btn btn-primary py-2 px-3">Team site</a></p>
                                 </div>
                             </div>
 
@@ -1619,16 +1368,16 @@
                                 <img src="dissection/static/images/web/unbox1.webp" width="80" height="80" style="object-fit: cover; border-radius: 12px; flex-shrink: 0;" loading="lazy" alt="" />
                                 <div class="text pl-3">
                                     <span class="date" style="font-weight: 600;">APRIL 2022</span>
-                                    <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">DC-DC Buck Boost Converter Analysis</h2>
-                                    <span class="position" style="font-weight: 600; color: var(--accent);">Power Electronics & Switching Topology</span>
-                                    <p style="margin-top: 12px; line-height: 1.7;">Deep analysis of commercial buck-boost converter topology (0.5V-30V, 4A). Includes PCB reverse engineering, inductor saturation analysis, feedback loop stability, and component characterization for high-efficiency power delivery.</p>
+                                    <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">DC-DC Buck-Boost Converter Teardown</h2>
+                                    <span class="position" style="font-weight: 600; color: var(--accent);">ECE 6723, Electronics Dissection</span>
+                                    <p style="margin-top: 12px; line-height: 1.7;">A teardown of a commercial 0.5&ndash;30&nbsp;V, 4&nbsp;A buck-boost module (ZK-4KX): board photos, the regulator and display circuits drawn as schematics, and a priced bill of materials.</p>
                                     <div class="mb-2">
                                         <span class="tech-badge">Power Electronics</span>
-                                        <span class="tech-badge">SMPS Design</span>
-                                        <span class="tech-badge">Control Theory</span>
-                                        <span class="tech-badge">Circuit Analysis</span>
+                                        <span class="tech-badge">SMPS</span>
+                                        <span class="tech-badge">Reverse Engineering</span>
+                                        <span class="tech-badge">Schematic Capture</span>
                                     </div>
-                                    <p><a href="projects/dc-dc-dissection.html" class="btn btn-primary py-2 px-3">View Analysis</a></p>
+                                    <p><a href="projects/dc-dc-dissection.html" class="btn btn-primary py-2 px-3">View Project</a></p>
                                 </div>
                             </div>
 
@@ -1637,7 +1386,7 @@
                                 <img src="images/projects/covid-drone/flight.webp" width="80"
                                     height="80" style="object-fit: cover; border-radius: 12px; flex-shrink: 0;" loading="lazy" alt="" />
                                 <div class="text pl-3">
-                                    <span class="date" style="font-weight: 600;">FEBRUARY 2021 🏆</span>
+                                    <span class="date" style="font-weight: 600;">FEBRUARY 2021</span>
                                     <h2 style="font-size: 1.6rem; font-weight: 700; margin: 8px 0;">COVID-19 Sample-Collection Drone</h2>
                                     <span class="position" style="font-weight: 600; color: var(--accent);">NXP HoverGames Challenge 2 · Bonus Prize</span>
                                     <p style="margin-top: 12px; line-height: 1.7;">An Android app requests a drone that flies a COVID-19 test kit to the patient, so nobody who may be infected has to visit a crowded test site. Built on NXP's HoverGames kit (RDDRONE-FMUK66 flight controller, NavQ companion computer), with PX4 obstacle avoidance tested in Gazebo.</p>
@@ -1657,25 +1406,53 @@
                         <!-- =============================================================== -->
                         <!-- TIER 2: THE SANDBOX - PROTOTYPES, EXPERIMENTS & WEEKEND HACKS -->
                         <!-- =============================================================== -->
-                        <div id="tier2-sandbox" style="margin-top: 80px; padding-top: 60px; border-top: 3px dashed #ddd; scroll-margin-top: 80px;">
-                            <div style="margin-bottom: 50px;">
-                                <h3 style="font-size: 2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">The Sandbox</h3>
-                                <p style="color: #888; font-size: 0.95rem; font-weight: 400; margin: 0;">Prototypes, experiments, and weekend hacks — the playground where ideas come to life.</p>
+                        <div id="tier2-sandbox" class="proj-section proj-sandbox">
+                            <div class="proj-head">
+                                <h3>The Sandbox</h3>
+                                <p>Smaller builds: coursework, prototypes, home-lab projects and weekend hacks.</p>
                             </div>
 
                             <!-- Sandbox Grid Container -->
                             <div id="sandboxGrid" class="sandbox-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 20px; margin-bottom: 20px;">
 
-                                <!-- Sandbox Item: NAND to Tetris on Basys3 -->
-                                <a href="projects/hack-computer-basys3.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                                    <img src="images/hack-nand2tetris.svg" style="width: 100%; height: 140px; object-fit: cover;" alt="NAND to Tetris on a Basys3" loading="lazy" />
+                                <!-- Sandbox Item: Cognitive Silo -->
+                                <a href="projects/cognitive-silo.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="images/projects/cognitive-silo/cover.svg" style="width: 100%; height: 140px; object-fit: cover;" alt="Cognitive Silo: a self-hosted AI stack on one GPU" loading="lazy" />
                                     <div style="padding: 16px;">
-                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">SEPTEMBER 2026 &middot; PLAYABLE IN BROWSER</span>
-                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">NAND to Tetris, on Real Silicon</h4>
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">2024&ndash;2025 &middot; HOME LAB</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Cognitive Silo: Self-Hosted AI Stack</h4>
                                         <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Nand2Tetris</span>
-                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Basys3</span>
-                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">CPU Design</span>
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Docker Compose</span>
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">ROCm</span>
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Radeon PRO W7900</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Sandbox Item: Social Media Automation Engine -->
+                                <a href="projects/sma.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="images/projects/sma/cover.svg" style="width: 100%; height: 140px; object-fit: cover;" alt="Content pipeline on Temporal workflows" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">2024&ndash;2025 &middot; HOME LAB</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Social Media Automation Engine</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Python</span>
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Temporal</span>
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">FFmpeg</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Sandbox Item: Workstation Build -->
+                                <a href="projects/workstation.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                    <img src="images/projects/workstation/pc.webp" style="width: 100%; height: 140px; object-fit: cover;" alt="The workstation" loading="lazy" />
+                                    <div style="padding: 16px;">
+                                        <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">DECEMBER 2023</span>
+                                        <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Workstation Build</h4>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Ryzen 9</span>
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Radeon PRO W7900</span>
+                                            <span style="display: inline-block; background: var(--accent-tint); color: var(--accent-dark); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 500;">Home Lab</span>
                                         </div>
                                     </div>
                                 </a>
@@ -1736,7 +1513,7 @@
 
                                 <!-- Sandbox Item: Temperature Monitor -->
                                 <a href="projects/iot-temp-monitor.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                                    <img src="iconss/project_icons/temp.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <img src="iconss/project_icons/temp.webp" style="width: 100%; height: 140px; object-fit: cover;" alt="Temperature-controlled fan unit enclosure" loading="lazy" />
                                     <div style="padding: 16px;">
                                         <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">NOVEMBER 2020</span>
                                         <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">IoT Temperature Monitor</h4>
@@ -1749,7 +1526,7 @@
 
                                 <!-- Sandbox Item: Video Player -->
                                 <a href="projects/video-player.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                                    <img src="iconss/project_icons/video.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <img src="iconss/project_icons/video.webp" style="width: 100%; height: 140px; object-fit: cover;" alt="Video player app icon" loading="lazy" />
                                     <div style="padding: 16px;">
                                         <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">JULY 2020</span>
                                         <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Video Player App</h4>
@@ -1762,7 +1539,7 @@
 
                                 <!-- Sandbox Item: DIY Drone -->
                                 <a href="projects/diy-rth-drone.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                                    <img src="iconss/project_icons/drone_rth.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <img src="iconss/project_icons/drone_rth.webp" style="width: 100%; height: 140px; object-fit: cover;" alt="3D model of the return-to-home quadcopter" loading="lazy" />
                                     <div style="padding: 16px;">
                                         <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">APRIL 2020</span>
                                         <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">DIY Return-to-Home Drone</h4>
@@ -1775,7 +1552,7 @@
 
                                 <!-- Sandbox Item: Analog Line Follower -->
                                 <a href="projects/analog-line-follower.html" class="sandbox-item" style="background: white; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                                    <img src="iconss/project_icons/line.webp" style="width: 100%; height: 140px; object-fit: cover;" loading="lazy" />
+                                    <img src="iconss/project_icons/line.webp" style="width: 100%; height: 140px; object-fit: cover;" alt="3D model of the analog line follower" loading="lazy" />
                                     <div style="padding: 16px;">
                                         <span style="display: inline-block; font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px;">MARCH 2020</span>
                                         <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 600; color: #333;">Analog Line Follower</h4>
@@ -1809,6 +1586,8 @@
                             });
                         </script>
 
+
+                    </div>
 
                         <div id="page-4" class="page three">
                             <div class="skills-section-header" style="text-align: center; margin-bottom: 50px;">

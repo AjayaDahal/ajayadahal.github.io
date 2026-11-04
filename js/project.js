@@ -11,16 +11,15 @@
   // Same groups and order as the Projects section of home.html; update both when adding a project.
   const PROJECTS = [
     ['Featured work', [
-      ['72ns-gateway.html', '72ns Gateway'],
       ['wifi-har-versal.html', 'Wi-Fi HAR on the Versal AI Engine'],
-      ['sma.html', 'SMA Engine'],
-      ['cognitive-silo.html', 'Cognitive Silo'],
-    ]],
-    ['AMD designs & FPGA', [
       ['versal-ethernet.html', 'Versal Ethernet designs'],
       ['zcu102-ethernet.html', 'ZCU102 Ethernet designs'],
+      ['vtol-plane.html', 'Tilt-rotor VTOL plane'],
+    ]],
+    ['FPGA & RTL', [
+      ['hack-computer-basys3.html', 'NAND to Tetris on a Basys3'],
+      ['72ns-gateway.html', '72ns Gateway (in progress)'],
       ['cummings-fifo.html', 'Asynchronous FIFO'],
-      ['workstation.html', 'Workstation build'],
     ]],
     ['Systems & hardware', [
       ['https://collide-o-scope-msu.github.io/', 'WRECKS senior design'],
@@ -28,7 +27,9 @@
       ['covid-drone.html', 'COVID-19 drone'],
     ]],
     ['Sandbox', [
-      ['hack-computer-basys3.html', 'NAND to Tetris on a Basys3'],
+      ['cognitive-silo.html', 'Cognitive Silo (home-lab AI)'],
+      ['sma.html', 'Social media automation'],
+      ['workstation.html', 'Workstation build'],
       ['rc-plane.html', 'Shark Aero RC plane'],
       ['har-wifi-radar.html', 'Wi-Fi vs. radar HAR'],
       ['soil-moisture-logger.html', 'Soil-moisture logger'],
