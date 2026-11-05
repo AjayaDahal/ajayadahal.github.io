@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tilt-Rotor VTOL, 3-D Printed and Verified in Code | Ajaya Dahal</title>
-    <meta name="description" content="A 3-D printed tilt-rotor VTOL plane. Every part is generated in Python from one parameter file, sliced from the command line and signed off by a 121-check verification gate before printing. Explore the interactive 3-D model.">
+    <meta name="description" content="A 3-D printed tilt-rotor VTOL plane. Every part is generated in Python from one parameter file, sliced from the command line and signed off by a 123-check verification gate, and the whole mission is flown in PX4's simulator before printing. Explore the interactive 3-D model.">
     <meta name="author" content="Ajaya Dahal">
     <link rel="icon" type="image/svg+xml" href="../iconss/logo.svg">
     <link rel="canonical" href="https://ajayadahal.github.io/projects/vtol-plane.html">
     <meta property="og:type" content="article">
     <meta property="og:title" content="A 3-D Printed Tilt-Rotor VTOL, Generated and Verified in Code | Ajaya Dahal">
-    <meta property="og:description" content="Takes off like a drone, flies like a plane. Every part generated in Python, 121 automated checks before printing, and an interactive 3-D model.">
+    <meta property="og:description" content="Takes off like a drone, flies like a plane. Every part generated in Python, 123 automated checks and a full mission flown in PX4 simulation before printing, and an interactive 3-D model.">
     <meta property="og:url" content="https://ajayadahal.github.io/projects/vtol-plane.html">
     <meta property="og:image" content="https://ajayadahal.github.io/images/projects/vtol-plane/og.jpg">
     <meta property="og:image:width" content="1200">
@@ -23,6 +23,7 @@
         "headline": "A 3-D Printed Tilt-Rotor VTOL, Generated and Verified in Code",
         "author": { "@type": "Person", "name": "Ajaya Dahal", "url": "https://ajayadahal.github.io/" },
         "datePublished": "2026-11-04",
+        "dateModified": "2026-11-05",
         "image": "https://ajayadahal.github.io/images/projects/vtol-plane/og.jpg",
         "url": "https://ajayadahal.github.io/projects/vtol-plane.html"
     }
@@ -160,12 +161,12 @@
         .vt-gauges p { margin: 0; font-size: .82rem; line-height: 1.5; color: var(--muted); }
 
         /* ---- pipeline ---- */
-        .vt-flow { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin: 28px 0 0; padding: 0; list-style: none; }
-        .vt-flow::before { content: ""; position: absolute; top: 17px; right: calc(100% / 12); left: calc(100% / 12); height: 2px; background: linear-gradient(90deg, var(--accent), #1d9bf0 75%, #22a35a); opacity: .45; }
+        .vt-flow { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
+        .vt-flow::before { content: ""; position: absolute; top: 17px; right: calc(100% / 14); left: calc(100% / 14); height: 2px; background: linear-gradient(90deg, var(--accent), #1d9bf0 75%, #22a35a); opacity: .45; }
         .vt-flow li { position: relative; display: flex; flex-direction: column; align-items: center; margin: 0; }
         .vt-node { position: relative; z-index: 1; display: grid; place-items: center; width: 36px; height: 36px; font-size: 14px; font-weight: 700; color: var(--accent); background: #fff; border: 2px solid var(--accent); border-radius: 50%; box-shadow: 0 0 0 6px #fff; }
         .vt-flow li:last-child .vt-node { color: #fff; background: #22a35a; border-color: #22a35a; }
-        .vt-flow-card { flex: 1; width: 100%; margin-top: 14px; padding: 14px 14px 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, .04); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+        .vt-flow-card { flex: 1; width: 100%; margin-top: 14px; padding: 14px 12px 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, .04); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
         .vt-flow-card:hover { border-color: rgba(62, 100, 255, .45); box-shadow: 0 10px 24px -12px rgba(21, 27, 36, .25); transform: translateY(-3px); }
         .vt-flow li:last-child .vt-flow-card { background: linear-gradient(160deg, #f1fbf5, #e2f5e9); border-color: #bfe6cd; }
         .vt-flow-card code { display: block; margin-bottom: 8px; padding: 0; font-size: 11.5px; line-height: 1.45; color: var(--accent-dark); background: none; border: 0; overflow-wrap: anywhere; }
@@ -177,7 +178,8 @@
         .section .vt-checks li { position: relative; margin: 0; padding: 13px 14px 13px 42px; font-size: .85rem; line-height: 1.5; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
         .vt-checks li::before { content: ""; position: absolute; top: 15px; left: 14px; width: 18px; height: 18px; background: #22a35a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat; border-radius: 50%; }
         .vt-checks b { display: block; font-size: .93rem; color: var(--ink); }
-        .section .vt-checks li.is-total { display: flex; flex-direction: column; justify-content: center; background: linear-gradient(150deg, #f1fbf5, #dff3e7); border-color: #bfe6cd; }
+        .section .vt-checks li.is-total { display: flex; grid-column: 1 / -1; align-items: baseline; gap: 12px; background: linear-gradient(150deg, #f1fbf5, #dff3e7); border-color: #bfe6cd; }
+        .vt-checks li.is-total::before { top: 50%; margin-top: -9px; }
         .vt-checks .is-total b { font-size: 1.5rem; line-height: 1.2; color: #17803f; }
 
         .vt-term { margin: 24px 0; }
@@ -190,6 +192,48 @@
         .vt-term .ok { color: #3fb950; }
         .vt-term .dim { color: #6e7a8a; }
         .vt-term .sum { font-weight: 700; color: #3fb950; }
+
+        /* ---- simulation ---- */
+        .vt-sim { margin: 26px 0 8px; }
+        .vt-sim-video { overflow: hidden; background: #0d1117; border-radius: 12px; box-shadow: 0 18px 40px -24px rgba(21, 27, 36, .6); }
+        .vt-sim-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+        .section .vt-mission { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+        .section .vt-mission li { margin: 0; }
+        .vt-mission button { position: relative; display: flex; flex-direction: column; justify-content: flex-start; width: 100%; height: 100%; padding: 10px 12px 12px; overflow: hidden; font: inherit; line-height: 1.4; text-align: left; color: var(--text); background: #fff; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease; }
+        .vt-mission button:hover { border-color: rgba(62, 100, 255, .45); }
+        .vt-mission button[aria-current="true"] { background: var(--accent-tint); border-color: var(--accent); box-shadow: 0 8px 18px -12px rgba(47, 79, 214, .7); }
+        .vt-mission .vt-mt { display: block; font: 600 11px/1.4 var(--mono); color: var(--accent-dark); }
+        .vt-mission b { display: block; margin: 3px 0 2px; font-size: .86rem; line-height: 1.3; color: var(--ink); }
+        .vt-mission .vt-mr { display: block; font-size: .76rem; line-height: 1.45; }
+        .vt-mission i { position: absolute; bottom: 0; left: 0; width: var(--p, 0%); height: 3px; background: var(--accent); transition: width .25s linear; }
+        .section .vt-sim-checks { margin: 14px 0 0; padding: 0; list-style: none; }
+        .section .vt-sim-checks li { position: relative; margin: 0; padding: 6px 0 6px 28px; font-size: .86rem; line-height: 1.5; border-bottom: 1px solid var(--line); }
+        .section .vt-sim-checks li:last-child { border-bottom: 0; }
+        .vt-sim-checks li::before { content: ""; position: absolute; top: 9px; left: 0; width: 17px; height: 17px; background: #22a35a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.6 2.5L12 5.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat; border-radius: 50%; }
+        .vt-sim-checks span { font: 600 11.5px var(--mono); color: #17803f; white-space: nowrap; }
+        .section .vt-finds { display: grid; gap: 12px; margin: 18px 0; padding: 0; list-style: none; }
+        .section .vt-finds li { margin: 0; padding: 16px 18px; background: #fff; border: 1px solid var(--line); border-left: 3px solid #f08a24; border-radius: 10px; }
+        .vt-finds b { display: block; margin: 0 0 6px; font-size: .98rem; line-height: 1.4; color: var(--ink); }
+        .vt-finds .vt-find-id { display: block; margin-bottom: 4px; font: 600 11px var(--mono); letter-spacing: .3px; color: var(--muted); }
+        .vt-finds p { margin: 0 0 8px; font-size: .9rem; line-height: 1.65; }
+        .vt-finds p:last-child { margin: 0; }
+        .vt-tag { display: inline-block; margin-right: 8px; padding: 0 8px; font-size: 11px; font-weight: 700; line-height: 1.7; letter-spacing: .4px; text-transform: uppercase; color: #17803f; background: #e3f5ea; border-radius: 999px; }
+        .vt-stress { display: grid; gap: 14px; margin: 20px 0 8px; padding: 20px 22px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+        .vt-stress-row { display: grid; grid-template-columns: minmax(0, 17.5em) minmax(0, 1fr) 4.6em; align-items: center; gap: 6px 16px; }
+        .vt-stress-row > span:first-child { font-size: .86rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
+        .vt-stress-row small { display: block; font-size: .74rem; font-weight: 400; color: var(--muted); }
+        .vt-bar { position: relative; height: 12px; background: #e1e6ee; border-radius: 6px; }
+        .vt-bar s { position: absolute; top: 0; right: 0; bottom: 0; left: var(--peak); background: repeating-linear-gradient(-45deg, rgba(34, 163, 90, .3) 0 3px, transparent 3px 7px); border-radius: 0 6px 6px 0; }
+        .vt-bar i { position: absolute; top: 0; bottom: 0; left: 0; width: var(--avg); background: var(--c); border-radius: 6px; }
+        .vt-bar em { position: absolute; top: -5px; bottom: -5px; left: var(--peak); width: 3px; margin-left: -1px; background: var(--ink); border-radius: 2px; }
+        .vt-stress-row > b { font-size: 1.05rem; font-variant-numeric: tabular-nums; line-height: 1.2; text-align: right; color: #17803f; }
+        .vt-stress-row.is-thin > b { color: #c2410c; }
+        .vt-stress > p { margin: 0; font-size: .82rem; line-height: 1.5; color: var(--muted); }
+        .vt-stress-key { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: .76rem; color: var(--muted); }
+        .vt-stress-key span { display: inline-flex; align-items: center; gap: 7px; }
+        .vt-stress-key i { width: 18px; height: 8px; background: #8aa0c8; border-radius: 4px; }
+        .vt-stress-key em { width: 3px; height: 14px; background: var(--ink); border-radius: 2px; }
+        .vt-stress-key s { width: 18px; height: 8px; background: repeating-linear-gradient(-45deg, rgba(34, 163, 90, .45) 0 3px, transparent 3px 7px); border-radius: 4px; }
 
         /* ---- media ---- */
         .vt-video { position: relative; margin: 24px 0; }
@@ -215,11 +259,13 @@
         .vt-steps b { display: block; margin-bottom: 2px; font-size: .86rem; color: var(--ink); }
         .vt-steps li.now b { color: var(--accent-dark); }
 
-        @media (max-width: 960px) {
+        @media (max-width: 1040px) {
             .vt-flow { grid-template-columns: minmax(0, 1fr); gap: 0; }
             .vt-flow::before { top: 18px; bottom: 18px; left: 17px; width: 2px; height: auto; background: linear-gradient(var(--accent), #1d9bf0 75%, #22a35a); }
             .vt-flow li { flex-direction: row; align-items: flex-start; gap: 16px; padding-bottom: 14px; }
             .vt-flow-card { margin-top: 0; }
+        }
+        @media (max-width: 960px) {
             .vt-hud { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
             .vt-buttons { grid-column: 1 / -1; justify-content: flex-start; }
         }
@@ -236,6 +282,13 @@
             .section .vt-steps li { padding: 0 0 16px 34px; text-align: left; }
             .vt-steps li::before { top: 2px; left: 0; margin-left: 0; }
             .vt-steps li::after { top: -16px; left: 8px; width: 2px; height: 20px; }
+            .section .vt-mission { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+            .vt-mission button { display: grid; grid-template-columns: 5.6em minmax(0, 1fr); align-content: start; align-items: baseline; column-gap: 10px; padding: 9px 12px 11px; }
+            .vt-mission .vt-mt { grid-row: 1 / 3; }
+            .vt-mission b { margin: 0; }
+            .vt-stress { padding: 16px 16px 14px; }
+            .vt-stress-row { grid-template-columns: minmax(0, 1fr) 4.2em; }
+            .vt-stress-row > span:first-child { grid-column: 1 / -1; }
         }
         @media (min-width: 761px) and (max-width: 1100px) {
             .section .vt-checks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -265,18 +318,20 @@
     <div class="vt-hero">
         <header class="project-hero col">
             <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../home.html">Home</a> / <a href="../home.html#page-3">Projects</a> / <span aria-current="page">Tilt-Rotor VTOL</span></nav>
-            <p class="eyebrow">November 2026 · v0.2: designed and verified, test prints next</p>
+            <p class="eyebrow">November 2026 · v0.2: verified and flown in simulation, test prints next</p>
             <h1>A <span class="vt-nw">3-D</span> Printed <span class="vt-nw">Tilt-Rotor</span> VTOL, <span class="vt-grad">Generated and Verified in Code</span></h1>
-            <p class="lede">It takes off like a drone and flies like a plane. Every part is generated by Python from a single parameter file, sliced from the command line, and signed off by an automated verification gate before any filament is used.</p>
+            <p class="lede">It takes off like a drone and flies like a plane. Every part is generated by Python from a single parameter file, sliced from the command line and signed off by an automated verification gate. Before any filament is used, it has already flown its whole mission in PX4's simulator.</p>
             <ul class="tags">
                 <li>Python CAD (build123d)</li>
                 <li>PX4 tilt-rotor</li>
+                <li>PX4 SITL + Gazebo</li>
                 <li>LW-PLA + PETG printing</li>
                 <li>three.js</li>
                 <li>CI verification</li>
             </ul>
             <div class="cta-row">
                 <a class="btn btn-primary" href="#model">Explore the 3-D model</a>
+                <a class="btn btn-outline" href="#simulation">Watch it fly in simulation</a>
                 <a class="btn btn-outline" href="https://github.com/AjayaDahal/vtol-plane" target="_blank" rel="noopener">Source on GitHub</a>
             </div>
         </header>
@@ -323,8 +378,8 @@
         <div class="stats vt-stats">
             <div class="stat"><b>1478&nbsp;mm</b><span>Wingspan</span></div>
             <div class="stat"><b>~2.0&nbsp;kg</b><span>All-up weight</span></div>
-            <div class="stat is-ok"><b>121/121</b><span>Checks passing</span></div>
-            <div class="stat"><b>58</b><span>Print jobs</span></div>
+            <div class="stat is-ok"><b>123/123</b><span>Design checks passing</span></div>
+            <div class="stat is-ok"><b>10/10</b><span>Simulated flight checks</span></div>
             <div class="stat"><b>~65&nbsp;h</b><span>Print time</span></div>
         </div>
 
@@ -336,8 +391,9 @@
                 <dt>Power</dt><dd>3 × Emax ECOII 2807 1700&nbsp;KV on 7 × 4.5 props, 50&nbsp;A DShot ESCs, 4S 5000&nbsp;mAh</dd>
                 <dt>Avionics</dt><dd>Pixhawk 6C running PX4 as a tilt-rotor VTOL; M10 GPS, airspeed sensor with pitot, ELRS receiver</dd>
                 <dt>Estimates</dt><dd>Cruise ~18&nbsp;m/s, stall 10–11.5&nbsp;m/s, ~7&nbsp;min of pure hover, static margin ~18&nbsp;%</dd>
+                <dt>Simulation</dt><dd>PX4 v1.17 SITL in Gazebo Harmonic, on a model generated from the design; the full mission passes all ten automated checks</dd>
                 <dt>Airframe</dt><dd>LW-PLA vase-mode skins with fused internal webs, PETG ribs and frames, carbon spars and tail boom</dd>
-                <dt>Toolchain</dt><dd>Python and build123d, Anycubic Slicer Next's command line, three.js, GitHub Actions</dd>
+                <dt>Toolchain</dt><dd>Python and build123d, Anycubic Slicer Next's command line, PX4 SITL and Gazebo, three.js, GitHub Actions</dd>
             </dl>
         </section>
 
@@ -353,7 +409,7 @@
             </figure>
 
             <h3>The number that matters: hover margin</h3>
-            <p>A VTOL lives or dies by how hard its motors work in hover. The gate fails the design if a front motor needs more than 60&nbsp;% of the thrust it makes on a nearly empty pack. The current 4S design passes at 58.9&nbsp;%, which is legal but thin, and that is why the next revision moves to 3S with bigger props.</p>
+            <p>A VTOL lives or dies by how hard its motors work in hover. The gate fails the design if a front motor needs more than 60&nbsp;% of the thrust it makes on a nearly empty pack. The current 4S design passes at 58.9&nbsp;%, which is legal but thin, and that is why the next revision moves to 3S with bigger props. The flight simulation's stress tests <a href="#stress">put numbers on how thin</a>.</p>
             <div class="vt-gauges">
                 <div class="vt-limit" aria-hidden="true"><span>60&nbsp;% limit</span></div>
                 <div class="vt-gauge">
@@ -368,9 +424,106 @@
             </div>
         </section>
 
+        <section class="section" id="simulation">
+            <h2>Flown in simulation before it is printed</h2>
+            <p>Before any filament is used, the aircraft flies its whole mission in PX4's software-in-the-loop simulation: the real PX4 v1.17 flight stack, with this airframe's parameters, flying a Gazebo Harmonic model that <code>make_sim.py</code> generates from the same design files. Every mass in the balance is placed in 3-D, and the wing and V-tail are modelled as lifting surfaces. The mission is the one the real aircraft will fly: a vertical takeoff to 30&nbsp;m, the transition to wing-borne flight, a 950&nbsp;×&nbsp;400&nbsp;m circuit at 40&nbsp;m with four 50° banked turns, the transition back, and a vertical landing on the pad.</p>
+            <figure class="vt-sim" id="sim-video">
+                <div class="vt-sim-video">
+                    <video muted loop playsinline controls preload="none" poster="../images/projects/vtol-plane/sim-flight.webp" width="960" height="540">
+                        <source src="../images/projects/vtol-plane/sim-flight.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <ol class="vt-mission">
+                    <li><button type="button" data-t="0"><span class="vt-mt">0:00 · 3×</span><b>Takeoff</b><span class="vt-mr">Hovers on 47&nbsp;% of front thrust, as the balance predicts</span><i></i></button></li>
+                    <li><button type="button" data-t="7.33"><span class="vt-mt">0:07</span><b>Transition</b><span class="vt-mr">Past 14&nbsp;m/s at 7.6&nbsp;s, done in 8.5&nbsp;s</span><i></i></button></li>
+                    <li><button type="button" data-t="21.33"><span class="vt-mt">0:21 · 4×</span><b>Cruise</b><span class="vt-mr">18.2&nbsp;m/s; roll and pitch within 2° RMS</span><i></i></button></li>
+                    <li><button type="button" data-t="34.33"><span class="vt-mt">0:34</span><b>Back transition</b><span class="vt-mr">18&nbsp;m/s to a hover in 6.6&nbsp;s, 4.4&nbsp;m up</span><i></i></button></li>
+                    <li><button type="button" data-t="50.33"><span class="vt-mt">0:50 · 4×</span><b>Landing</b><span class="vt-mr">On the pad, 0.0&nbsp;m from home</span><i></i></button></li>
+                </ol>
+                <figcaption>One minute cut from the 3&nbsp;min&nbsp;42&nbsp;s check flight, filmed by Gazebo's chase camera in simulated time; the long stretches are sped up as labelled. Select a phase to jump to it.</figcaption>
+            </figure>
+            <p>The simulation lands on the design's own numbers. In hover the front motors run at 0.47 of their full thrust and the rear one at 0.34, the mass balance's 736&nbsp;g and 528&nbsp;g of 1,550&nbsp;g, and the model's static margin, 16&nbsp;%, is within 3&nbsp;% of the balance's 18&nbsp;%, which the gate holds it to.</p>
+
+            <h3>A check flight that grades itself</h3>
+            <div class="grid-2">
+                <div>
+                    <p><code>fly_test.py</code> flies the mission through PX4's MAVLink interface, then reads the log PX4 wrote. It passes only if every one of these does:</p>
+                    <ul class="vt-sim-checks">
+                        <li>Takes off above 25&nbsp;m</li>
+                        <li>Transitions to fixed-wing flight</li>
+                        <li>Reaches every circuit waypoint</li>
+                        <li>Holds 15–25&nbsp;m/s as a plane: <span>17.1–20.6&nbsp;m/s</span></li>
+                        <li>Stays above 15&nbsp;m as a plane</li>
+                        <li>Transitions back to hover</li>
+                        <li>Climbs no more in the back transition than its airspeed can buy, v²/2g: <span>4.4 of ~16.5&nbsp;m</span></li>
+                        <li>Never pitches past 45°</li>
+                        <li>Lands and disarms within 15&nbsp;m of home: <span>0.0&nbsp;m</span></li>
+                        <li>Raises no failsafe or critical message</li>
+                    </ul>
+                </div>
+                <figure>
+                    <a href="../images/projects/vtol-plane/sim-log.webp" data-zoom><img src="../images/projects/vtol-plane/sim-log.webp" width="1210" height="1210" loading="lazy" alt="Four plots against time from PX4's log of the check flight: altitude climbing to 30 m and cruising at 40 m; airspeed rising to about 18 m/s through the transition and falling back to zero; front and rear motor thrust with the tilt command stepping from hover to forward and back; and pitch and roll tracking their setpoints through four 50-degree turns"></a>
+                    <figcaption>What PX4 logged: altitude, airspeed, motor and tilt commands, and attitude against its setpoints. Orange marks the transitions, blue the fixed-wing flight. Select to enlarge.</figcaption>
+                </figure>
+            </div>
+
+            <h3>What the simulation changed</h3>
+            <ol class="vt-finds">
+                <li>
+                    <span class="vt-find-id">Review 12.1 and 13.2</span>
+                    <b>Held level, the transition never reached cruise speed</b>
+                    <p>PX4 holds the aircraft level through the front transition. By about 15&nbsp;m/s the wing carried the weight, the altitude controller throttled back, and the motors' forward pull dropped with it: the airspeed levelled off at 15.2&nbsp;m/s. Asked to finish at 18&nbsp;m/s, PX4 gave up at its 15&nbsp;s timeout and flew home in hover.</p>
+                    <p><span class="vt-tag">Fix</span>End the transition at 14&nbsp;m/s, 1&nbsp;m/s above stall, and fly it 2° nose-down. It now passes 14&nbsp;m/s at 7.6&nbsp;s, and the aircraft speeds up to its 18&nbsp;m/s cruise as a plane.</p>
+                </li>
+                <li>
+                    <span class="vt-find-id">Review 12.2</span>
+                    <b>A bug in the model, not the aircraft</b>
+                    <p>Gazebo's physics engine ignores a servo's command while the joint rests on its stop. With the stops at the ends of the commanded range, the tilt servos stayed at 90° after the back transition, so the front motors kept pushing forward while PX4 asked them to lift. Every back transition climbed 18–85&nbsp;m, dived or tumbled, whatever the settings.</p>
+                    <p><span class="vt-tag">Fix</span>The model's stops sit 5° beyond the commanded range. The real aircraft was already safe: the gate checks that nothing touches a yoke within 5° past either end of its travel, so only the servos' calibrated end points stop them.</p>
+                </li>
+                <li>
+                    <span class="vt-find-id">Review 13.3</span>
+                    <b>PX4's transition timer suits faster aircraft</b>
+                    <p>If the airspeed is still under 8&nbsp;m/s after 6&nbsp;s, PX4 abandons the transition; the model was at 8.8&nbsp;m/s by then. And without a working airspeed sensor, from a loose plug or a blocked pitot, PX4 ends the transition on time alone: after 8.5&nbsp;s, at 15&nbsp;m/s, only 2&nbsp;m/s above stall.</p>
+                    <p><span class="vt-tag">Fix</span>A 12&nbsp;s limit. Flown without its airspeed sensor, the transition now ends after 13.7&nbsp;s at about 19.5&nbsp;m/s, and the aircraft flies the circuit and lands at home.</p>
+                </li>
+            </ol>
+            <p>The same review turned the failsafes from notes into settings: return home at 25&nbsp;% battery and land at 15&nbsp;%, return on a lost link or at the geofence, and limits that drop the aircraft back into hover if wing-borne flight goes wrong. None of them trips in the check flight or the stress tests.</p>
+
+            <h3 id="stress">Stress tests: the premortem, flown</h3>
+            <p>The latest review was a premortem: assume the aircraft is built and its first flights go wrong, then work out why. Each failure story became a variant of the model, flown through the same mission: heavier, on a near-empty pack, without its airspeed sensor, with a wing that lifts more than modelled, and with the 3S plan's motors. Heavier and on a near-empty pack, the 4S build still flies the whole mission in calm air. What shrinks is the thrust it has to spare:</p>
+            <div class="vt-stress">
+                <div class="vt-stress-key" aria-hidden="true"><span><i></i>Average in hover</span><span><em></em>Peak</span><span><s></s>Headroom</span></div>
+                <div class="vt-stress-row">
+                    <span>4S design, 2.00&nbsp;kg<small>Full pack · 47&nbsp;% average, 54&nbsp;% peak</small></span>
+                    <span class="vt-bar" role="img" aria-label="47 percent average, 54 percent peak" style="--avg:47%;--peak:54%;--c:linear-gradient(90deg,#6b8cff,#3e64ff)"><s></s><i></i><em></em></span>
+                    <b>46&nbsp;%</b>
+                </div>
+                <div class="vt-stress-row is-thin">
+                    <span>4S, 10&nbsp;% heavier<small>Near-empty pack · 63&nbsp;% average, 74&nbsp;% peak</small></span>
+                    <span class="vt-bar" role="img" aria-label="63 percent average, 74 percent peak" style="--avg:63%;--peak:74%;--c:linear-gradient(90deg,#ffc247,#f08a24)"><s></s><i></i><em></em></span>
+                    <b>26&nbsp;%</b>
+                </div>
+                <div class="vt-stress-row is-thin">
+                    <span>4S, 20&nbsp;% heavier<small>Near-empty pack · 69&nbsp;% average, 81&nbsp;% peak</small></span>
+                    <span class="vt-bar" role="img" aria-label="69 percent average, 81 percent peak" style="--avg:69%;--peak:81%;--c:linear-gradient(90deg,#f6a04d,#e0663a)"><s></s><i></i><em></em></span>
+                    <b>19&nbsp;%</b>
+                </div>
+                <div class="vt-stress-row">
+                    <span>3S plan, 2.29&nbsp;kg<small>Near-empty pack · 48&nbsp;% average, 56&nbsp;% peak</small></span>
+                    <span class="vt-bar" role="img" aria-label="48 percent average, 56 percent peak" style="--avg:48%;--peak:56%;--c:linear-gradient(90deg,#4fd18b,#1f9d5c)"><s></s><i></i><em></em></span>
+                    <b>44&nbsp;%</b>
+                </div>
+                <p>Front-motor thrust in the simulated hover, as a share of what the motors can make in that state; the figure on the right is the headroom above the peak. Headroom is what a gust, the pack's sag under load and a sinking back transition draw on, and the simulation models none of them. That is why the premortem recommends the 3S plan's bigger motors before the first flight.</p>
+            </div>
+            <div class="note">
+                <p><strong>What the simulation leaves out.</strong> The props' wash over the wing and tail, the drop in a prop's thrust with airspeed, the pack's voltage sag, wind and turbulence, and ground effect. It checks the setup, the control and the logic of the transitions, not the last few percent of performance, so the first real transition, at altitude, is still the test. The model, the full flight and how to run it: <a href="https://github.com/AjayaDahal/vtol-plane/blob/main/SIMULATION.md" target="_blank" rel="noopener">SIMULATION.md</a>.</p>
+            </div>
+        </section>
+
         <section class="section" id="pipeline">
             <h2>Design as code</h2>
-            <p>The design lives in code, not in a CAD file. Every dimension is in one Python file. Scripts generate every part from it, lay each one out for its printer, slice it through the slicer's command line, and regenerate the documentation from the sliced files. Change one number and <code>build_all.py</code> rebuilds, re-slices and re-verifies the whole aircraft.</p>
+            <p>The design lives in code, not in a CAD file. Every dimension is in one Python file. Scripts generate every part from it, lay each one out for its printer, slice it through the slicer's command line, and regenerate the documentation from the sliced files. Change one number and <code>build_all.py</code> rebuilds, re-slices and re-verifies the whole aircraft, and regenerates the model it flies in simulation.</p>
         </section>
     </div>
 
@@ -381,14 +534,15 @@
             <li><span class="vt-node" aria-hidden="true">3</span><div class="vt-flow-card"><code>make_print_ready.py · plates.py</code><b>Lay out for printing</b><span>Orientation, printer and copies, and the seven PETG plates.</span></div></li>
             <li><span class="vt-node" aria-hidden="true">4</span><div class="vt-flow-card"><code>slice_all.py</code><b>Slice headless</b><span>G-code and a 3MF project for every job, from the slicer's CLI.</span></div></li>
             <li><span class="vt-node" aria-hidden="true">5</span><div class="vt-flow-card"><code>mass_balance.py · make_viewer.py · make_tracker.py</code><b>Measure and document</b><span>Mass, CG and hover margin, the viewer, the tracker and charts.</span></div></li>
-            <li><span class="vt-node" aria-hidden="true">✓</span><div class="vt-flow-card"><code>check_parts.py</code><b>Sign off</b><span>121 checks, locally and in CI on every push.</span></div></li>
+            <li><span class="vt-node" aria-hidden="true">6</span><div class="vt-flow-card"><code>make_sim.py</code><b>Model it for flight</b><span>A Gazebo model and PX4 airframe, from the mass balance.</span></div></li>
+            <li><span class="vt-node" aria-hidden="true">✓</span><div class="vt-flow-card"><code>check_parts.py</code><b>Sign off</b><span>123 checks, locally and in CI on every push.</span></div></li>
         </ol>
     </div>
 
     <div class="col">
         <section class="section" id="gate">
             <h2>A sign-off gate before any filament</h2>
-            <p>I borrowed a habit from chip design: nothing goes to a printer until a sign-off gate passes. <code>check_parts.py</code> checks the generated meshes, the sliced G-code and the documentation, on my machine and in GitHub Actions on every push. It reads the G-code back instead of trusting the settings that produced it, and every G-code file carries a hash of the STL it was sliced from, so a stale file cannot slip through.</p>
+            <p>I borrowed a habit from chip design: nothing goes to a printer until a sign-off gate passes. <code>check_parts.py</code> checks the generated meshes, the sliced G-code, the flight-simulation model and the documentation, on my machine and in GitHub Actions on every push. It reads the G-code back instead of trusting the settings that produced it, and every G-code file carries a hash of the STL it was sliced from, so a stale file cannot slip through.</p>
             <ul class="vt-checks">
                 <li><b>Meshes</b>Watertight, and left and right parts true mirror images.</li>
                 <li><b>Fits</b>Every spigot, coupler, frame, ring and hatch, with its glue gap.</li>
@@ -401,7 +555,8 @@
                 <li><b>G-code</b>Fresh, inside the bed, webs fused, nothing far over air.</li>
                 <li><b>Slicer projects</b>Every job's 3MF matches its G-code and settings.</li>
                 <li><b>Docs</b>Viewer, tracker, charts and previews match the files.</li>
-                <li class="is-total"><b>121/121</b>checks passing on the current design</li>
+                <li><b>Simulation</b>The PX4 model and airframe match the design; static margins agree.</li>
+                <li class="is-total"><b>123/123</b>checks passing on the current design</li>
             </ul>
             <figure class="vt-term">
                 <div class="vt-term-bar" aria-hidden="true"><i></i><i></i><i></i><span>python scripts/check_parts.py</span></div>
@@ -411,14 +566,16 @@
 <span class="ok">[PASS]</span> hover thrust per front motor &lt;= 60 % of worst-case max: 58.9 % of 1250 g
 <span class="ok">[PASS]</span> static margin 10-25 % MAC: 18 %
 <span class="ok">[PASS]</span> battery slides out through the nose opening: 9.6 mm each side at the tightest point of its path
+<span class="ok">[PASS]</span> PX4 SITL model and airframe (sim/) match the design: vtol_plane, airframe 22100, mass 2000 g, hover CG x=437.7
+<span class="ok">[PASS]</span> SITL model's static margin within 3 % MAC of mass_balance.py's: 16.1 % against 18.0 %
 <span class="ok">[PASS]</span> wing webs print as fused double walls (G-code): 4 skins, every web fused (&lt;= 0.42 mm) <span class="dim">…</span>
 <span class="ok">[PASS]</span> PETG G-code lays nothing far over air: bridges span &lt;= 30 mm, <span class="dim">…</span> longest 23.8 mm
 <span class="ok">[PASS]</span> G-code has no support extrusions (profile sanity): 0 support moves
 <span class="dim">…</span>
-<span class="sum">121/121 checks passed</span></code></pre>
+<span class="sum">123/123 checks passed</span></code></pre>
                 <figcaption>Lines from the gate's run in GitHub Actions on the current design.</figcaption>
             </figure>
-            <p>The design itself went through eleven rounds of review and a premortem that started from "assume it already failed". Every finding and its fix is recorded in the repository's review report.</p>
+            <p>The design has been through thirteen rounds of review, three of them premortems that start from "assume it already failed"; the latest was <a href="#stress">flown in the simulation</a>, failure story by failure story. Every finding and its fix is recorded in the repository's review report.</p>
         </section>
 
         <section class="section" id="airframe">
@@ -490,14 +647,14 @@
             <h2>Where it stands</h2>
             <ol class="vt-steps">
                 <li class="done"><b>Designed</b>51 parts from one parameter file</li>
-                <li class="done"><b>Verified</b>121/121 checks, 58 jobs sliced</li>
+                <li class="done"><b>Verified</b>123/123 checks, 58 jobs sliced</li>
+                <li class="done"><b>Simulated</b>Full mission in PX4, 10/10 checks</li>
                 <li class="now"><b>Test prints</b>Flow, fits and wing webs</li>
-                <li><b>Weigh and balance</b>Real masses into the balance</li>
-                <li><b>Glide test</b>At the design CG</li>
+                <li><b>Balance, then glide</b>Real masses, at the design CG</li>
                 <li><b>Hover, then transition</b>Bench, hover, then at altitude</li>
             </ol>
             <div class="note">
-                <p><strong>Next revision: 3S.</strong> I'm moving the build to parts I already own: 3S packs, a Cube Black flight controller, a Power Brick Mini, and SunnySky X2814 900&nbsp;KV motors on 12&nbsp;in props. Modelled, the front motors hover at 47.9&nbsp;% of their thrust instead of 58.9&nbsp;%, and pure hover grows from about 7 to about 18 minutes. Only two PETG plates change, so everything else can print now.</p>
+                <p><strong>Next revision: 3S, and the simulation's recommendation.</strong> I'm moving the build to parts I already own: 3S packs, a Cube Black flight controller, a Power Brick Mini, and SunnySky X2814 900&nbsp;KV motors on 12&nbsp;in props. Modelled, the front motors hover at 47.9&nbsp;% of their thrust instead of 58.9&nbsp;%, and pure hover grows from about 7 to about 18 minutes; flown in the simulation, it keeps the design's full-pack headroom to the end of its pack. Only two PETG plates change, so everything else can print now while one motor is thrust-tested.</p>
             </div>
         </section>
 
@@ -506,9 +663,10 @@
             <ul class="links">
                 <li><a href="https://github.com/AjayaDahal/vtol-plane" target="_blank" rel="noopener"><b>GitHub repository</b><span>Generators, gate, G-code and slicer projects</span></a></li>
                 <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/DESIGN.md" target="_blank" rel="noopener"><b>Design and build guide</b><span>Key numbers, assembly, servicing</span></a></li>
-                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/REPORT.md" target="_blank" rel="noopener"><b>Review report</b><span>Eleven rounds of review and a premortem</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/REPORT.md" target="_blank" rel="noopener"><b>Review report</b><span>Thirteen rounds of review, three premortems</span></a></li>
                 <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/tracker.md" target="_blank" rel="noopener"><b>Print tracker</b><span>Every job with its mass and time</span></a></li>
-                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/PX4_GUIDE.md" target="_blank" rel="noopener"><b>PX4 setup</b><span>Geometry, outputs, tilt calibration, first flight</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/PX4_GUIDE.md" target="_blank" rel="noopener"><b>PX4 setup</b><span>Geometry, outputs, transitions, failsafes, first flight</span></a></li>
+                <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/SIMULATION.md" target="_blank" rel="noopener"><b>Flight simulation</b><span>PX4 SITL in Gazebo: model, results, stress tests</span></a></li>
                 <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/PLAN_3S.md" target="_blank" rel="noopener"><b>3S build plan</b><span>Motor choice, changes, shopping list</span></a></li>
                 <li><a href="https://github.com/AjayaDahal/vtol-plane/blob/main/renders/vtol_plane.stl" target="_blank" rel="noopener"><b>Exterior model (STL)</b><span>In GitHub's 3-D viewer</span></a></li>
                 <li><a href="../images/projects/vtol-plane/model.glb" download><b>This page's 3-D model</b><span>glTF binary (GLB), 1&nbsp;MB</span></a></li>
@@ -574,6 +732,45 @@
         else if (!still) video.play().catch(() => {});
         sync();
     });
+})();
+// The simulated flight: plays muted while on screen (not for reduced motion or Save-Data), the
+// phase buttons jump to a phase, and the current phase is highlighted with its progress.
+(() => {
+    const fig = document.getElementById('sim-video');
+    if (!fig) return;
+    const video = fig.querySelector('video');
+    const phases = [...fig.querySelectorAll('.vt-mission button')];
+    const starts = phases.map((b) => parseFloat(b.dataset.t));
+    let held = window.matchMedia('(prefers-reduced-motion: reduce)').matches || !!(navigator.connection && navigator.connection.saveData);
+    let ours = false;
+    const show = () => {
+        const t = video.currentTime;
+        const begun = t > 0 || !video.paused;
+        let k = 0;
+        starts.forEach((s, i) => { if (t >= s - 0.05) k = i; });
+        const end = k + 1 < starts.length ? starts[k + 1] : (video.duration || starts[k] + 8);
+        phases.forEach((b, i) => {
+            if (begun && i === k) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+            const p = !begun || i > k ? 0 : i < k ? 100 : Math.min(100, ((t - starts[k]) / (end - starts[k])) * 100);
+            b.style.setProperty('--p', `${p.toFixed(1)}%`);
+        });
+    };
+    video.addEventListener('timeupdate', show);
+    video.addEventListener('seeked', show);
+    video.addEventListener('play', () => { held = false; show(); });
+    video.addEventListener('pause', () => { if (!ours) held = true; ours = false; });
+    phases.forEach((b) => b.addEventListener('click', () => {
+        video.currentTime = parseFloat(b.dataset.t);
+        held = false;
+        video.play().catch(() => {});
+        show();
+    }));
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { if (!held && video.paused) video.play().catch(() => {}); }
+            else if (!video.paused) { ours = true; video.pause(); }
+        }, { threshold: 0.5 }).observe(video);
+    }
 })();
 </script>
 <script type="importmap">

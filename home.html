@@ -126,7 +126,7 @@
                             </p>
                             
                             <p style="font-size: 1.05rem; line-height: 1.8; color: #555; text-align: justify; margin-bottom: 25px;">
-                                Formerly a Graduate Researcher in <b>Software Defined Radio (SDR)</b> and Autonomous Systems at Mississippi State; my Master's thesis work on WiFi sensing now runs on the <a href="projects/wifi-har-versal.html" style="color: var(--accent); font-weight: 600;">Versal AI Engine</a>. Outside of work I build drones and aircraft, most recently a <a href="projects/vtol-plane.html" style="color: var(--accent); font-weight: 600;">3-D printed tilt-rotor VTOL</a> whose every part is generated in code and checked by an automated sign-off gate before it is printed.
+                                Formerly a Graduate Researcher in <b>Software Defined Radio (SDR)</b> and Autonomous Systems at Mississippi State; my Master's thesis work on WiFi sensing now runs on the <a href="projects/wifi-har-versal.html" style="color: var(--accent); font-weight: 600;">Versal AI Engine</a>. Outside of work I build drones and aircraft, most recently a <a href="projects/vtol-plane.html" style="color: var(--accent); font-weight: 600;">3-D printed tilt-rotor VTOL</a> that is generated in code, checked by an automated sign-off gate and flown in PX4's simulator before it is printed.
                             </p>
                             
                             <div style="background: var(--dark); padding: 25px; border-radius: 12px; margin: 30px 0;">
@@ -1176,7 +1176,7 @@
                         <div id="featured-work" class="proj-section">
                             <div class="proj-head">
                                 <h3>Featured Work</h3>
-                                <p>Three projects, end to end, with the evidence behind them: a Master's thesis taken onto AMD silicon, the Ethernet designs AMD publishes for its customers, and an aircraft that has to pass 121 automated checks before it is printed.</p>
+                                <p>Three projects, end to end, with the evidence behind them: a Master's thesis taken onto AMD silicon, the Ethernet designs AMD publishes for its customers, and an aircraft that has to pass 123 automated checks, and fly its mission in simulation, before it is printed.</p>
                             </div>
 
                             <div class="fw-list">
@@ -1247,24 +1247,24 @@
                                         <span class="fw-proof">Interactive 3-D model</span>
                                     </a>
                                     <div class="fw-body">
-                                        <p class="fw-eyebrow">Personal build &middot; 2026 &middot; Designed and verified, test prints next</p>
+                                        <p class="fw-eyebrow">Personal build &middot; 2026 &middot; Verified and flown in simulation, test prints next</p>
                                         <h4 class="fw-title"><a href="projects/vtol-plane.html">A 3-D Printed Tilt-Rotor VTOL, Generated and Verified in Code</a></h4>
-                                        <p class="fw-summary">A tilt-rotor tricopter that takes off like a drone and flies like a plane, under PX4. Every part is generated in Python from one parameter file and sliced from the command line, and nothing is printed until a verification gate signs off the fits, flush joints, clearances, balance, hover margin and the G-code itself.</p>
+                                        <p class="fw-summary">A tilt-rotor tricopter that takes off like a drone and flies like a plane, under PX4. Every part is generated in Python from one parameter file and sliced from the command line, and nothing is printed until a verification gate signs off the fits, flush joints, clearances, balance, hover margin and the G-code itself. It has already flown its whole mission in PX4's simulator, which changed its transition settings and its choice of motors.</p>
                                         <ul class="fw-facts">
-                                            <li><b>121/121</b><span>Checks passing, in CI on every push</span></li>
-                                            <li><b>51 parts</b><span>From one parameter file</span></li>
+                                            <li><b>123/123</b><span>Checks passing, in CI on every push</span></li>
+                                            <li><b>10/10</b><span>Simulated flight checks, PX4 + Gazebo</span></li>
                                             <li><b>1478&nbsp;mm</b><span>Span, about 2.0&nbsp;kg all-up</span></li>
                                         </ul>
                                         <ul class="fw-tags" aria-label="Technologies">
                                             <li>Python CAD (build123d)</li>
-                                            <li>PX4 tilt-rotor</li>
+                                            <li>PX4 SITL + Gazebo</li>
                                             <li>LW-PLA + PETG</li>
                                             <li>three.js</li>
                                             <li>GitHub Actions</li>
                                         </ul>
                                         <div class="fw-actions">
                                             <a class="fw-btn fw-btn-primary" href="projects/vtol-plane.html">Read the case study <span aria-hidden="true">&rarr;</span></a>
-                                            <a class="fw-btn fw-btn-ghost" href="projects/vtol-plane.html#model">Explore in 3-D</a>
+                                            <a class="fw-btn fw-btn-ghost" href="projects/vtol-plane.html#simulation">Watch it fly</a>
                                             <a class="fw-btn fw-btn-ghost" href="https://github.com/AjayaDahal/vtol-plane" target="_blank" rel="noopener">GitHub</a>
                                         </div>
                                     </div>
